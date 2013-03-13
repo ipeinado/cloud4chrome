@@ -23,7 +23,7 @@ In Google Chrome, click the 'Customise and control Google Chrome' icon in the up
 License
 =======
 
-The research leading to these results has received funding from the European Union's Seventh Framework Programme (FP7/2007-2013) under grant agreement n° 289016. This software is licensed under a BSD license.
+Copyright (c) 2013, Technosite R&D. All rights reserved. This software is licensed under a BSD license.
 
-More about Cloud4all: http://cloud4all.info
+The research leading to these results has received funding from the European Union's Seventh Framework Programme (FP7/2007-2013) under grant agreement n° 289016. More about Cloud4all: http://cloud4all.info
 
