@@ -1,0 +1,48 @@
+﻿{
+	"name": "Cloud4all for Chrome",
+	"version": "0.1",
+	"description": "testing messaging between background and content script",
+	
+	"manifest_version": 2,
+	
+	"content_scripts": [
+		{
+			"matches": ["http://*/*", "https://*/*", "<all_urls>"],
+			"js": ["content.js"],
+			"css": ["content.css"],
+			"run_at": "document_start"
+		}
+	],
+	
+	"background": {
+		"scripts": ["common.js"]
+	},
+	
+	"browser_action": {
+		"default_icon": {
+			"19": "icon_19.png",
+			"38": "icon_38.png"
+		},
+		"default_popup": "popup.html"
+	},
+	
+	"commands": {
+		"_execute_browser_action": {
+			"suggested_key": {
+				"windows": "Ctrl+Shift+C",
+				"mac": "Command+Shift+C",
+				"chromeos": "Ctrl+Shift+C",
+				"linux": "Ctrl+Shift+C"
+			}
+		}
+    },
+	
+	"permissions": [
+		"tabs", 
+		"storage",
+		"management",
+		"http://*/*", 
+		"https://*/*",
+		"<all_urls>"
+	]
+}

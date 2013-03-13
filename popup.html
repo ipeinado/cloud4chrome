@@ -1,0 +1,136 @@
+<!doctype html>
+<html>
+	<head>
+		<style type="text/css">
+			html[hc="on"] {
+				-webkit-filter: invert();
+			}
+			
+			html[ts="large"] * {
+				font-size: 120% !important;
+			}
+			
+			html[ts="large"] > body {
+				width: 500px;
+			}
+			
+			
+			html[ts="x-large"] * {
+				font-size: 140% !important;
+			}
+			
+			html[ts="x-large"] > body {
+				width: 600px;
+			}
+			
+			html[zoom="200%"] {
+			  zoom: 2;
+			}
+			
+			html[zoom="300%"] {
+			  zoom: 3;
+			}			
+			
+			body {
+				font-family: Helvetica, arial, sans-serif;
+				width: 340px;
+				font-size: medium;
+			}
+			.config_option {
+				border-top: 1px solid #CCC;
+				padding: 0 1em 1em 1em;
+				margin: 0;
+			}
+			
+			.config_option h3 {
+			  font-size: 1.2em;
+			}
+			
+			ul.radiogroup {
+				list-style: none; 
+				margin: 0; 
+				padding: 0; 
+			}
+			
+			span.textSizeLarge {
+			  margin-top: 1em;
+				font-size: large;
+			}
+			
+			span.textSizeXLarge {
+			  margin-top: 1em;
+				font-size: x-large;
+			}
+			
+		</style>
+		<style rel="stylesheet" type="text/javascript" href="content.css"></style>
+		<script type="text/javascript" src="popup.js"></script>
+		<script type="text/javascript" src="common.js"></script>
+	</head>
+	<body>
+		<form>
+			<h2 id="configTitle" tabindex="1">Your configuration</h2>
+		
+		
+			<div class="config_option" id="screenReaderDiv">
+				<h3 tabindex="2">Screen reader</h3>
+					<div id="screenReaderDivCVInstalled">
+						<input type="checkbox" name="screen reader checkbox" id="screenReaderCheckBox" role="checkbox" tabindex="3" />
+						<label for="screenReaderCheckBox" id="screenReaderLabel">Activate ChromeVox</label>
+					</div>
+					<div id="screenReaderDivCVNotInstalled" style="display: none;">
+						<p>ChromeVox is not installed</p>
+						<p><button id="installCVButton" role="button" tabindex="3">Install ChromeVox</a></p>
+					</div>
+			</div>
+			
+			<div class="config_option">
+			  <h3 tabindex="4">High Contrast</h3>
+				<input type="checkbox" name="high contrast checkbox" id="highContrastCheckBox" role="checkbox" tabindex="5"/>
+				<label for="highContrastCheckBox" id="highContrastLabel">Activate High Contrast</label>
+			</div>
+			
+			<div class="config_option">
+				<h3 id="zoomrg" tabindex="6">Zoom</h3>
+				<ul class="radiogroup" role="radiogroup" aria-labelledby="zoomrg">
+					<li>
+						<input type="radio" name="zoom" id="zoom100" value="100" tabindex="7" role="radio">
+						<label for="zoom100">100%</label>
+					</li>
+					<li>
+						<input type="radio" name="zoom" id="zoom200" value="200" tabindex="8" role="radio">
+						<label for="zoom200">200%</label>
+					</li>
+					<li>
+						<input type="radio" name="zoom" id="zoom300" value="300" tabindex="9" role="radio">
+						<label for="zoom300">300%</label>
+					</li>
+				</ul>
+			</div>
+			
+			<div class="config_option">
+			  <h3 id="fontsizerg" tabindex="10">Font size</h3>
+				<ul class="radiogroup" role="radiogroup" aria-labelledby="fontsizerg">
+					<li>
+						<input type="radio" name="textSize" id="textSizeNormal" value="normal" tabindex="11" role="radio">
+						<label for="textSizeNormal">Normal</label>
+					</li>
+					<li>
+						<input type="radio" name="textSize" id="textSizeLarge" value="large" tabindex="12" role="radio">
+						<label for="textSizeLarge"><span class="textSizeLarge">Large</span></label>
+					</li>
+					<li>
+						<input type="radio" name="textSize" id="textSizeXLarge" value="x-large" tabindex="13" role="radio">
+						<label for="textSizeXLarge"><span class="textSizeXLarge">X-Large</span></label>
+					</li>
+				</ul>
+			
+			</div>
+			<div class="config_option">
+			  <h3 tabindex="14">Simplifier</h3>
+				<input type="checkbox" name="simplifier checkbox" id="simplifierCheckBox" role="checkbox" tabindex="15"/>
+				<label for="simplifierCheckBox" id="simplifierCheckBoxLabel">Enable simplification</label>
+			</div>
+		</form>
+	</body>
+</html>
