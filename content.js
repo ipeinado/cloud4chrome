@@ -121,8 +121,7 @@ function simplifyPage() {
 		document.documentElement.innerHTML = "";
 		document.body.setAttribute("simp", "true");
 		document.body.appendChild(simpleContainer);
-		
-		var articles = [];
+
 		var divArticle = document.createElement("div");
 		divArticle.setAttribute("class", "article");
 		for (var i = 0; i < max; i++) {
