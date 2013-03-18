@@ -103,28 +103,48 @@ function simplifyPage() {
 	console.log("inside simplifypage");
 	
 	window.onload = function() {
-		
+		/*
 		var title = document.getElementsByTagName('title')[0].innerHTML,
 			titleElement = document.createElement('title'),
 			index = 0;
-	
-		var nodeList = document.querySelectorAll("h1, h2, h3, h4, h5, p, blockquote"); 
+	 */
+	 
+		var nodes = document.querySelectorAll("h1, h2, h3, p, blockquote");		
+		var max = nodes.length;
 		
-		titleElement.innerText = "Simplified version of " + title; 
+/*		titleElement.innerText = "Simplified version of " + title; 
 		document.head.appendChild(titleElement);
-		
+*/		
 		document.body.setAttribute("simp", "true");
 	
 		
 		document.documentElement.innerHTML = "";
+		document.body.setAttribute("simp", "true");
 		document.body.appendChild(simpleContainer);
 		
-		for (var i = 0; i < nodeList.length; i++) {
-			if (!((nodeList[i].tagName == "UL") && (nodeList[i].parentNode.tagName == "UL"))) {
-				nodeList[i].setAttribute("tabIndex", index++); 
-				document.getElementById("simpleContainer").appendChild(nodeList[i]); 
-			}
-		}
+		var articles = [];
+		var divArticle = document.createElement("div");
+		divArticle.setAttribute("class", "article");
+		for (var i = 0; i < max; i++) {
+		  if (nodes[i].nodeName == "H1") {
+		    if ((divArticle.childElementCount > 0) && (divArticle.querySelectorAll("h1, h2").length > 0) && (divArticle.querySelectorAll("p").length > 0)) {
+		      document.getElementById("simpleContainer").appendChild(divArticle.cloneNode(true));
+		    }
+		    divArticle.innerHTML = "";
+		    divArticle.appendChild(nodes[i]);
+		  } else if (nodes[i].nodeName == "H2") {
+		    if ((divArticle.childElementCount > 0) && (divArticle.querySelectorAll("h2").length > 0) && (divArticle.querySelectorAll("p").length > 0)) {
+  		    document.getElementById("simpleContainer").appendChild(divArticle.cloneNode(true));
+  		    divArticle.innerHTML = "";
+  		  }
+  		  divArticle.appendChild(nodes[i]);
+		  } else {
+		    divArticle.appendChild(nodes[i]);
+		  }
+    }
+    if ((divArticle.childElementCount > 0) && (divArticle.querySelectorAll("h1, h2").length > 0) && (divArticle.querySelectorAll("p").length > 0)) {
+	    document.getElementById("simpleContainer").appendChild(divArticle);
+	  }
 	}
 }
 

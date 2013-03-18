@@ -25,22 +25,31 @@ html[zoom="300%"] body {
 }
 
 body[simp="true"] {
+  background: #EEE;
 }
 
 div#simpleContainer {	
+  background: white;
 	max-width: 980px;
 	margin: 0 auto;
 	padding: 1em;
 }
 
-div#simpleContainer img {
-	float: left;
-	margin: 0 1em 1em 0; 
+div#simpleContainer > div.article {
+  display: block;
+  clear: both;
+  overflow: hidden;
+  padding-bottom: 1em;
+  border-bottom: 1px solid #333;
 }
 
-div#waitDiv {
-	width: 100%;
-	height: 100%;
-	background: red;
-	z-index: 100;
+div.article > p {
+  font-size: large;
+  line-height: 120%;
+}
+
+div#simpleContainer img {
+	float: left;
+	clear: left;
+	margin: 0 1em 1em 0; 
 }
