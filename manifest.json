@@ -29,16 +29,17 @@
 	"commands": {
 		"_execute_browser_action": {
 			"suggested_key": {
-				"windows": "Ctrl+Shift+4",
-				"mac": "Command+Shift+4",
-				"chromeos": "Ctrl+Shift+4",
-				"linux": "Ctrl+Shift+4"
+				"windows": "Ctrl+4",
+				"mac": "Command+4",
+				"chromeos": "Ctrl+4",
+				"linux": "Ctrl+4"
 			}
 		}
     },
 	
 	"permissions": [
 		"tabs", 
+		"tts",
 		"storage",
 		"management",
 		"http://*/*", 
