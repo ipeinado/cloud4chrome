@@ -6,7 +6,7 @@
 				font-size: medium;
 			}
 			
-			html[hc="on"] {
+			html[hc="invert"] {
 				-webkit-filter: invert();
 			}
 			
@@ -93,9 +93,17 @@
 			</div>
 			
 			<div class="config_option">
-			  <h3 tabindex="4">High Contrast</h3>
-				<input type="checkbox" name="high contrast checkbox" id="highContrastCheckBox" role="checkbox" tabindex="5"/>
-				<label for="highContrastCheckBox" id="highContrastLabel">Activate High Contrast</label>
+			  <h3 id="highContrastRg" tabindex="4">High Contrast</h3>
+			  <ul class="radiogroup" role="radiogroup" aria-labelledby="highContrastRg">
+				<li>
+					<input type="radio" name="highContrast" id="NoHighContrastRB" value="noHighContrast" role="radio" tabindex="" />
+					<label for="NoHighContrastRB2" id="noHighContrastLabel">None</label>
+				</li>
+				<li>
+				  <input type="radio" name="highContrast" id="invertRB" value="invertColors" role="radio" tabindex="5"/>
+				  <label for="invertRB" id="invertLabel">Invert colors</label>
+				</li>
+			  </ul>
 			</div>
 			
 			<div class="config_option">

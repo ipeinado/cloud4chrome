@@ -1,4 +1,4 @@
-html[hc="on"] {
+html[hc="invert"] {
 	-webkit-filter: invert();
 }
 

@@ -19,16 +19,13 @@ function initializePopup() {
 
 	    if (key == "highContrast") {
 			value = items[key];
-		    if (value == "on") {
-				document.getElementById("highContrastCheckBox").checked = true;
-				html.setAttribute("hc", "on");
-				document.getElementById("highContrastCheckBox").setAttribute("aria-checked", "true"); 
-				console.log("High contrast checkbox initialized to true in background"); 
-			} else if (value == "off") {
-			  document.getElementById("highContrastCheckBox").checked = false;
-			  document.documentElement.removeAttribute("hc");
-			  document.getElementById("highContrastCheckBox").setAttribute("aria-checked", "false"); 
-			  console.log("High contrast checkbox initialized to false in background"); 
+		    if (value == "off") {
+				document.getElementById("NoHighContrastRB").checked = true;
+				html.removeAttribute("hc"); 
+			} else if (value == "invert") {
+			  document.getElementById("invertRB").checked = true;
+			  html.setAttribute("hc", "invert"); 
+			  console.log("Invert initializated in background"); 
 			}
 		}
 		

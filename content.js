@@ -88,10 +88,10 @@ function changeZoom(value) {
 
 // Change attribute 'hc' in HTML tag depending on the value of highContrast in storage
 function changeHighContrast(value) {
-	if (value == "on")  {
-	  html.setAttribute("hc", "on");
-	} else if (value == "off") {
-		html.removeAttribute("hc"); 
+	if (value == "off")  {
+		html.removeAttribute("hc");
+	} else if (value == "invert") {
+		html.setAttribute("hc", "invert"); 
 	}
 }
 

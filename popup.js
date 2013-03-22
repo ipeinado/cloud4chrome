@@ -6,7 +6,8 @@ document.addEventListener("DOMContentLoaded", function() {
 	document.getElementById("configTitle").focus(); 
 	document.getElementById("installCVButton").addEventListener("click", installCVButtonClicked); 
 	document.getElementById("screenReaderCheckBox").addEventListener("click", screenReaderClicked);
-	document.getElementById("highContrastCheckBox").addEventListener("click", highContrastCheckBoxClicked);  
+	document.getElementById("NoHighContrastRB").addEventListener("click", noHighContrastClicked);
+	document.getElementById("invertRB").addEventListener("click", invertRBClicked);  
 	document.getElementById("textSizeNormal").addEventListener("click", textSizeNormalClicked);
 	document.getElementById("textSizeLarge").addEventListener("click", textSizeLargeClicked);
 	document.getElementById("textSizeXLarge").addEventListener("click", textSizeXLargeClicked);
@@ -84,18 +85,16 @@ function textSizeXLargeClicked() {
 	});
 }
 
-function highContrastCheckBoxClicked() {
-	if (this.checked) {
-		chrome.storage.sync.set({highContrast: "on"}, function() {
-			document.documentElement.setAttribute("hc", "on"); 
-			document.getElementById("highContrastCheckBox").setAttribute("aria-checked", "true");
-		}); 
-	} else {
-		chrome.storage.sync.set({highContrast: "off"}, function() {
-			document.documentElement.removeAttribute("hc"); 
-			document.getElementById("highContrastCheckBox").setAttribute("aria-checked", "false");
-		}); 
-	}
+function noHighContrastClicked() {
+	chrome.storage.sync.set({highContrast: "off"}, function() {
+		document.documentElement.removeAttribute("hc");
+	}); 
+}
+
+function invertRBClicked() {
+	chrome.storage.sync.set({highContrast: "invert"}, function() {
+		document.documentElement.setAttribute("hc", "invert"); 
+	}); 
 }
 
 function simplifierCheckBoxClicked() {
