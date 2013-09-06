@@ -1,0 +1,136 @@
+/* Personalization options */
+html[hc="invert"] {
+  -webkit-filter: invert();
+}
+			
+html[ts="large"] > body {
+  font-size: large;
+}
+			
+html[ts="large"] > body {
+  width: 400px;
+}
+			
+html[ts="x-large"] > body {
+ font-size: x-large;
+}
+		
+html[ts="x-large"] > body {
+  width: 500px;
+}
+			
+html[zoom="200%"] {
+  zoom: 2;
+}
+			
+html[zoom="300%"] {
+  zoom: 3;
+}			
+
+/* Common options */
+
+body {
+  font-family: Helvetica, Arial, sans-serif;
+  width: 400px;
+  margin: 0;
+}
+
+/* Token form */
+
+div#tokenFormContainer {
+	display: block;
+	padding: 1em;
+	background: #133E5B;
+}
+
+div#tokenFormContainer h1 {
+	color: white;
+	margin: 0 0 0.5em 0;
+	z-index: 1;
+}
+
+label.tokenFormLabel {
+	display: inline-block;
+	float: left;
+	display: none;
+	z-index: 2;
+}
+
+input#tokenInput {
+	width: 90%;
+	font-size: 1.2em;
+	padding: 0.3em;
+	background: #133E5B;
+	border: 1px solid white;
+	color: white;
+	z-index: 3;
+}
+
+div#tokenFormContainer input[type='submit'] {
+  display: none;
+}
+
+div#tokenFormContainer div#results {
+	display: none;
+	padding: 0 1em 1em 1em;
+	color: white;
+}
+
+span.warning {
+  color: yellow;
+}
+
+div#tokenFormContainer div#options {
+	font-size: 1.2em;
+	display: block;
+	padding: 1em 0;
+}
+
+div#tokenFormContainer div#options a {
+  color: #DAEEF3;
+  display: inline-block;
+  z-index: 4;
+}
+
+div#tokenFormContainer div#options a#exitbutton {
+  float: right;
+  display: none;
+  z-index: 5;
+}
+
+
+/* Style of preferences form */
+div#preferencesContainer {
+  font-size: medium;
+}
+			
+			
+.config_option {
+  border-top: 1px solid #CCC;
+  padding: 0 1em 1em 1em;
+  margin: 0;
+}
+		
+.config_option h3 {
+  font-size: 1.2em;
+}
+			
+ul.radiogroup {
+  list-style: none; 
+  margin: 0; 
+  padding: 0; 
+}
+			
+span.textSizeMedium {
+  font-size: medium; 
+}
+			
+span.textSizeLarge {
+  margin-top: 1em;
+  font-size: large;
+}
+			
+span.textSizeXLarge {
+  margin-top: 1em;
+  font-size: x-large;
+}

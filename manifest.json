@@ -1,49 +1,56 @@
 ﻿{
 	"name": "Cloud4all for Chrome (Ctrl + Shift + 4)",
-	"version": "0.1",
-	"description": "testing messaging between background and content script",
+	"version": "0.2",
+	"description": "Personalize Google Chrome and store your preferences in the Cloud",
 	
 	"manifest_version": 2,
 	
+	"icons": {
+	  "16": "images/icon16.png",
+	  "48": "images/icon48.png",
+	  "128": "images/icon128.png"
+	},
+	
 	"content_scripts": [
-		{
-			"matches": ["http://*/*", "https://*/*", "<all_urls>"],
-			"js": ["content.js"],
-			"css": ["content.css"],
-			"run_at": "document_start"
-		}
+	  {
+	    "matches": ["http://*/*", "https://*/*", "<all_urls>"],
+		"js": ["content.js"],
+		"css": ["content.css"],
+		"run_at": "document_start"
+	  }
 	],
 	
 	"background": {
-		"scripts": ["common.js"]
+	  "scripts": ["common.js"]
 	},
 	
 	"browser_action": {
-		"default_icon": {
-			"19": "icon_19.png",
-			"38": "icon_38.png"
-		},
-		"default_popup": "popup.html"
+	  "default_icon": {
+	    "19": "images/icon19.png",
+		"38": "images/icon38.png"
+	  },
+	  "default_popup": "popup.html"
 	},
 	
 	"commands": {
-		"_execute_browser_action": {
-			"suggested_key": {
-				"windows": "Ctrl+4",
-				"mac": "Command+4",
-				"chromeos": "Ctrl+4",
-				"linux": "Ctrl+4"
-			}
+	  "_execute_browser_action": {
+	    "suggested_key": {
+		  "windows": "Ctrl+Shift+4",
+		  "mac": "Command+4",
+		  "chromeos": "Ctrl+4",
+		  "linux": "Ctrl+4"
 		}
+	  }
     },
 	
 	"permissions": [
-		"tabs", 
-		"tts",
-		"storage",
-		"management",
-		"http://*/*", 
-		"https://*/*",
-		"<all_urls>"
+	  "tabs", 
+	  "tts",
+	  "storage",
+	  "management",
+	  "http://preferences.gpii.net/",
+	  "http://*/*", 
+	  "https://*/*",
+	  "<all_urls>"
 	]
 }

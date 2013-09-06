@@ -1,152 +1,103 @@
 <!doctype html>
 <html>
 	<head>
-		<style type="text/css">
-			body {
-				font-size: medium;
-			}
-			
-			html[hc="invert"] {
-				-webkit-filter: invert();
-			}
-			
-			html[ts="large"] > body {
-				font-size: large;
-			}
-			
-			html[ts="large"] > body {
-				width: 400px;
-			}
-			
-			
-			html[ts="x-large"] > body {
-				font-size: x-large;
-			}
-			
-			html[ts="x-large"] > body {
-				width: 500px;
-			}
-			
-			html[zoom="200%"] {
-			  zoom: 2;
-			}
-			
-			html[zoom="300%"] {
-			  zoom: 3;
-			}			
-			
-			body {
-				font-family: Helvetica, arial, sans-serif;
-				width: 340px;
-				font-size: medium;
-			}
-			.config_option {
-				border-top: 1px solid #CCC;
-				padding: 0 1em 1em 1em;
-				margin: 0;
-			}
-			
-			.config_option h3 {
-			  font-size: 1.2em;
-			}
-			
-			ul.radiogroup {
-				list-style: none; 
-				margin: 0; 
-				padding: 0; 
-			}
-			
-			span.textSizeMedium {
-				font-size: medium; 
-			}
-			
-			span.textSizeLarge {
-			  margin-top: 1em;
-			  font-size: large;
-			}
-			
-			span.textSizeXLarge {
-			  margin-top: 1em;
-				font-size: x-large;
-			}
-			
-		</style>
-		<style rel="stylesheet" type="text/javascript" href="content.css"></style>
-		<script type="text/javascript" src="popup.js"></script>
-		<script type="text/javascript" src="common.js"></script>
+	  <link rel='stylesheet' type='text/javascript' href='content.css' />
+	  <link rel='stylesheet' type='text/javascript' href='popup.css' />
+	  <script type='text/javascript' src='popup.js'></script>
+	  <script type='text/javascript' src='common.js'></script>
 	</head>
 	<body>
+	  <!-- Form to insert the token -->
+	  <div id='tokenFormContainer'>
+	    <h1>Welcome to Cloud4all</h1>
+		<form id='tokenForm'>
+		  <label for='tokenInput' class='tokenFormLabel'></label>
+		  <input type='text' name='token' id='tokenInput' placeholder='insert your token'>
+		  <input type='submit' value='submit' id='tokenSubmit' />
+		</form>
+		<div id='results'></div>
+		<div id='options'>
+		  <a id='optionsLink' href=''>or edit your preferences</a>
+		</div>
+	  </div>
+	  
+	  <!-- Preferences configurator -->
+	  <div id = 'preferencesContainer'>
 		<form>
-			<h2 id="configTitle" tabindex="1">Your preferences</h2>
+		  <h2 id='configTitle' tabindex='1'>Your preferences</h2>
 		
-		
-			<div class="config_option" id="screenReaderDiv">
-				<h3 tabindex="2">Screen reader</h3>
-					<div id="screenReaderDivCVInstalled">
-						<input type="checkbox" name="screen reader checkbox" id="screenReaderCheckBox" role="checkbox" tabindex="3" />
-						<label for="screenReaderCheckBox" id="screenReaderLabel">Activate ChromeVox</label>
-					</div>
-					<div id="screenReaderDivCVNotInstalled" style="display: none;">
-						<p>ChromeVox is not installed</p>
-						<p><button id="installCVButton" role="button" tabindex="3">Install ChromeVox</a></p>
-					</div>
-			</div>
+		  <div class='config_option' id="screenReaderDiv">
+		    <h3 tabindex='2'>Screen reader</h3>
+			  <div id='screenReaderDivCVInstalled'>
+				<input type='checkbox' name='screen reader checkbox' id='screenReaderCheckBox' role='checkbox' tabindex='3' />
+				<label for='screenReaderCheckBox' id='screenReaderLabel'>Activate ChromeVox</label>
+			  </div>
+			  
+			  <div id='screenReaderDivCVNotInstalled' style='display: none;'>
+				<p>ChromeVox is not installed</p>
+				<p><button id='installCVButton' role='button' tabindex='3'>Install ChromeVox</a></p>
+			  </div>
+		  </div>
 			
-			<div class="config_option">
-			  <h3 id="highContrastRg" tabindex="4">High Contrast</h3>
-			  <ul class="radiogroup" role="radiogroup" aria-labelledby="highContrastRg">
+		  <div class='config_option'>
+			<h3 id='highContrastRg' tabindex='4'>High Contrast</h3>
+			  <ul class= 'radiogroup' role='radiogroup' aria-labelledby='highContrastRg'>
 				<li>
-					<input type="radio" name="highContrast" id="NoHighContrastRB" value="noHighContrast" role="radio" tabindex="" />
-					<label for="NoHighContrastRB2" id="noHighContrastLabel">None</label>
+			      <input type='radio' name='highContrast' id='NoHighContrastRB' value='noHighContrast' role='radio' tabindex="" />
+				  <label for='NoHighContrastRB2' id='noHighContrastLabel'>None</label>
 				</li>
 				<li>
-				  <input type="radio" name="highContrast" id="invertRB" value="invertColors" role="radio" tabindex="5"/>
-				  <label for="invertRB" id="invertLabel">Invert colors</label>
+				  <input type='radio' name='highContrast' id='invertRB' value='invertColors' role='radio' tabindex='5'/>
+				  <label for='invertRB' id='invertLabel'>Invert colors</label>
 				</li>
 			  </ul>
-			</div>
+		  </div>
 			
-			<div class="config_option">
-				<h3 id="zoomrg" tabindex="6">Zoom</h3>
-				<ul class="radiogroup" role="radiogroup" aria-labelledby="zoomrg">
-					<li>
-						<input type="radio" name="zoom" id="zoom100" value="100" tabindex="7" role="radio">
-						<label for="zoom100">100%</label>
-					</li>
-					<li>
-						<input type="radio" name="zoom" id="zoom200" value="200" tabindex="8" role="radio">
-						<label for="zoom200">200%</label>
-					</li>
-					<li>
-						<input type="radio" name="zoom" id="zoom300" value="300" tabindex="9" role="radio">
-						<label for="zoom300">300%</label>
-					</li>
-				</ul>
-			</div>
+		  <div class='config_option'>
+			<h3 id='zoomrg' tabindex='6'>Zoom</h3>
+			  <ul class='radiogroup' role='radiogroup' aria-labelledby='zoomrg'>
+				<li>
+				  <input type='radio' name='zoom' id='zoom100' value='100' tabindex='7' role='radio'>
+				  <label for='zoom100'>100%</label>
+				</li>
+				<li>
+				  <input type='radio' name='zoom' id='zoom200' value='200' tabindex='8' role='radio'>
+				  <label for='zoom200'>200%</label>
+				</li>
+				
+				<li>
+				  <input type='radio' name='zoom' id='zoom300' value='300' tabindex='9' role='radio'>
+				  <label for='zoom300'>300%</label>
+				</li>
+			  </ul>
+		  </div>
 			
-			<div class="config_option">
-			  <h3 id="fontsizerg" tabindex="10">Font size</h3>
-				<ul class="radiogroup" role="radiogroup" aria-labelledby="fontsizerg">
-					<li>
-						<input type="radio" name="textSize" id="textSizeNormal" value="medium" tabindex="11" role="radio">
-						<label for="textSizeMedium"><span class="textSizeMedium">Medium</span></label>
-					</li>
-					<li>
-						<input type="radio" name="textSize" id="textSizeLarge" value="large" tabindex="12" role="radio">
-						<label for="textSizeLarge"><span class="textSizeLarge">Large</span></label>
-					</li>
-					<li>
-						<input type="radio" name="textSize" id="textSizeXLarge" value="x-large" tabindex="13" role="radio">
-						<label for="textSizeXLarge"><span class="textSizeXLarge">X-Large</span></label>
-					</li>
-				</ul>
-			
-			</div>
-			<div class="config_option">
-			  <h3 tabindex="14">Simplifier (Beta)</h3>
-				<input type="checkbox" name="simplifier checkbox" id="simplifierCheckBox" role="checkbox" tabindex="15"/>
-				<label for="simplifierCheckBox" id="simplifierCheckBoxLabel">Enable simplification</label>
-			</div>
+		  <div class='config_option'>
+			<h3 id='fontsizerg' tabindex='10'>Font size</h3>
+		      <ul class='radiogroup' role='radiogroup' aria-labelledby='fontsizerg'>
+				<li>
+				  <input type='radio' name='textSize' id='textSizeNormal' value='medium' tabindex='11' role='radio'>
+				  <label for='textSizeMedium'><span class='textSizeMedium'>Medium</span></label>
+				</li>
+				
+				<li>
+				  <input type='radio' name='textSize' id='textSizeLarge' value='large' tabindex="12" role="radio">
+				  <label for='textSizeLarge'><span class='textSizeLarge'>Large</span></label>
+				</li>
+				
+				<li>
+				  <input type='radio' name='textSize' id='textSizeXLarge' value='x-large' tabindex='13' role='radio'>
+				  <label for='textSizeXLarge'><span class="textSizeXLarge">X-Large</span></label>
+				</li>
+			  </ul>
+		  </div>
+		  
+		  <div class='config_option'>
+			<h3 tabindex='14'>Simplifier (Beta)</h3>
+			  <input type='checkbox' name='simplifier checkbox' id='simplifierCheckBox' role='checkbox' tabindex='15'/>
+			  <label for='simplifierCheckBox' id='simplifierCheckBoxLabel'>Enable simplification</label>
+		  </div>
 		</form>
+	  </div> <!-- prefContainer -->
 	</body>
 </html>
