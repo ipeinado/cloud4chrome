@@ -1,0 +1,108 @@
+<!doctype html>
+<html>
+	<head>
+	  <link rel='stylesheet' type='text/javascript' href='content.css' />
+	  <link rel='stylesheet' type='text/javascript' href='options.css' />
+	  <script type='text/javascript' src='options.js'></script>
+	  <script type='text/javascript' src='common.js'></script>
+	</head>
+	<body>
+	  <!-- Preferences configurator -->
+	  <div id = 'preferencesContainerOP'>
+	    <div id='header'>
+		  <img src='images/C4a_GPII_logo.png' alt="Cloud4all and the GPII logos" />
+		  <h1>Edit your preferences</h1>
+		  <p>Edit your preferences in Cloud4all and a lot of devices will adapt to your preferences automatically</p>
+		</div>
+		</header>
+		<form id='preferencesFormOP'>
+		
+		  <div class='formWarning'>
+		    Please insert a valid token
+		  </div>
+		  
+		  <div class='config_option' id="newTokenInputDivOP">
+		    <h2 id='tokenTitle'>Token *</h2>
+			<input type='text' value='' id='newTokenInputOP' placeholder="write an ID"/>
+		  </div>
+		
+		  <div class='config_option' id="screenReaderDiv">
+		    <h2 tabindex='2'>Screen reader</h2>
+			  <div id='screenReaderDivCVInstalled'>
+				<input type='checkbox' name='screen reader checkbox' id='screenReaderCheckBoxOP' role='checkbox' tabindex='3' />
+				<label for='screenReaderCheckBox' id='screenReaderLabel'>Activate ChromeVox</label>
+			  </div>
+			  
+			  <div id='screenReaderDivCVNotInstalled' style='display: none;'>
+				<p>ChromeVox is not installed</p>
+				<p><button id='installCVButton' role='button' tabindex='3'>Install ChromeVox</a></p>
+			  </div>
+		  </div>
+			
+		  <div class='config_option'>
+			<h2 id='highContrastRg' tabindex='4'>High Contrast</h2>
+			  <ul class= 'radiogroup' role='radiogroup' aria-labelledby='highContrastRg'>
+				<li>
+			      <input type='radio' name='highContrast' id='noHighContrastRBOP' value='noHighContrast' role='radio' tabindex="" />
+				  <label for='NoHighContrastRB2' id='noHighContrastLabel'>None</label>
+				</li>
+				<li>
+				  <input type='radio' name='highContrast' id='invertRBOP' value='invertColors' role='radio' tabindex='5'/>
+				  <label for='invertRB' id='invertLabel'>Invert colors</label>
+				</li>
+			  </ul>
+		  </div>
+			
+		  <div class='config_option'>
+			<h2 id='zoomrg' tabindex='6'>Zoom</h2>
+			  <ul class='radiogroup' role='radiogroup' aria-labelledby='zoomrg'>
+				<li>
+				  <input type='radio' name='zoom' id='zoom100OP' value='100' tabindex='7' role='radio'>
+				  <label for='zoom100'>100%</label>
+				</li>
+				<li>
+				  <input type='radio' name='zoom' id='zoom200OP' value='200' tabindex='8' role='radio'>
+				  <label for='zoom200'>200%</label>
+				</li>
+				
+				<li>
+				  <input type='radio' name='zoom' id='zoom300OP' value='300' tabindex='9' role='radio'>
+				  <label for='zoom300'>300%</label>
+				</li>
+			  </ul>
+		  </div>
+			
+		  <div class='config_option'>
+			<h2 id='fontsizerg' tabindex='10'>Font size</h2>
+		      <ul class='radiogroup' role='radiogroup' aria-labelledby='fontsizerg'>
+				<li>
+				  <input type='radio' name='textSize' id='textSizeNormalOP' value='medium' tabindex='11' role='radio'>
+				  <label for='textSizeMedium'><span class='textSizeMedium'>Medium</span></label>
+				</li>
+				
+				<li>
+				  <input type='radio' name='textSize' id='textSizeLargeOP' value='large' tabindex="12" role="radio">
+				  <label for='textSizeLarge'><span class='textSizeLarge'>Large</span></label>
+				</li>
+				
+				<li>
+				  <input type='radio' name='textSize' id='textSizeXLargeOP' value='x-large' tabindex='13' role='radio'>
+				  <label for='textSizeXLarge'><span class="textSizeXLarge">X-Large</span></label>
+				</li>
+			  </ul>
+		  </div>
+		  
+		  <div class='config_option'>
+			<h2 tabindex='14'>Simplifier (Beta)</h2>
+			  <input type='checkbox' name='simplifier checkbox' id='simplifierCheckBoxOP' role='checkbox' tabindex='15'/>
+			  <label for='simplifierCheckBox' id='simplifierCheckBoxLabel'>Enable simplification</label>
+		  </div>
+		  
+		  <div class='config_option' id='prefOptions'>
+		    <input type='submit' value='save' id='savePrefsBtn' />
+			<a href="" id="clearBtn" title="Sign out of Cloud4all" >Clear</a>
+		  </div>
+		</form>
+	  </div> <!-- prefContainer -->
+	</body>
+</html>
