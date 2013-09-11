@@ -3,50 +3,239 @@
 
 // Set all handlers
 
+var userToken = "",
+    localPreferences = {};
+
 document.addEventListener("DOMContentLoaded", function(e) {
 
-  console.log('DOM content loaded');
-	
   document.querySelector('#tokenForm').addEventListener('submit', onTokenFormSubmit);
   document.querySelector('#optionsLink').addEventListener('click', onOptionsClick);
-	
-  document.getElementById('installCVButton').addEventListener('click', installCVButtonClicked); 
-  document.getElementById('screenReaderCheckBox').addEventListener('click', screenReaderClicked);
-  document.getElementById('NoHighContrastRB').addEventListener('click', noHighContrastClicked);
-  document.getElementById('invertRB').addEventListener('click', invertRBClicked);  
-  document.getElementById('textSizeNormal').addEventListener('click', textSizeNormalClicked);
-  document.getElementById('textSizeLarge').addEventListener('click', textSizeLargeClicked);
-  document.getElementById('textSizeXLarge').addEventListener('click', textSizeXLargeClicked);
-  document.getElementById('zoom100').addEventListener('click', zoom100Clicked);
-  document.getElementById('zoom200').addEventListener('click', zoom200Clicked);
-  document.getElementById('zoom300').addEventListener('click', zoom300Clicked);
-  document.getElementById('simplifierCheckBox').addEventListener('click', simplifierCheckBoxClicked);
+  
+  document.querySelector('#seeallprefs').addEventListener('click', onOptionsClick); 
+  document.querySelector('#signOutBtn').addEventListener('click', signOutBtnClicked);
   
   // if there is a configuration stored locally, we will load this 
   // set of needs and preferences
-  chrome.storage.local.get({'token' : "" , 'npset': {} }, function(results) {
-    if ((isEmpty(results['npset'])) && (results['token'] === "")) {
-	  console.log('set of needs and preferences not stored locally');
-	  document.querySelector('#preferencesContainer').style.display = 'none';
-  	  document.querySelector('#tokenFormContainer').style.display = 'block';
-
-	} else {
-	  console.log('set of needs and preferences stored locally');
-	  document.querySelector('#tokenFormContainer').style.display = 'none';
-	  document.querySelector('#preferencesContainer').style.display = 'block';
-	  initPrefFrom(results['npset']);
-	}
+  chrome.storage.local.get({'token' : "" , 'preferences': {} }, function(results) {
+    setPreferencesForm({token: results['token'], preferences: results['preferences']});
   }); 
 	
 }); 
 
-function initPrefFrom(npset) {
+function onTokenFormSubmit(e) {
+  e.preventDefault();
+  
+  var token = document.querySelector('#tokenInput').value;
+  document.querySelector('#tokenInput').value = "";
+  console.log('submitting token'); 
+  chrome.runtime.sendMessage(token, handleResponse);
 }
 
-function onTokenFormSubmit() {
+function handleResponse(response) {
+  var status = response.status;
+  // status 0 means the request could not be complete
+  if (status == 0) {
+    document.querySelector('#results').style.display = 'block';
+    document.querySelector('#results').innerHTML = '<span class="warning">sorry, there are no users with this token</span>';
+	console.log('network error');
+  } else {
+	// status 1 means the request was successfully complete
+	if (status == 1) {
+	  window.location.reload();
+	  console.log('succesfully logged in');
+	} else {
+	  if (status == 2) {
+		document.querySelector('#results').style.display = 'block';
+		document.querySelector('#results').innerHTML = '<span class="warning">The file is not valid<span>';
+		console.log('JSON file is no valid'); 
+	  }
+	}
+  }
 }
 
+
+// Function that initializes the popup
+function setPreferencesForm(npsetObject) {
+
+  if (npsetObject.hasOwnProperty('token') && npsetObject.hasOwnProperty('preferences')) {
+  // The needs and preferences object has a property 'token' and a property 'preferences'
+  
+	if (isEmpty(npsetObject['preferences']) && npsetObject['token'] == "") {
+	  // The preferences object is empty and the token is an empty string
+	  
+	  console.log('set of needs and preferences not stored locally');
+	  document.querySelector('#preferencesContainer').style.display = 'none';
+  	  document.querySelector('#tokenFormContainer').style.display = 'block';
+	  document.querySelector('#tokenInput').focus(); 
+	  chrome.tts.speak("Welcome to Cloud For All. Please insert your token or edit your preferences.");
+	
+	} else {
+	  // Either the token is a valid string or there are actual preferences 
+	  
+	  console.log('set of needs and preferences stored locally');
+	  document.querySelector('#tokenFormContainer').style.display = 'none';
+	  document.querySelector('#preferencesContainer').style.display = 'block';
+	    
+	  if (npsetObject['token'] != "") {
+	    // The token is a valid string
+		userToken = npsetObject['token'];
+	    document.querySelector('#configTitle').innerText = "Welcome, " + npsetObject['token'];
+		chrome.tts.speak( "Welcome to Cloud For All, " + npsetObject['token'] );
+	  }
+	  
+	  if (isEmpty(npsetObject['preferences'])) {
+	    // The preferences object is empty
+	    console.log("Preferences object is empty");
+		
+	  } else {
+	    // The preferences object is not empty
+	    localPreferences = npsetObject['preferences'];
+		
+		// Initialize screenreader
+		if (localPreferences.hasOwnProperty('screenReaderTTSEnabled')) {
+	      chrome.management.get('kgejglhpjiefppelpmljglcjbhoiplfn', function(extInfo) {
+		    try {
+		      console.log(extInfo.name + " is installed.");
+			
+			  if (localPreferences['screenReaderTTSEnabled']) {
+			    document.querySelector('#screenReaderCheckBox').checked = true;
+			    console.log("Screen reader checkbox initialized to true in background");
+			  
+			    if (!extInfo.enabled) {
+			      chrome.management.setEnabled(extInfo.id, true, function() {
+				    console.log("ChromeVox has been enabled in initialization");
+				  }); 
+			    }
+		      } else {
+			    document.querySelector('#screenReaderCheckBox').checked = false;
+			    console.log("Screen reader checkbox initializated to false in background");
+			  
+			    if (extInfo.enabled) {
+			      chrome.management.setEnabled(extInfo.id, false, function() {
+			      console.log("ChromeVox has been disabled in initialization");
+			      }); 
+			    }
+		      }
+		    } catch (e) {
+		      console.log('Error in screen reader management: ' + e.message);
+			  document.querySelector('#screenReaderDivCVInstalled').style.display = 'none';
+			  document.querySelector('#screenReaderDivCVNotInstalled').style.display = 'block';
+		    }
+		  });
+	    } else {
+		  document.querySelector('#screenReaderDiv').style.display = 'none';
+		}
+		// Initialize high contrast
+		if (localPreferences.hasOwnProperty('highContrast')) {
+	      switch (localPreferences['highContrast']) {
+		    case 'none': 
+		      document.querySelector('#NoHighContrastRB').checked = true;
+			  document.documentElement.removeAttribute('hc');
+			  console.log('High contrast initialized to none in popup');
+		      break;
+		    case 'invert': 
+		      document.querySelector('#invertRB').checked = true;
+			  document.documentElement.setAttribute('hc', 'invert');
+			  console.log('High contrast initialized to invert in popup');
+		      break;
+			default:
+			  document.querySelector('#NoHighContrastRB').checked = true;
+			  document.documentElement.removeAttribute('hc');
+		  }
+	    } else {
+		  document.querySelector('#highContrastOptions').style.display = 'none';
+		}
+		
+		if (localPreferences.hasOwnProperty('magnification')) {
+          switch (localPreferences['magnification']) {
+		    case 1: 
+			  // Magnification 100%
+		      document.querySelector('#zoom100').checked = true;
+			  document.documentElement.removeAttribute('zoom');
+			  console.log("Zoom initilialized to 100% in background");
+		      break;
+		    case 2: 
+			  // Magnification 200%
+		      document.querySelector('#zoom200').checked = true;
+			  document.documentElement.setAttribute('zoom', '200%');
+			  console.log("Zoom initilialized to 200% in background");
+		      break;
+		    case 3: 
+			  // Magnification 300%
+		      document.querySelector('#zoom300').checked = true;
+			  document.documentElement.setAttribute('zoom', '300%');
+			  console.log("Zoom initilialized to 300% in background");
+		      break;
+		    default:
+			  // No correct value of magnification selected
+		      document.querySelector('#zoom100').defaultChecked;
+			  console.log("Not valid value for magnification");
+          }		  
+	    } else {
+		  document.querySelector('#zoomOptions').style.display = 'none';
+		}
+		
+	    if (localPreferences.hasOwnProperty('fontSize')) {
+		  // There is a property font Size
+	      console.log(localPreferences['fontSize']);
+	      switch (localPreferences['fontSize']) {
+		    case 'medium': 
+		      document.querySelector('#textSizeNormal').checked = true;
+			  document.documentElement.removeAttribute('ts');
+			  console.log("Text size initialized to normal in background");
+		      break;
+		    case 'large': 
+		      document.querySelector('#textSizeLarge').checked = true; 
+			  document.documentElement.setAttribute('ts', 'large');
+			  console.log("Text size initialized to large in background"); 
+		      break;
+		    case 'x-large': 
+		      document.querySelector('#textSizeXLarge').checked = true;
+			  document.documentElement.setAttribute('ts', 'x-large');
+			  console.log("Text size initializated to x-large in background");
+		      break;
+		    default:
+		      console.log('text size value is not properly defined');
+	      } 
+	    } else {
+		  // preferences has not font size
+		  document.querySelector('#fontSizeOptions').style.display = 'none';
+		}
+		
+		// Initialize simplifier
+		if (localPreferences.hasOwnProperty('simplifier')) {
+	      if (localPreferences['simplifier']) {
+		    document.querySelector('#simplifierCheckBox').checked = true;
+		    console.log("Simplification set to true in background");
+		  } else {
+		    document.querySelector('#simplifierCheckBox').checked = false;
+		    console.log("Simplification set to false in background");
+		  }
+	    }
+		
+	  } // The preferences object is empty ifelse
+	}
+  } else {
+    // The preferences object lacks the token property or the preferences property
+    console.log('The JSON object is not well built');
+  }  
+}	
+	
 function onOptionsClick() {
+  	  chrome.tabs.create({ url: 'options.html' }); 
+	  window.close();
+}
+
+function signOutBtnClicked(e) {
+  e.preventDefault();
+  chrome.storage.local.clear();
+  
+  setPreferencesForm({ token: "", preferences: {} }); 
+  
+  document.documentElement.removeAttribute('hc');
+  document.documentElement.removeAttribute('ts');
+  document.documentElement.removeAttribute('zoom');
+  
 }
 
 

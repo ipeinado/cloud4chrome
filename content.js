@@ -6,7 +6,7 @@ var simpleContainer = document.createElement("div");
 simpleContainer.setAttribute("id", "simpleContainer"); 
 
 
-This executes each time a web page is loaded
+// This executes each time a web page is loaded
 // ( function() {
 	// chrome.storage.sync.get({screenReader: "off", highContrast: "off", textSize: "normal", zoom: "100%", simplifier: "off"}, function(items) {
 		// for (key in items) {
@@ -31,7 +31,7 @@ This executes each time a web page is loaded
 	// }); 
 // } ()); 
 
-The content script changes when a change in sync storage is detected
+// The content script changes when a change in sync storage is detected
 // chrome.storage.onChanged.addListener(function(changes, namespace) {
 	// for (key in changes) {
 		// var storageChange = changes[key];
@@ -64,7 +64,7 @@ The content script changes when a change in sync storage is detected
 	// }
 // }); 
 
-Change attribute 'ts' in HTML tag depending on the value of textSize in storage
+// Change attribute 'ts' in HTML tag depending on the value of textSize in storage
 // function changeTextSize(value) {
   // if (value == "normal") {
     // html.removeAttribute("ts");
@@ -75,7 +75,7 @@ Change attribute 'ts' in HTML tag depending on the value of textSize in storage
   // }
 // }
 
-Change attribute 'zoom' in HTML tag depending on the value of zoom in storage
+// Change attribute 'zoom' in HTML tag depending on the value of zoom in storage
 // function changeZoom(value) {
   // if (value == "100%") {
     // html.removeAttribute("zoom");
@@ -86,7 +86,7 @@ Change attribute 'zoom' in HTML tag depending on the value of zoom in storage
   // } 
 // }
 
-Change attribute 'hc' in HTML tag depending on the value of highContrast in storage
+// Change attribute 'hc' in HTML tag depending on the value of highContrast in storage
 // function changeHighContrast(value) {
 	// if (value == "off")  {
 		// html.removeAttribute("hc");

@@ -23,9 +23,17 @@
 	  
 	  <!-- Preferences configurator -->
 	  <div id = 'preferencesContainer'>
-		<form>
-		  <h2 id='configTitle' tabindex='1'>Your preferences</h2>
+	  
+	    <div id='header'>
+		  <h2 id='configTitle' tabindex='1'>Welcome</h2>
+		  <p>These are your preferences in Cloud4all - 
+		  <a href="" title='see all preferences' class='seemore' id='seeallprefs'>see all preferences</a>
+		  </p>
+		</div>
 		
+		<form id='preferencesForm'>
+  		  
+
 		  <div class='config_option' id="screenReaderDiv">
 		    <h3 tabindex='2'>Screen reader</h3>
 			  <div id='screenReaderDivCVInstalled'>
@@ -39,7 +47,7 @@
 			  </div>
 		  </div>
 			
-		  <div class='config_option'>
+		  <div class='config_option' id='highContrastOptions'>
 			<h3 id='highContrastRg' tabindex='4'>High Contrast</h3>
 			  <ul class= 'radiogroup' role='radiogroup' aria-labelledby='highContrastRg'>
 				<li>
@@ -53,7 +61,7 @@
 			  </ul>
 		  </div>
 			
-		  <div class='config_option'>
+		  <div class='config_option' id='zoomOptions'>
 			<h3 id='zoomrg' tabindex='6'>Zoom</h3>
 			  <ul class='radiogroup' role='radiogroup' aria-labelledby='zoomrg'>
 				<li>
@@ -72,7 +80,7 @@
 			  </ul>
 		  </div>
 			
-		  <div class='config_option'>
+		  <div class='config_option' id='fontSizeOptions'>
 			<h3 id='fontsizerg' tabindex='10'>Font size</h3>
 		      <ul class='radiogroup' role='radiogroup' aria-labelledby='fontsizerg'>
 				<li>
@@ -92,10 +100,15 @@
 			  </ul>
 		  </div>
 		  
-		  <div class='config_option'>
+		  <div class='config_option' id='simplifierOptions'>
 			<h3 tabindex='14'>Simplifier (Beta)</h3>
 			  <input type='checkbox' name='simplifier checkbox' id='simplifierCheckBox' role='checkbox' tabindex='15'/>
 			  <label for='simplifierCheckBox' id='simplifierCheckBoxLabel'>Enable simplification</label>
+		  </div>
+		  
+		  <div class='config_option' id='prefOptions'>
+		  	<a href="" id="signOutBtn" title="Sign out of Cloud4all" >Sign out</a>
+		    <input type='submit' value='save' id='savePrefsBtn' />
 		  </div>
 		</form>
 	  </div> <!-- prefContainer -->

@@ -72,7 +72,6 @@ div#tokenFormContainer input[type='submit'] {
 
 div#tokenFormContainer div#results {
 	display: none;
-	padding: 0 1em 1em 1em;
 	color: white;
 }
 
@@ -100,10 +99,10 @@ div#tokenFormContainer div#options a#exitbutton {
 
 
 /* Style of preferences form */
-div#preferencesContainer {
-  font-size: medium;
+
+div#preferencesContainer div#header {
+  padding: 0 1em;
 }
-			
 			
 .config_option {
   border-top: 1px solid #CCC;
@@ -133,4 +132,23 @@ span.textSizeLarge {
 span.textSizeXLarge {
   margin-top: 1em;
   font-size: x-large;
+}
+
+div#prefOptions {
+  padding: 1em;
+}
+
+input[type='submit'] {
+  background: #FF5702;
+  font-size: 1.2em;
+  color: white;
+  border: 0;
+  padding: 0.3em 0.8em;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 1em;
+}
+
+a#signOutBtn {
+  float: right;
 }

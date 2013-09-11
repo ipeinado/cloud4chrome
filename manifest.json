@@ -32,6 +32,8 @@
 	  "default_popup": "popup.html"
 	},
 	
+	"options_page" : "options.html",
+	
 	"commands": {
 	  "_execute_browser_action": {
 	    "suggested_key": {

@@ -1,5 +1,83 @@
 var value,
-	html = document.documentElement;
+	html = document.documentElement,
+	uri = 'http://registry.gpii.org/applications/org.chrome.cloud4chrome',
+	npserver = chrome.extension.getURL('/sampleProfiles/'),
+	xhr = new XMLHttpRequest(),
+	userprefs = { token: "", preferences: {} },
+	npset,
+	xhrstatus = { status: 0 };
+	
+chrome.runtime.onInstalled.addListener(function() {
+	// initialization when your extension is installed or upgraded
+}); 
+
+chrome.runtime.onSuspend.addListener(function() {
+  chrome.storage.local.clear();
+}); 
+
+chrome.storage.onChanged.addListener(function(objects) {
+	console.log('There is a change');
+}); 
+
+	
+chrome.runtime.onMessage.addListener(
+  function(message, sender, sendResponse) {
+    getNP(message);
+    console.log('status at addlistener: ' + xhrstatus.status );
+	if (xhrstatus.status == 1) {
+	  console.log('NPSet has own property: ' + npset.hasOwnProperty(uri));
+	  if (npset.hasOwnProperty(uri)) {
+	   var preferences = npset[uri][0].value;
+	   chrome.storage.local.set(
+	     {
+		   token: message,
+		   preferences: preferences
+		 },
+		 function() {
+		   if (chrome.runtime.lastError) {
+		     console.log('Error storing preferences locally');
+		   } else {
+		     console.log('Preferences saved locally');
+		   }
+		 }
+	   );
+	  }
+	}
+	sendResponse({ status: xhrstatus.status });
+  }
+);
+
+function getNP(token) {
+  try {
+    xhr.open("GET", npserver + token + ".json", false);
+    xhr.send();
+  } catch (e) {
+    console.log("Error: " + e.message);
+  }
+}
+
+xhr.onreadystatechange = function() {
+  if (xhr.readyState == 4) {
+    if (xhr.status == 200) {
+	  console.log("code 200");
+	  try {
+		npset = JSON.parse(xhr.response);
+		xhrstatus.status = 1;
+  	  } catch (e) {
+		console.log('JSON file is not valid');
+		xhrstatus.status = 2;
+		npset = undefined;
+	  }
+	} else {
+	  console.log("no code 200");
+	  xhrstatus.status = 0;
+	  npset = undefined;
+	}
+	console.log(npset);
+  }
+}
+
+
 
 // Executes every time the background loads
 
@@ -13,106 +91,8 @@ var value,
 // }());	
 
 // Function that sets up the values in the popup
-// function initializePopup() {
-	// chrome.storage.sync.get({screenReader: "off", highContrast: "off", textSize: "normal", zoom: "100%", simplifier: "off"}, function(items) {
-	  // for (key in items) {
 
-	    // if (key == "highContrast") {
-			// value = items[key];
-		    // if (value == "off") {
-				// document.getElementById("NoHighContrastRB").checked = true;
-				// html.removeAttribute("hc"); 
-			// } else if (value == "invert") {
-			  // document.getElementById("invertRB").checked = true;
-			  // html.setAttribute("hc", "invert"); 
-			  // console.log("Invert initializated in background"); 
-			// }
-		// }
-		
-		
-		// if (key == "textSize") {
-			// value = items[key];
-			// if (value == "normal") {
-				// document.getElementById("textSizeNormal").checked = true;
-				// html.removeAttribute("ts");
-				// console.log("Text size initilialized to large in background"); 
-			// } else if (value == "large") {
-				// document.getElementById("textSizeLarge").checked = true;
-				// document.documentElement.setAttribute("ts", "large");
-				// console.log("Text size initilialized to large in background"); 
-			// } else if (value == "x-large") {
-        // document.getElementById("textSizeXLarge").checked = true;
-        // html.setAttribute("ts", "x-large");
-			  // console.log("Text size initilialized to x-large in background"); 
-      // }
-    // }
-  
-		// if (key == "zoom") {
-			// value = items[key];
-			// if (value == "100%") {
-				// document.getElementById("zoom100").checked = true;
-				// html.removeAttribute("zoom");
-				// console.log("Zoom initilialized to 100% in background"); 
-			// } else if (value == "200%") {
-				// document.getElementById("zoom200").checked = true;
-				// html.setAttribute("zoom", "200%");
-				// console.log("Zoom initilialized to 200% in background"); 
-			// } else if (value == "300%") {
-				// document.getElementById("zoom300").checked = true;
-				// html.setAttribute("zoom", "300%");
-				// console.log("Zoom initilialized to 300% in background"); 
-      // }
-    // }
-		
-		// if (key == "screenReader") {
-			// var srvalue = items[key];
-			// chrome.management.get("kgejglhpjiefppelpmljglcjbhoiplfn", function(extInfo) {
-				// try {
-					// console.log(extInfo.name + " is installed"); 
-					 
-					// if (srvalue == "off") {
-						// document.getElementById("screenReaderCheckBox").checked = false; 
-						// document.getElementById("screenReaderCheckBox").setAttribute("aria-checked", "false");
-						// console.log("Screenreader checkbox initializated to false in background"); 
-						// if (extInfo.enabled) {
-							// chrome.management.setEnabled(extInfo.id, false, function() {
-								// console.log("ChromeVox has been disabled in initialization"); 
-							// }); 
-						// }
-							
-					// } else if (srvalue == "on") {
-						// document.getElementById("screenReaderCheckBox").checked = true; 
-						// document.getElementById("screenReaderCheckBox").setAttribute("aria-checked", "true");
-						// console.log("Screenreader checkbox initializated to true in background"); 
-						// if (!extInfo.enabled) {
-							// chrome.management.setEnabled(extInfo.id, true, function() {
-								// console.log("ChromeVox has been enabled in initialization"); 
-							// }); 
-						// }
-					// }
-				// } catch (e) {
-					// console.log("Exception thrown");
-					// document.getElementById("screenReaderDivCVInstalled").style.display = "none"; 
-					// document.getElementById("screenReaderDivCVNotInstalled").style.display = "block";
-				// }
-			// });
-		// }
-	  
-	  // if (key == "simplifier") {
-	    // value = items[key];
-	    // if (value == "on") {
-			  // document.getElementById("simplifierCheckBox").checked = true;
-			  // document.getElementById("simplifierCheckBox").setAttribute("aria-checked", "true"); 
-			  // console.log("Simplification checkbox initialized to true in background"); 
-		  // } else if (value == "off") {
-		    // document.getElementById("simplifierCheckBox").checked = false;
-			// document.getElementById("simplifierCheckBox").setAttribute("aria-checked", "false"); 
-		    // console.log("Simplification checkbox initialized to false in background"); 
-		  // }
-	  // }
-	// }
-	  
-	// }); 
+
 // }
 
 function installCVButtonClicked() {
