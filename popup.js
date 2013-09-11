@@ -11,9 +11,20 @@ document.addEventListener("DOMContentLoaded", function(e) {
   document.querySelector('#tokenForm').addEventListener('submit', onTokenFormSubmit);
   document.querySelector('#optionsLink').addEventListener('click', onOptionsClick);
   
+  document.querySelector('#screenReaderCheckBox').addEventListener('click', screenReaderCBClicked);
+  document.querySelector('#NoHighContrastRB').addEventListener('click', noHighContrastClicked);
+  document.querySelector('#invertRB').addEventListener('click', invertRBClicked);
+  document.querySelector('#zoom100').addEventListener('click', zoom100Clicked);
+  document.querySelector('#zoom200').addEventListener('click', zoom200Clicked);
+  document.querySelector('#zoom300').addEventListener('click', zoom300Clicked);
+  document.querySelector('#textSizeNormal').addEventListener('click', textSizeNormalClicked);
+  document.querySelector('#textSizeLarge').addEventListener('click', textSizeLargeClicked);
+  document.querySelector('#textSizeXLarge').addEventListener('click', textSizeXLargeClicked);
+  document.querySelector('#simplifierCheckBox').addEventListener('click', simplifierCheckBoxClicked);
+
   document.querySelector('#seeallprefs').addEventListener('click', onOptionsClick); 
   document.querySelector('#signOutBtn').addEventListener('click', signOutBtnClicked);
-  
+    
   // if there is a configuration stored locally, we will load this 
   // set of needs and preferences
   chrome.storage.local.get({'token' : "" , 'preferences': {} }, function(results) {
@@ -41,8 +52,8 @@ function handleResponse(response) {
   } else {
 	// status 1 means the request was successfully complete
 	if (status == 1) {
-	  window.location.reload();
 	  console.log('succesfully logged in');
+	  window.location.reload();
 	} else {
 	  if (status == 2) {
 		document.querySelector('#results').style.display = 'block';
@@ -239,7 +250,7 @@ function signOutBtnClicked(e) {
 }
 
 
-function screenReaderClicked() {
+function screenReaderCBClicked() {
 	// if (this.checked == true) {
 		// chrome.storage.sync.set({screenReader: "on"}, function() {
 			// document.getElementById("screenReaderCheckBox").setAttribute("aria-checked", "true");
@@ -271,6 +282,7 @@ function screenReaderClicked() {
 }
 
 function zoom100Clicked() {
+  document.documentElement.removeAttribute('zoom');
   // chrome.storage.sync.set({zoom: "100%"}, function() {
     // document.documentElement.removeAttribute("zoom");
   // })
@@ -280,54 +292,61 @@ function zoom200Clicked() {
   // chrome.storage.sync.set({zoom: "200%"}, function() {
     // document.documentElement.setAttribute("zoom", "200%");
   // });
+  document.documentElement.setAttribute('zoom', '200%'); 
 }
 
 function zoom300Clicked() {
+  document.documentElement.setAttribute('zoom', '300%');
   // chrome.storage.sync.set({zoom: "300%"}, function() {
     // document.documentElement.setAttribute("zoom", "300%");
   // });
 }
 
 function textSizeNormalClicked() {
+  document.documentElement.removeAttribute('ts');
 	// chrome.storage.sync.set({textSize: "normal"}, function() {
 		// document.documentElement.removeAttribute("ts"); 
 	// }); 
 }
 
 function textSizeLargeClicked() {
+  document.documentElement.setAttribute("ts", "large");
   // chrome.storage.sync.set({textSize: "large"}, function() {
     // document.documentElement.setAttribute("ts", "large");
   // });
 }
 
 function textSizeXLargeClicked() {
+  document.documentElement.setAttribute("ts", "x-large");
 	// chrome.storage.sync.set({textSize: "x-large"}, function() {
 	  // document.documentElement.setAttribute("ts", "x-large");
 	// });
 }
 
 function noHighContrastClicked() {
+  document.documentElement.removeAttribute("hc");
 	// chrome.storage.sync.set({highContrast: "off"}, function() {
 		// document.documentElement.removeAttribute("hc");
 	// }); 
 }
 
 function invertRBClicked() {
+  document.documentElement.setAttribute("hc", "invert"); 
 	// chrome.storage.sync.set({highContrast: "invert"}, function() {
 		// document.documentElement.setAttribute("hc", "invert"); 
 	// }); 
 }
 
 function simplifierCheckBoxClicked() {
-	// if (this.checked) {
+	if (this.checked) {
 		// chrome.storage.sync.set({simplifier: "on"}, function() {
-			// document.getElementById("simplifierCheckBox").setAttribute("aria-checked", "true");
+			document.getElementById("simplifierCheckBox").setAttribute("aria-checked", "true");
 		// }); 
-	// } else {
+	} else {
 		// chrome.storage.sync.set({simplifier: "off"}, function() {
-			// document.getElementById("simplifierCheckBox").setAttribute("aria-checked", "false");
+			document.getElementById("simplifierCheckBox").setAttribute("aria-checked", "false");
 		// }); 
-	// }
+	}
 }
 
 
