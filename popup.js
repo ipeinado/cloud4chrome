@@ -9,6 +9,9 @@ var userToken = "",
 document.addEventListener("DOMContentLoaded", function(e) {
 
   document.querySelector('#tokenForm').addEventListener('submit', onTokenFormSubmit);
+  document.querySelector('#tokenInput').addEventListener('focus', function(e) { chrome.tts.speak('Insert your token and press Enter'); });
+  
+  document.querySelector('#optionsLink').addEventListener('focus', function(e) { chrome.tts.speak('Click to edit your preferences');});
   document.querySelector('#optionsLink').addEventListener('click', onOptionsClick);
   
   document.querySelector('#screenReaderCheckBox').addEventListener('click', screenReaderCBClicked);
@@ -78,7 +81,7 @@ function setPreferencesForm(npsetObject) {
 	  document.querySelector('#preferencesContainer').style.display = 'none';
   	  document.querySelector('#tokenFormContainer').style.display = 'block';
 	  document.querySelector('#tokenInput').focus(); 
-	  chrome.tts.speak("Welcome to Cloud For All. Please insert your token or edit your preferences.");
+	  chrome.tts.speak("Welcome to Cloud For All. Press TAB for options.");
 	
 	} else {
 	  // Either the token is a valid string or there are actual preferences 
