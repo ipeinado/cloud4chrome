@@ -1,7 +1,7 @@
 var value,
 	html = document.documentElement,
 	uri = 'http://registry.gpii.org/applications/org.chrome.cloud4chrome',
-	npserver = chrome.extension.getURL('/sampleProfiles/'),
+	npserver = 'http://preferences.gpii.net/user/',
 	xhr = new XMLHttpRequest(),
 	userprefs = { token: "", preferences: {} },
 	npset,
@@ -14,11 +14,6 @@ chrome.runtime.onInstalled.addListener(function() {
 chrome.runtime.onSuspend.addListener(function() {
   chrome.storage.local.clear();
 }); 
-
-chrome.storage.onChanged.addListener(function(objects) {
-	console.log('There is a change');
-}); 
-
 	
 chrome.runtime.onMessage.addListener(
   function(message, sender, sendResponse) {
@@ -49,7 +44,7 @@ chrome.runtime.onMessage.addListener(
 
 function getNP(token) {
   try {
-    xhr.open("GET", npserver + token + ".json", false);
+    xhr.open("GET", npserver + token , false);
     xhr.send();
   } catch (e) {
     console.log("Error: " + e.message);
@@ -78,29 +73,12 @@ xhr.onreadystatechange = function() {
 }
 
 
-
-// Executes every time the background loads
-
-// ( function () {
-	// chrome.storage.sync.get({screenReader: "off", highContrast: "off", textSize: "normal", zoom: "100%", simplifier: "off"}, function(items) {
-		// initializePopup(); 
-		// for (key in items) {
-			// console.log(key + ": " + items[key] + " saved in background"); 
-		// }
-	// });
-// }());	
-
-// Function that sets up the values in the popup
-
-
-// }
-
 function installCVButtonClicked() {
-	// chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-		// console.log("button Clicked"); 
-		// chrome.tabs.update(tabs[0].id, {url: "https://chrome.google.com/webstore/detail/chromevox/kgejglhpjiefppelpmljglcjbhoiplfn?hl=en"});
-		// self.close();
-	// }); 
+	chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+		console.log("button Clicked"); 
+		chrome.tabs.update(tabs[0].id, {url: "https://chrome.google.com/webstore/detail/chromevox/kgejglhpjiefppelpmljglcjbhoiplfn?hl=en"});
+		self.close();
+	}); 
 }
 
 function isEmpty(obj) {

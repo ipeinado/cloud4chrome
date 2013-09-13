@@ -1,6 +1,7 @@
 var preferences = {},
     xhrupload = new XMLHttpRequest(),
-	uploadserver = chrome.extension.getURL('/sampleProfiles/');
+	uploadserver = 'http://preferences.gpii.net/user/',
+	preferencesFormatObject = { 'http://registry.gpii.org/applications/org.chrome.cloud4chrome' : [] };
 
 window.onload = function() {
   document.querySelector('#screenReaderCheckBoxOP').addEventListener('click', screenReaderCheckBoxOPClicked); 
@@ -103,7 +104,11 @@ function formPreferenceSubmit(e) {
 	  
 	  chrome.storage.local.set(npObject); 
 	  
-  	  var npJSON = JSON.stringify(npObject);
+	  preferencesFormatObject['http://registry.gpii.org/applications/org.chrome.cloud4chrome'][0] = { value : preferences };
+	  
+  	  var npJSON = JSON.stringify(preferencesFormatObject);
+	  
+	  console.log(npJSON); 
 	  
 	  
 	  // SAVING LOCALLY DOES NOT WORK

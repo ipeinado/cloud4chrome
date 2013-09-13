@@ -1,9 +1,91 @@
-var html = document.documentElement;
-var waitDiv = document.createElement("div"); 
-waitDiv.setAttribute("id", "waitId");
-waitDiv.innerHTML = "<h1>Loading... Please wait</h1>";
-var simpleContainer = document.createElement("div");
+var simpleContainer = document.createElement("div"),
+preferencesPort;
+	
 simpleContainer.setAttribute("id", "simpleContainer"); 
+
+
+document.addEventListener('DOMContentLoaded', function(e) {
+  
+  chrome.storage.local.get({ 'token' : "", 'preferences': {} }, function(results) {
+    if (chrome.runtime.lastError) {
+	} else {
+	  activatePreferences(results['preferences']); 
+	}
+  }); 
+});
+
+chrome.runtime.onConnect.addListener(function(port) {
+  console.log("Connection port: " + port.name);
+  port.onMessage.addListener(function(preferences) {
+	console.log(preferences); 
+    activatePreferences(preferences); 
+  }); 
+}); 
+
+function activatePreferences(preferences)  {
+  if (!isEmpty(preferences)) {
+  
+    if (preferences.hasOwnProperty('highContrast')) {
+	  switch (preferences['highContrast']) {
+	    case 'none': 
+		  document.documentElement.removeAttribute('hc');
+		  break;
+		case 'invert': 
+		  document.documentElement.setAttribute('hc', 'invert');
+		  break;
+		default:
+		  document.documentElement.removeAttribute('hc'); 
+	  }
+	}
+	
+	if (preferences.hasOwnProperty('magnifierEnabled')) {
+	  if (preferences['magnifierEnabled']) {
+	  	if (preferences.hasOwnProperty('magnification')) {
+	      switch (preferences['magnification']) {
+	        case 1: 
+		      document.documentElement.removeAttribute('zoom'); 
+		      break;
+		    case 2:
+		      document.documentElement.setAttribute('zoom', '200%');
+		      break;
+		    case 3: 
+		      document.documentElement.setAttribute('zoom', '300%'); 
+		      break;
+		    default:
+		      document.documentElement.removeAttribute('zoom'); 
+		  }
+	    } 
+	  } else {
+	    document.documentElement.removeAttribute('zoom'); 
+	  }
+	}
+	
+	if (preferences.hasOwnProperty('fontSize')) {
+	  switch (preferences['fontSize']) {
+	    case 'medium':
+          document.documentElement.removeAttribute('ts');		
+		  break;
+		case 'large': 
+		  document.documentElement.setAttribute('ts', 'large');
+		  break;
+		case 'x-large':
+		  document.documentElement.setAttribute('ts', 'x-large');
+		  break;
+		default: 
+		  document.documentElement.removeAttribute('ts');
+	  }
+	}
+	
+	if (preferences.hasOwnProperty('simplifier')) {
+	  if (preferences['simplifier']) {
+	    console.log('Simplifier has been activated'); 
+		simplifyPage(); 
+	  }
+	}
+    
+  }
+}
+
 
 
 // This executes each time a web page is loaded
@@ -64,88 +146,50 @@ simpleContainer.setAttribute("id", "simpleContainer");
 	// }
 // }); 
 
-// Change attribute 'ts' in HTML tag depending on the value of textSize in storage
-// function changeTextSize(value) {
-  // if (value == "normal") {
-    // html.removeAttribute("ts");
-  // } else if (value == "large") {
-      // html.setAttribute("ts", "large");
-  // } else if (value == "x-large") {
-        // html.setAttribute("ts", "x-large");
-  // }
-// }
 
-// Change attribute 'zoom' in HTML tag depending on the value of zoom in storage
-// function changeZoom(value) {
-  // if (value == "100%") {
-    // html.removeAttribute("zoom");
-  // } else if (value == "200%") {
-    // html.setAttribute("zoom", "200%");
-  // } else if (value == "300%") {
-          // html.setAttribute("zoom", "300%");
-  // } 
-// }
+/* 	
+v1 - Gets all nodes with text in the document (h1, h2, h3, h4, h5, p, ul, blockquote) and 
+appends them to the body of the document, adding an incremental tabIndex
+*/ 
 
-// Change attribute 'hc' in HTML tag depending on the value of highContrast in storage
-// function changeHighContrast(value) {
-	// if (value == "off")  {
-		// html.removeAttribute("hc");
-	// } else if (value == "invert") {
-		// html.setAttribute("hc", "invert"); 
-	// }
-// }
+function simplifyPage() {
+  console.log("inside simplifypage");
 
-// /* 	
-// v1 - Gets all nodes with text in the document (h1, h2, h3, h4, h5, p, ul, blockquote) and 
-// appends them to the body of the document, adding an incremental tabIndex
-// */ 
-// function simplifyPage() {
-	// console.log("inside simplifypage");
-	
-	// window.onload = function() {
-		// /*
-		// var title = document.getElementsByTagName('title')[0].innerHTML,
-			// titleElement = document.createElement('title'),
-			// index = 0;
-	 // */
 	 
-		// var nodes = document.querySelectorAll("h1, h2, h3, p, blockquote");		
-		// var max = nodes.length;
+	var nodes = document.querySelectorAll("h1, h2, h3, p, blockquote");		
+	var max = nodes.length;
 		
-// /*		titleElement.innerText = "Simplified version of " + title; 
-		// document.head.appendChild(titleElement);
-// */		
-		// document.body.setAttribute("simp", "true");
+	document.body.setAttribute("simp", "true");
 	
 		
-		// document.documentElement.innerHTML = "";
-		// document.body.setAttribute("simp", "true");
-		// document.body.appendChild(simpleContainer);
+	document.documentElement.innerHTML = "";
+	document.body.setAttribute("simp", "true");
+	document.body.appendChild(simpleContainer);
 
-		// var divArticle = document.createElement("div");
-		// divArticle.setAttribute("class", "article");
-		// for (var i = 0; i < max; i++) {
-		  // if (nodes[i].nodeName == "H1") {
-		    // if ((divArticle.childElementCount > 0) && (divArticle.querySelectorAll("h1, h2").length > 0) && (divArticle.querySelectorAll("p").length > 0)) {
-		      // document.getElementById("simpleContainer").appendChild(divArticle.cloneNode(true));
-		    // }
-		    // divArticle.innerHTML = "";
-		    // divArticle.appendChild(nodes[i]);
-		  // } else if (nodes[i].nodeName == "H2") {
-		    // if ((divArticle.childElementCount > 0) && (divArticle.querySelectorAll("h2").length > 0) && (divArticle.querySelectorAll("p").length > 0)) {
-  		    // document.getElementById("simpleContainer").appendChild(divArticle.cloneNode(true));
-  		    // divArticle.innerHTML = "";
-  		  // }
-  		  // divArticle.appendChild(nodes[i]);
-		  // } else {
-		    // divArticle.appendChild(nodes[i]);
-		  // }
-    // }
-    // if ((divArticle.childElementCount > 0) && (divArticle.querySelectorAll("h1, h2").length > 0) && (divArticle.querySelectorAll("p").length > 0)) {
-	    // document.getElementById("simpleContainer").appendChild(divArticle);
-	  // }
-	// }
-// }
+	var divArticle = document.createElement("div");
+	divArticle.setAttribute("class", "article");
+	for (var i = 0; i < max; i++) {
+	  if (nodes[i].nodeName == "H1") {
+	    if ((divArticle.childElementCount > 0) && (divArticle.querySelectorAll("h1, h2").length > 0) && (divArticle.querySelectorAll("p").length > 0)) {
+	      document.getElementById("simpleContainer").appendChild(divArticle.cloneNode(true));
+	    }
+	    divArticle.innerHTML = "";
+	    divArticle.appendChild(nodes[i]);
+	  } else if (nodes[i].nodeName == "H2") {
+	    if ((divArticle.childElementCount > 0) && (divArticle.querySelectorAll("h2").length > 0) && (divArticle.querySelectorAll("p").length > 0)) {
+ 		  document.getElementById("simpleContainer").appendChild(divArticle.cloneNode(true));
+ 		  divArticle.innerHTML = "";
+     	}
+  		divArticle.appendChild(nodes[i]);
+		} else {
+		  divArticle.appendChild(nodes[i]);
+		}
+      }
+    
+	  if ((divArticle.childElementCount > 0) && (divArticle.querySelectorAll("h1, h2").length > 0) && (divArticle.querySelectorAll("p").length > 0)) {
+	    document.getElementById("simpleContainer").appendChild(divArticle);
+	  }
+}
 
 // function changeScreenReaderValue(value) {
 	// if (value == "on") {
@@ -155,3 +199,10 @@ simpleContainer.setAttribute("id", "simpleContainer");
 		
 	// }
 // }
+function isEmpty(obj) {
+  for(var key in obj) {
+    if(obj.hasOwnProperty(key))
+      return false;
+  }
+  return true;
+}	

@@ -4,7 +4,8 @@
 // Set all handlers
 
 var userToken = "",
-    localPreferences = {};
+    localPreferences = {},
+	preferencesPort;
 
 document.addEventListener("DOMContentLoaded", function(e) {
 
@@ -28,12 +29,16 @@ document.addEventListener("DOMContentLoaded", function(e) {
   document.querySelector('#seeallprefs').addEventListener('click', onOptionsClick); 
   document.querySelector('#signOutBtn').addEventListener('click', signOutBtnClicked);
     
+  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+	preferencesPort = chrome.tabs.connect(tabs[0].id, { name : 'preferencesPort' } ); 	
+  }); 
+  
   // if there is a configuration stored locally, we will load this 
   // set of needs and preferences
   chrome.storage.local.get({'token' : "" , 'preferences': {} }, function(results) {
     setPreferencesForm({token: results['token'], preferences: results['preferences']});
   }); 
-	
+ 	
 }); 
 
 function onTokenFormSubmit(e) {
@@ -254,51 +259,60 @@ function signOutBtnClicked(e) {
 
 
 function screenReaderCBClicked() {
-	// if (this.checked == true) {
-		// chrome.storage.sync.set({screenReader: "on"}, function() {
-			// document.getElementById("screenReaderCheckBox").setAttribute("aria-checked", "true");
+  // if (this.checked == true) {
+	// chrome.storage.sync.set({screenReader: "on"}, function() {
+	  // document.getElementById("screenReaderCheckBox").setAttribute("aria-checked", "true");
 			
-			// Activate chromevox if not activated
-			// chrome.management.get("kgejglhpjiefppelpmljglcjbhoiplfn", function(extInfo) {
-				// if (!extInfo.enabled)  {
-					// chrome.management.setEnabled(extInfo.id, true, function() {
-						// console.log("ChromeVox Enabled activated from popup"); 
-					// }); 
-				// } 
-			// }); 
-		// }); 
+	  // Activate chromevox if not activated
+	  // chrome.management.get("kgejglhpjiefppelpmljglcjbhoiplfn", function(extInfo) {
+		// if (!extInfo.enabled)  {
+		  // chrome.management.setEnabled(extInfo.id, true, function() {
+			// console.log("ChromeVox Enabled activated from popup"); 
+		  // }); 
+		// } 
+	  // }); 
+	// }); 
 	
-	// } else {
-		// chrome.storage.sync.set({screenReader: "off"}, function() {
-			// document.getElementById("screenReaderCheckBox").setAttribute("aria-checked", "false");
+  // } else {
+	// chrome.storage.sync.set({screenReader: "off"}, function() {
+	  // document.getElementById("screenReaderCheckBox").setAttribute("aria-checked", "false");
 			
-			// Deactivate chromevox if activated
-			// chrome.management.get("kgejglhpjiefppelpmljglcjbhoiplfn", function(extInfo) {
-				// if (extInfo.enabled) {
-					// chrome.management.setEnabled(extInfo.id, false, function() {
-						// console.log("ChromeVox Enabled deactivated from popup"); 
-					// }); 
-				// }
-			// });
-		// }); 
-	// }
+	  // Deactivate chromevox if activated
+		// chrome.management.get("kgejglhpjiefppelpmljglcjbhoiplfn", function(extInfo) {
+		// if (extInfo.enabled) {
+		  // chrome.management.setEnabled(extInfo.id, false, function() {
+			// console.log("ChromeVox Enabled deactivated from popup"); 
+		  // }); 
+		// }
+	  // });
+	// }); 
+  // }
 }
 
 function zoom100Clicked() {
+  localPreferences['magnifierEnabled'] = false;
+  localPreferences['magnification'] = 1;
+  chrome.storage.local.set({ token: userToken, preferences: localPreferences}); 
+  preferencesPort.postMessage({ magnifierEnabled : false, magnification : 1 }); 
   document.documentElement.removeAttribute('zoom');
-  // chrome.storage.sync.set({zoom: "100%"}, function() {
-    // document.documentElement.removeAttribute("zoom");
-  // })
 }
 
 function zoom200Clicked() {
   // chrome.storage.sync.set({zoom: "200%"}, function() {
     // document.documentElement.setAttribute("zoom", "200%");
   // });
+  localPreferences['magnifierEnabled'] = true;
+  localPreferences['magnification'] = 2;
+  chrome.storage.local.set({ token: userToken, preferences: localPreferences});
+  preferencesPort.postMessage({ magnifierEnabled : true, magnification : 2 });   
   document.documentElement.setAttribute('zoom', '200%'); 
 }
 
 function zoom300Clicked() {
+  localPreferences['magnifierEnabled'] = true;
+  localPreferences['magnification'] = 3;
+  chrome.storage.local.set({ token: userToken, preferences: localPreferences});
+  preferencesPort.postMessage({ magnifierEnabled : true, magnification : 3 }); 
   document.documentElement.setAttribute('zoom', '300%');
   // chrome.storage.sync.set({zoom: "300%"}, function() {
     // document.documentElement.setAttribute("zoom", "300%");
@@ -306,20 +320,23 @@ function zoom300Clicked() {
 }
 
 function textSizeNormalClicked() {
+  localPreferences['fontSize'] = 'medium';
+  chrome.storage.local.set({ fontSize : 'medium' });
+  preferencesPort.postMessage({ fontSize : 'medium' }); 
   document.documentElement.removeAttribute('ts');
-	// chrome.storage.sync.set({textSize: "normal"}, function() {
-		// document.documentElement.removeAttribute("ts"); 
-	// }); 
 }
 
 function textSizeLargeClicked() {
+  localPreferences['fontSize'] = 'large';
+  chrome.storage.local.set({ fontSize : 'large' });
+  preferencesPort.postMessage({ fontSize : 'large' }); 
   document.documentElement.setAttribute("ts", "large");
-  // chrome.storage.sync.set({textSize: "large"}, function() {
-    // document.documentElement.setAttribute("ts", "large");
-  // });
 }
 
 function textSizeXLargeClicked() {
+  localPreferences['fontSize'] = 'x-large';
+  chrome.storage.local.set({ fontSize : 'x-large' });
+  preferencesPort.postMessage({ fontSize : 'x-large' }); 
   document.documentElement.setAttribute("ts", "x-large");
 	// chrome.storage.sync.set({textSize: "x-large"}, function() {
 	  // document.documentElement.setAttribute("ts", "x-large");
@@ -327,17 +344,17 @@ function textSizeXLargeClicked() {
 }
 
 function noHighContrastClicked() {
+  localPreferences['highContrast'] = 'none';
+  chrome.storage.local.set({ highContrast : 'none' });
+  preferencesPort.postMessage({ highContrast : 'none' }); 
   document.documentElement.removeAttribute("hc");
-	// chrome.storage.sync.set({highContrast: "off"}, function() {
-		// document.documentElement.removeAttribute("hc");
-	// }); 
 }
 
 function invertRBClicked() {
+  localPreferences['highContrast'] = 'invert';
+  chrome.storage.local.set({ highContrast : 'invert' });
+  preferencesPort.postMessage({ highContrast : 'invert' }); 
   document.documentElement.setAttribute("hc", "invert"); 
-	// chrome.storage.sync.set({highContrast: "invert"}, function() {
-		// document.documentElement.setAttribute("hc", "invert"); 
-	// }); 
 }
 
 function simplifierCheckBoxClicked() {
