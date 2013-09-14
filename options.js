@@ -182,10 +182,9 @@ function onOptionsClick() {
 
 function transferComplete(e) {
   console.log("the transfer is complete");
-  document.querySelector('#formWarning').style.display = 'block';
-  document.querySelector('#formWarning').innerText = "Your preferences have been successfully updated";
-  document.querySelector('#formWarning').style.color = "green";
-  window.reload();
+  document.querySelector('.formWarning').style.display = 'block';
+  document.querySelector('.formWarning').innerText = "Your preferences have been successfully updated";
+  document.querySelector('.formWarning').style.color = "green";
 }
 
 function transferFailed(e) {
@@ -200,7 +199,11 @@ function screenReaderCheckBoxOPClicked() {
   console.log('screen reader clicked');
   if (document.querySelector('#screenReaderCheckBoxOP').checked) {
     chrome.tts.speak("ChromeVox has been activated");
+    preferences['screenReaderTTSEnabled'] = true;
+  } else {
+    preferences['screenReaderTTSEnabled'] = false;
   }
+
 }
 
 function noHighContrastRBOPClicked() {
@@ -245,7 +248,11 @@ function textSizeXLargeOPClicked() {
 
 function simplifierCheckBoxOPClicked() {
    console.log('Simplifier clicked');
-   preferences['simplifier'] = false;
+   if (this.checked == true) {
+     preferences['simplifier'] = true;
+   } else {
+     preferences['simplifier'] = false;
+   }
 }
 
 function formPreferenceSubmit(e) {

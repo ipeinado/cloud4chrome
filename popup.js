@@ -262,34 +262,29 @@ function signOutBtnClicked(e) {
 
 
 function screenReaderCBClicked() {
-  // if (this.checked == true) {
-	// chrome.storage.sync.set({screenReader: "on"}, function() {
-	  // document.getElementById("screenReaderCheckBox").setAttribute("aria-checked", "true");
-			
-	  // Activate chromevox if not activated
-	  // chrome.management.get("kgejglhpjiefppelpmljglcjbhoiplfn", function(extInfo) {
-		// if (!extInfo.enabled)  {
-		  // chrome.management.setEnabled(extInfo.id, true, function() {
-			// console.log("ChromeVox Enabled activated from popup"); 
-		  // }); 
-		// } 
-	  // }); 
-	// }); 
-	
-  // } else {
-	// chrome.storage.sync.set({screenReader: "off"}, function() {
-	  // document.getElementById("screenReaderCheckBox").setAttribute("aria-checked", "false");
-			
-	  // Deactivate chromevox if activated
-		// chrome.management.get("kgejglhpjiefppelpmljglcjbhoiplfn", function(extInfo) {
-		// if (extInfo.enabled) {
-		  // chrome.management.setEnabled(extInfo.id, false, function() {
-			// console.log("ChromeVox Enabled deactivated from popup"); 
-		  // }); 
-		// }
-	  // });
-	// }); 
-  // }
+  if (this.checked == true) {
+    localPreferences['screenReaderTTSEnabled'] = true;
+    chrome.storage.local.set({ token: userToken, preferences: localPreferences});   
+    chrome.management.get('kgejglhpjiefppelpmljglcjbhoiplfn', function(extInfo) {
+      if (!extInfo.enabled) {
+        chrome.management.setEnabled(extInfo.id, true, function() {
+          chrome.tts.speak('ChromeVox has been activated');
+          console.log('ChromeVox has been activated');
+        });
+      }
+    });
+  } else {
+    localPreferences['screenReaderTTSEnabled'] = false;
+    chrome.storage.local.set({ token: userToken, preferences: localPreferences});   
+    chrome.management.get('kgejglhpjiefppelpmljglcjbhoiplfn', function(extInfo) {
+      if (extInfo.enabled) {
+        chrome.management.setEnabled(extInfo.id, false, function() {
+          chrome.tts.speak('ChromeVox has been deactivated');
+          console.log('ChromeVox activated from popup');
+        });
+      }
+    });
+  }
 }
 
 function zoom100Clicked() {
@@ -301,9 +296,6 @@ function zoom100Clicked() {
 }
 
 function zoom200Clicked() {
-  // chrome.storage.sync.set({zoom: "200%"}, function() {
-    // document.documentElement.setAttribute("zoom", "200%");
-  // });
   localPreferences['magnifierEnabled'] = true;
   localPreferences['magnification'] = 2;
   chrome.storage.local.set({ token: userToken, preferences: localPreferences});
