@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", function(e) {
   document.querySelector('#signOutBtn').addEventListener('click', signOutBtnClicked);
     
   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-	preferencesPort = chrome.tabs.connect(tabs[0].id, { name : 'preferencesPort' } ); 	
+	  preferencesPort = chrome.tabs.connect(tabs[0].id, { name : 'preferencesPort' } ); 	
   }); 
   
   // if there is a configuration stored locally, we will load this 

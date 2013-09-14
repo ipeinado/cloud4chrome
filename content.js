@@ -86,67 +86,6 @@ function activatePreferences(preferences)  {
   }
 }
 
-
-
-// This executes each time a web page is loaded
-// ( function() {
-	// chrome.storage.sync.get({screenReader: "off", highContrast: "off", textSize: "normal", zoom: "100%", simplifier: "off"}, function(items) {
-		// for (key in items) {
-			// var value = items[key];
-			
-			// if (key == "highContrast") {
-				// changeHighContrast(value);
-				// console.log("High Contrast initialized at script: " + value); 
-			// }
-			// if (key == "textSize") {
-				// changeTextSize(value);
-				// console.log("Text size initialized at script: "+ value); 
-			// }
-			// if (key == "zoom") {
-				// changeZoom(value);
-				// console.log("Zoom initialized at script: " + value); 
-			// }
-			// if (key == "simplifier" && value == "on") {
-			    // simplifyPage();
-			// }		
-		// }
-	// }); 
-// } ()); 
-
-// The content script changes when a change in sync storage is detected
-// chrome.storage.onChanged.addListener(function(changes, namespace) {
-	// for (key in changes) {
-		// var storageChange = changes[key];
-		// var value = storageChange.newValue;
-		
-		// if (key == "screenReader") {
-			// changeScreenReaderValue(value);
-			// console.log("Screen reader changed in script");
-		// }
-		
-		// if (key == "highContrast") {
-			// changeHighContrast(value);
-			// console.log("High contrast changed to " + value + " in script"); 
-		// }
-		// if (key == "textSize") {
-		  // changeTextSize(value);
-		  // console.log("Text size changed to " + value + " in script"); 
-		// }
-		// if (key == "zoom") {
-		  // changeZoom(value);
-		  // console.log("Zoom changed to " + value + " in script"); 
-		// }
-		// if (key == "simplifier") {
-		  // console.log("Simplifier activated");
-		  // window.location.reload();
-		  // if (value == "on") {
-		    // simplifyPage();
-		  // }
-		// } 
-	// }
-// }); 
-
-
 /* 	
 v1 - Gets all nodes with text in the document (h1, h2, h3, h4, h5, p, ul, blockquote) and 
 appends them to the body of the document, adding an incremental tabIndex

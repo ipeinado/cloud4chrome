@@ -1,7 +1,8 @@
 var preferences = {},
     xhrupload = new XMLHttpRequest(),
-	uploadserver = 'http://preferences.gpii.net/user/',
-	preferencesFormatObject = { 'http://registry.gpii.org/applications/org.chrome.cloud4chrome' : [] };
+	  uploadserver = 'http://preferences.gpii.net/user/',
+	  localPreferences = {},
+	  preferencesFormatObject = { 'http://registry.gpii.org/applications/org.chrome.cloud4chrome' : [] };
 
 window.onload = function() {
   document.querySelector('#screenReaderCheckBoxOP').addEventListener('click', screenReaderCheckBoxOPClicked); 
@@ -17,13 +18,174 @@ window.onload = function() {
   
   document.querySelector('#preferencesFormOP').addEventListener('submit', formPreferenceSubmit);
   
+  chrome.storage.local.get({'token' : "" , 'preferences': {} }, function(results) {
+    setPreferencesFormOP({token: results['token'], preferences: results['preferences']});
+  });
+  
   xhrupload.upload.addEventListener('load', transferComplete, false);
   xhrupload.upload.addEventListener('error', transferFailed, false);
   xhrupload.upload.addEventListener('abort', transferCanceled, false); 
 } 
 
+function setPreferencesFormOP(npsetObject) {
+
+  if (npsetObject.hasOwnProperty('token') && npsetObject.hasOwnProperty('preferences')) {
+    // The needs and preferences object has a property 'token' and a property 'preferences'
+  
+	  if (isEmpty(npsetObject['preferences']) && npsetObject['token'] == "") {
+	    // The preferences object is empty and the token is an empty string
+	    console.log('set of needs and preferences not stored locally at setPreferencesFormOP');
+	
+	  } else {
+	    // Either the token is a valid string or there are actual preferences 
+	    console.log('set of needs and preferences stored locally at setPreferencesFormOP');
+	    
+	    if (npsetObject['token'] != "") {
+	      document.querySelector('#newTokenInputOP').value = npsetObject['token'];
+	    }
+	  
+	    if (isEmpty(npsetObject['preferences'])) {
+	      // The preferences object is empty
+	      console.log("Preferences object is empty");
+		
+	    } else {
+	      // The preferences object is not empty
+	      localPreferences = npsetObject['preferences'];
+		
+		    // Initialize screenreader
+		    if (localPreferences.hasOwnProperty('screenReaderTTSEnabled')) {
+	        chrome.management.get('kgejglhpjiefppelpmljglcjbhoiplfn', function(extInfo) {
+		        try {
+		          console.log(extInfo.name + " is installed.");
+			
+			        if (localPreferences['screenReaderTTSEnabled']) {
+			          document.querySelector('#screenReaderCheckBoxOP').checked = true;
+			          console.log("Screen reader checkbox initialized to true in background");
+			  
+			          if (!extInfo.enabled) {
+			            chrome.management.setEnabled(extInfo.id, true, function() {
+				            console.log("ChromeVox has been enabled in initialization");
+				          }); 
+			          }
+		          } else {
+			          document.querySelector('#screenReaderCheckBoxOP').checked = false;
+			          console.log("Screen reader checkbox initializated to false in background");
+			  
+			          if (extInfo.enabled) {
+			            chrome.management.setEnabled(extInfo.id, false, function() {
+			              console.log("ChromeVox has been disabled in initialization");
+			            }); 
+			          }
+		          }
+		        } catch (e) {
+		          console.log('Error in screen reader management: ' + e.message);
+			        document.querySelector('#screenReaderDivCVInstalled').style.display = 'none';
+			        document.querySelector('#screenReaderDivCVNotInstalled').style.display = 'block';
+		        }
+		      });
+	      } // if screenreader
+	     
+		    // Initialize high contrast
+		    if (localPreferences.hasOwnProperty('highContrast')) {
+	        switch (localPreferences['highContrast']) {
+		        case 'none': 
+		          document.querySelector('#NoHighContrastRBOP').checked = true;
+			        document.documentElement.removeAttribute('hc');
+			        console.log('High contrast initialized to none in popup');
+		          break;
+		        case 'invert': 
+		          document.querySelector('#invertRBOP').checked = true;
+			        document.documentElement.setAttribute('hc', 'invert');
+			        console.log('High contrast initialized to invert in popup');
+		          break;
+			      default:
+			        document.querySelector('#NoHighContrastRBOP').checked = true;
+			        document.documentElement.removeAttribute('hc');
+		      }
+		    } // if high contrast
+		
+		    if (localPreferences.hasOwnProperty('magnification')) {
+          switch (localPreferences['magnification']) {
+		        case 1: 
+			        // Magnification 100%
+		          document.querySelector('#zoom100OP').checked = true;
+			        document.documentElement.removeAttribute('zoom');
+			        console.log("Zoom initilialized to 100% in background");
+		          break;
+		        case 2: 
+			        // Magnification 200%
+		          document.querySelector('#zoom200OP').checked = true;
+			        document.documentElement.setAttribute('zoom', '200%');
+			        console.log("Zoom initilialized to 200% in background");
+		          break;
+		        case 3: 
+			        // Magnification 300%
+		          document.querySelector('#zoom300OP').checked = true;
+			        document.documentElement.setAttribute('zoom', '300%');
+			        console.log("Zoom initilialized to 300% in background");
+		          break;
+		        default:
+			        // No correct value of magnification selected
+		          document.querySelector('#zoom100OP').defaultChecked;
+			        console.log("Not valid value for magnification");
+          } 		  
+	      } // if magnification
+		
+	      if (localPreferences.hasOwnProperty('fontSize')) {
+		      // There is a property font Size
+	        console.log(localPreferences['fontSize']);
+	        switch (localPreferences['fontSize']) {
+		        case 'medium': 
+		          document.querySelector('#textSizeNormalOP').checked = true;
+			        document.documentElement.removeAttribute('ts');
+			        console.log("Text size initialized to normal in background");
+		          break;
+		        case 'large': 
+		          document.querySelector('#textSizeLargeOP').checked = true; 
+			        document.documentElement.setAttribute('ts', 'large');
+			        console.log("Text size initialized to large in background"); 
+		          break;
+		        case 'x-large': 
+		          document.querySelector('#textSizeXLargeOP').checked = true;
+			        document.documentElement.setAttribute('ts', 'x-large');
+			        console.log("Text size initializated to x-large in background");
+		          break;
+		        default:
+		          console.log('text size value is not properly defined');
+	        } 
+	      } // fontSize
+		
+		    // Initialize simplifier
+		    if (localPreferences.hasOwnProperty('simplifier')) {
+	        if (localPreferences['simplifier']) {
+		        document.querySelector('#simplifierCheckBoxOP').checked = true;
+		          console.log("Simplification set to true in background");
+		      } else {
+		        document.querySelector('#simplifierCheckBoxOP').checked = false;
+		        console.log("Simplification set to false in background");
+		      }
+	      } // end if simplifier
+		
+	    } // The preferences object is empty ifelse
+	  } // The preferences object is empty and the token is an empty string
+  } else {
+    // The preferences object lacks the token property or the preferences property
+    console.log('The JSON object is not well built');
+  }  
+}	
+	
+function onOptionsClick() {
+  chrome.tabs.create({ url: 'options.html' }); 
+	window.close();
+}
+
+
 function transferComplete(e) {
   console.log("the transfer is complete");
+  document.querySelector('#formWarning').style.display = 'block';
+  document.querySelector('#formWarning').innerText = "Your preferences have been successfully updated";
+  document.querySelector('#formWarning').style.color = "green";
+  window.reload();
 }
 
 function transferFailed(e) {
