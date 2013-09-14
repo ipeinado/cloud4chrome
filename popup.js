@@ -51,27 +51,34 @@ function onTokenFormSubmit(e) {
 }
 
 function handleResponse(response) {
-  var status = response.status;
+  var status = response.status,
+      isError = response.isError;
+  console.log('status: ' + status + ',isError: ' + isError);
   // status 0 means the request could not be complete
   if (status == 0) {
     document.querySelector('#results').style.display = 'block';
-    document.querySelector('#results').innerHTML = '<span class="warning">sorry, there are no users with this token</span>';
-	console.log('network error');
+    document.querySelector('#results').innerHTML = '<span class="warning">A network error ocurred</span>';
+	  console.log('network error');
   } else {
-	// status 1 means the request was successfully complete
-	if (status == 1) {
-	  console.log('succesfully logged in');
-	  window.location.reload();
-	} else {
-	  if (status == 2) {
-		document.querySelector('#results').style.display = 'block';
-		document.querySelector('#results').innerHTML = '<span class="warning">The file is not valid<span>';
-		console.log('JSON file is no valid'); 
+	  // status 1 means the request was successfully complete
+	  if (status == 1) {
+	    if (isError) {
+	      document.querySelector('#results').style.display = 'block';
+        document.querySelector('#results').innerHTML = '<span class="warning">sorry, there are no users with this token</span>';  
+	    } else {
+	      console.log('succesfully logged in');
+  	    window.location.reload();
+	    }
+	  
+	  } else {
+	    if (status == 2) {
+		    document.querySelector('#results').style.display = 'block';
+		    document.querySelector('#results').innerHTML = '<span class="warning">The file is not valid<span>';
+		    console.log('JSON file is no valid'); 
+	    }
 	  }
-	}
   }
 }
-
 
 // Function that initializes the popup
 function setPreferencesForm(npsetObject) {

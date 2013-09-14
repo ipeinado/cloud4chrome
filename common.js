@@ -5,7 +5,7 @@ var value,
 	xhr = new XMLHttpRequest(),
 	userprefs = { token: "", preferences: {} },
 	npset,
-	xhrstatus = { status: 0 };
+	xhrstatus = { status: 0, isError: true };
 	
 chrome.runtime.onInstalled.addListener(function() {
 	// initialization when your extension is installed or upgraded
@@ -17,28 +17,29 @@ chrome.runtime.onSuspend.addListener(function() {
 	
 chrome.runtime.onMessage.addListener(
   function(message, sender, sendResponse) {
+    var isError = true;
     getNP(message);
     console.log('status at addlistener: ' + xhrstatus.status );
-	if (xhrstatus.status == 1) {
-	  console.log('NPSet has own property: ' + npset.hasOwnProperty(uri));
-	  if (npset.hasOwnProperty(uri)) {
-	   var preferences = npset[uri][0].value;
-	   chrome.storage.local.set(
-	     {
-		   token: message,
-		   preferences: preferences
-		 },
-		 function() {
-		   if (chrome.runtime.lastError) {
-		     console.log('Error storing preferences locally');
-		   } else {
-		     console.log('Preferences saved locally');
-		   }
-		 }
-	   );
+	  if (xhrstatus.status == 1) {
+	    if (npset.hasOwnProperty(uri)) {
+	      var preferences = npset[uri][0].value;
+	      isError = false;
+	      chrome.storage.local.set(
+	        {
+		        token: message,
+		        preferences: preferences
+		      },
+		      function() {
+		        if (chrome.runtime.lastError) {
+		          console.log('Error storing preferences locally');
+		        } else {
+		          console.log('Preferences saved locally');
+		        }
+		      }
+	      );
+	    } 
 	  }
-	}
-	sendResponse({ status: xhrstatus.status });
+	  sendResponse({ status: xhrstatus.status, isError: isError });
   }
 );
 
