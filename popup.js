@@ -5,7 +5,7 @@
 
 var userToken = "",
     localPreferences = {},
-	preferencesPort;
+	  preferencesPort;
 
 document.addEventListener("DOMContentLoaded", function(e) {
 
@@ -67,6 +67,9 @@ function handleResponse(response) {
         document.querySelector('#results').innerHTML = '<span class="warning">sorry, there are no users with this token</span>';  
 	    } else {
 	      console.log('succesfully logged in');
+	      chrome.storage.local.get({'token' : "" , 'preferences': {} }, function(results) {
+          preferencesPort.postMessage(results['preferences']);
+        });
   	    window.location.reload();
 	    }
 	  
@@ -84,163 +87,154 @@ function handleResponse(response) {
 function setPreferencesForm(npsetObject) {
 
   if (npsetObject.hasOwnProperty('token') && npsetObject.hasOwnProperty('preferences')) {
-  // The needs and preferences object has a property 'token' and a property 'preferences'
+    // The needs and preferences object has a property 'token' and a property 'preferences'
   
-	if (isEmpty(npsetObject['preferences']) && npsetObject['token'] == "") {
-	  // The preferences object is empty and the token is an empty string
+	  if (isEmpty(npsetObject['preferences']) && npsetObject['token'] == "") {
+	    // The preferences object is empty and the token is an empty string
 	  
-	  console.log('set of needs and preferences not stored locally');
-	  document.querySelector('#preferencesContainer').style.display = 'none';
+	    console.log('set of needs and preferences not stored locally');
+	    document.querySelector('#preferencesContainer').style.display = 'none';
   	  document.querySelector('#tokenFormContainer').style.display = 'block';
-	  document.querySelector('#tokenInput').focus(); 
-	  chrome.tts.speak("Welcome to Cloud For All. Press TAB for options.");
+	    document.querySelector('#tokenInput').focus(); 
+	    chrome.tts.speak("Welcome to Cloud For All. Press TAB for options.");
 	
-	} else {
-	  // Either the token is a valid string or there are actual preferences 
-	  
-	  console.log('set of needs and preferences stored locally');
-	  document.querySelector('#tokenFormContainer').style.display = 'none';
-	  document.querySelector('#preferencesContainer').style.display = 'block';
-	    
-	  if (npsetObject['token'] != "") {
-	    // The token is a valid string
-		userToken = npsetObject['token'];
-	    document.querySelector('#configTitle').innerText = "Welcome, " + npsetObject['token'];
-		chrome.tts.speak( "Welcome to Cloud For All, " + npsetObject['token'] );
-	  }
-	  
-	  if (isEmpty(npsetObject['preferences'])) {
-	    // The preferences object is empty
-	    console.log("Preferences object is empty");
-		
 	  } else {
-	    // The preferences object is not empty
-	    localPreferences = npsetObject['preferences'];
-		
-		// Initialize screenreader
-		if (localPreferences.hasOwnProperty('screenReaderTTSEnabled')) {
-	      chrome.management.get('kgejglhpjiefppelpmljglcjbhoiplfn', function(extInfo) {
-		    try {
-		      console.log(extInfo.name + " is installed.");
-			
-			  if (localPreferences['screenReaderTTSEnabled']) {
-			    document.querySelector('#screenReaderCheckBox').checked = true;
-			    console.log("Screen reader checkbox initialized to true in background");
-			  
-			    if (!extInfo.enabled) {
-			      chrome.management.setEnabled(extInfo.id, true, function() {
-				    console.log("ChromeVox has been enabled in initialization");
-				  }); 
-			    }
-		      } else {
-			    document.querySelector('#screenReaderCheckBox').checked = false;
-			    console.log("Screen reader checkbox initializated to false in background");
-			  
-			    if (extInfo.enabled) {
-			      chrome.management.setEnabled(extInfo.id, false, function() {
-			      console.log("ChromeVox has been disabled in initialization");
-			      }); 
-			    }
-		      }
-		    } catch (e) {
-		      console.log('Error in screen reader management: ' + e.message);
-			  document.querySelector('#screenReaderDivCVInstalled').style.display = 'none';
-			  document.querySelector('#screenReaderDivCVNotInstalled').style.display = 'block';
-		    }
-		  });
-	    } else {
-		  document.querySelector('#screenReaderDiv').style.display = 'none';
-		}
-		// Initialize high contrast
-		if (localPreferences.hasOwnProperty('highContrast')) {
-	      switch (localPreferences['highContrast']) {
-		    case 'none': 
-		      document.querySelector('#NoHighContrastRB').checked = true;
-			  document.documentElement.removeAttribute('hc');
-			  console.log('High contrast initialized to none in popup');
-		      break;
-		    case 'invert': 
-		      document.querySelector('#invertRB').checked = true;
-			  document.documentElement.setAttribute('hc', 'invert');
-			  console.log('High contrast initialized to invert in popup');
-		      break;
-			default:
-			  document.querySelector('#NoHighContrastRB').checked = true;
-			  document.documentElement.removeAttribute('hc');
-		  }
-	    } else {
-		  document.querySelector('#highContrastOptions').style.display = 'none';
-		}
-		
-		if (localPreferences.hasOwnProperty('magnification')) {
-          switch (localPreferences['magnification']) {
-		    case 1: 
-			  // Magnification 100%
-		      document.querySelector('#zoom100').checked = true;
-			  document.documentElement.removeAttribute('zoom');
-			  console.log("Zoom initilialized to 100% in background");
-		      break;
-		    case 2: 
-			  // Magnification 200%
-		      document.querySelector('#zoom200').checked = true;
-			  document.documentElement.setAttribute('zoom', '200%');
-			  console.log("Zoom initilialized to 200% in background");
-		      break;
-		    case 3: 
-			  // Magnification 300%
-		      document.querySelector('#zoom300').checked = true;
-			  document.documentElement.setAttribute('zoom', '300%');
-			  console.log("Zoom initilialized to 300% in background");
-		      break;
-		    default:
-			  // No correct value of magnification selected
-		      document.querySelector('#zoom100').defaultChecked;
-			  console.log("Not valid value for magnification");
-          }		  
-	    } else {
-		  document.querySelector('#zoomOptions').style.display = 'none';
-		}
-		
-	    if (localPreferences.hasOwnProperty('fontSize')) {
-		  // There is a property font Size
-	      console.log(localPreferences['fontSize']);
-	      switch (localPreferences['fontSize']) {
-		    case 'medium': 
-		      document.querySelector('#textSizeNormal').checked = true;
-			  document.documentElement.removeAttribute('ts');
-			  console.log("Text size initialized to normal in background");
-		      break;
-		    case 'large': 
-		      document.querySelector('#textSizeLarge').checked = true; 
-			  document.documentElement.setAttribute('ts', 'large');
-			  console.log("Text size initialized to large in background"); 
-		      break;
-		    case 'x-large': 
-		      document.querySelector('#textSizeXLarge').checked = true;
-			  document.documentElement.setAttribute('ts', 'x-large');
-			  console.log("Text size initializated to x-large in background");
-		      break;
-		    default:
-		      console.log('text size value is not properly defined');
-	      } 
-	    } else {
-		  // preferences has not font size
-		  document.querySelector('#fontSizeOptions').style.display = 'none';
-		}
-		
-		// Initialize simplifier
-		if (localPreferences.hasOwnProperty('simplifier')) {
-	      if (localPreferences['simplifier']) {
-		    document.querySelector('#simplifierCheckBox').checked = true;
-		    console.log("Simplification set to true in background");
-		  } else {
-		    document.querySelector('#simplifierCheckBox').checked = false;
-		    console.log("Simplification set to false in background");
-		  }
+	    // Either the token is a valid string or there are actual preferences 
+	    console.log('set of needs and preferences stored locally');
+	    document.querySelector('#tokenFormContainer').style.display = 'none';
+	    document.querySelector('#preferencesContainer').style.display = 'block';
+	    
+	    if (npsetObject['token'] != "") {
+	      // The token is a valid string
+		    userToken = npsetObject['token'];
+	      document.querySelector('#configTitle').innerText = "Welcome, " + npsetObject['token'];
+		    chrome.tts.speak( "Welcome to Cloud For All, " + npsetObject['token'] );
 	    }
+	  
+	    if (isEmpty(npsetObject['preferences'])) {
+	      // The preferences object is empty
+	      console.log("Preferences object is empty");
 		
-	  } // The preferences object is empty ifelse
-	}
+	    } else {
+	      // The preferences object is not empty
+	      localPreferences = npsetObject['preferences'];
+		
+		    // Initialize screenreader
+		    if (localPreferences.hasOwnProperty('screenReaderTTSEnabled')) {
+	        chrome.management.get('kgejglhpjiefppelpmljglcjbhoiplfn', function(extInfo) {
+		        try {
+		          console.log(extInfo.name + " is installed.");
+			
+			        if (localPreferences['screenReaderTTSEnabled']) {
+			          document.querySelector('#screenReaderCheckBox').checked = true;
+			          console.log("Screen reader checkbox initialized to true in background");
+			  
+			          if (!extInfo.enabled) {
+			            chrome.management.setEnabled(extInfo.id, true, function() {
+				            console.log("ChromeVox has been enabled in initialization");
+				          }); 
+			          }
+		          } else {
+			          document.querySelector('#screenReaderCheckBox').checked = false;
+			          console.log("Screen reader checkbox initializated to false in background");
+			  
+			          if (extInfo.enabled) {
+			            chrome.management.setEnabled(extInfo.id, false, function() {
+			              console.log("ChromeVox has been disabled in initialization");
+			            }); 
+			          }
+		          }
+		        } catch (e) {
+		          console.log('Error in screen reader management: ' + e.message);
+			        document.querySelector('#screenReaderDivCVInstalled').style.display = 'none';
+			        document.querySelector('#screenReaderDivCVNotInstalled').style.display = 'block';
+		        }
+		      });
+	      } // if screenreader
+	     
+		    // Initialize high contrast
+		    if (localPreferences.hasOwnProperty('highContrast')) {
+	        switch (localPreferences['highContrast']) {
+		        case 'none': 
+		          document.querySelector('#NoHighContrastRB').checked = true;
+			        document.documentElement.removeAttribute('hc');
+			        console.log('High contrast initialized to none in popup');
+		          break;
+		        case 'invert': 
+		          document.querySelector('#invertRB').checked = true;
+			        document.documentElement.setAttribute('hc', 'invert');
+			        console.log('High contrast initialized to invert in popup');
+		          break;
+			      default:
+			        document.querySelector('#NoHighContrastRB').checked = true;
+			        document.documentElement.removeAttribute('hc');
+		      }
+		    } // if high contrast
+		
+		    if (localPreferences.hasOwnProperty('magnification')) {
+          switch (localPreferences['magnification']) {
+		        case 1: 
+			        // Magnification 100%
+		          document.querySelector('#zoom100').checked = true;
+			        document.documentElement.removeAttribute('zoom');
+			        console.log("Zoom initilialized to 100% in background");
+		          break;
+		        case 2: 
+			        // Magnification 200%
+		          document.querySelector('#zoom200').checked = true;
+			        document.documentElement.setAttribute('zoom', '200%');
+			        console.log("Zoom initilialized to 200% in background");
+		          break;
+		        case 3: 
+			        // Magnification 300%
+		          document.querySelector('#zoom300').checked = true;
+			        document.documentElement.setAttribute('zoom', '300%');
+			        console.log("Zoom initilialized to 300% in background");
+		          break;
+		        default:
+			        // No correct value of magnification selected
+		          document.querySelector('#zoom100').defaultChecked;
+			        console.log("Not valid value for magnification");
+          } 		  
+	      } // if magnification
+		
+	      if (localPreferences.hasOwnProperty('fontSize')) {
+		      // There is a property font Size
+	        console.log(localPreferences['fontSize']);
+	        switch (localPreferences['fontSize']) {
+		        case 'medium': 
+		          document.querySelector('#textSizeNormal').checked = true;
+			        document.documentElement.removeAttribute('ts');
+			        console.log("Text size initialized to normal in background");
+		          break;
+		        case 'large': 
+		          document.querySelector('#textSizeLarge').checked = true; 
+			        document.documentElement.setAttribute('ts', 'large');
+			        console.log("Text size initialized to large in background"); 
+		          break;
+		        case 'x-large': 
+		          document.querySelector('#textSizeXLarge').checked = true;
+			        document.documentElement.setAttribute('ts', 'x-large');
+			        console.log("Text size initializated to x-large in background");
+		          break;
+		        default:
+		          console.log('text size value is not properly defined');
+	        } 
+	      } // fontSize
+		
+		    // Initialize simplifier
+		    if (localPreferences.hasOwnProperty('simplifier')) {
+	        if (localPreferences['simplifier']) {
+		        document.querySelector('#simplifierCheckBox').checked = true;
+		          console.log("Simplification set to true in background");
+		      } else {
+		        document.querySelector('#simplifierCheckBox').checked = false;
+		        console.log("Simplification set to false in background");
+		      }
+	      } // end if simplifier
+		
+	    } // The preferences object is empty ifelse
+	  } // The preferences object is empty and the token is an empty string
   } else {
     // The preferences object lacks the token property or the preferences property
     console.log('The JSON object is not well built');
@@ -248,8 +242,8 @@ function setPreferencesForm(npsetObject) {
 }	
 	
 function onOptionsClick() {
-  	  chrome.tabs.create({ url: 'options.html' }); 
-	  window.close();
+  chrome.tabs.create({ url: 'options.html' }); 
+	window.close();
 }
 
 function signOutBtnClicked(e) {
@@ -257,6 +251,8 @@ function signOutBtnClicked(e) {
   chrome.storage.local.clear();
   
   setPreferencesForm({ token: "", preferences: {} }); 
+  
+  preferencesPort.postMessage({ fontSize : 'medium', highContrast: 'none', magnifierEnabled: false, magnification: 1});
   
   document.documentElement.removeAttribute('hc');
   document.documentElement.removeAttribute('ts');
@@ -328,21 +324,21 @@ function zoom300Clicked() {
 
 function textSizeNormalClicked() {
   localPreferences['fontSize'] = 'medium';
-  chrome.storage.local.set({ fontSize : 'medium' });
+  chrome.storage.local.set({ token: userToken, preferences: localPreferences });
   preferencesPort.postMessage({ fontSize : 'medium' }); 
   document.documentElement.removeAttribute('ts');
 }
 
 function textSizeLargeClicked() {
   localPreferences['fontSize'] = 'large';
-  chrome.storage.local.set({ fontSize : 'large' });
+  chrome.storage.local.set({ token: userToken, preferences: localPreferences });
   preferencesPort.postMessage({ fontSize : 'large' }); 
   document.documentElement.setAttribute("ts", "large");
 }
 
 function textSizeXLargeClicked() {
   localPreferences['fontSize'] = 'x-large';
-  chrome.storage.local.set({ fontSize : 'x-large' });
+  chrome.storage.local.set({ token: userToken, preferences: localPreferences });
   preferencesPort.postMessage({ fontSize : 'x-large' }); 
   document.documentElement.setAttribute("ts", "x-large");
 	// chrome.storage.sync.set({textSize: "x-large"}, function() {
@@ -352,27 +348,29 @@ function textSizeXLargeClicked() {
 
 function noHighContrastClicked() {
   localPreferences['highContrast'] = 'none';
-  chrome.storage.local.set({ highContrast : 'none' });
+  chrome.storage.local.set({ token: userToken, preferences: localPreferences });
   preferencesPort.postMessage({ highContrast : 'none' }); 
   document.documentElement.removeAttribute("hc");
 }
 
 function invertRBClicked() {
   localPreferences['highContrast'] = 'invert';
-  chrome.storage.local.set({ highContrast : 'invert' });
+  chrome.storage.local.set({ token: userToken, preferences: localPreferences });
   preferencesPort.postMessage({ highContrast : 'invert' }); 
   document.documentElement.setAttribute("hc", "invert"); 
 }
 
 function simplifierCheckBoxClicked() {
 	if (this.checked) {
-		// chrome.storage.sync.set({simplifier: "on"}, function() {
-			document.getElementById("simplifierCheckBox").setAttribute("aria-checked", "true");
-		// }); 
+		localPreferences['simplifier'] = true;
+		chrome.storage.local.set({ token : userToken, preferences : localPreferences });
+		document.getElementById("simplifierCheckBox").setAttribute("aria-checked", "true"); 
+		preferencesPort.postMessage({ simplifier : true }); 
 	} else {
-		// chrome.storage.sync.set({simplifier: "off"}, function() {
-			document.getElementById("simplifierCheckBox").setAttribute("aria-checked", "false");
-		// }); 
+	  localPreferences['simplifier'] = false;
+		chrome.storage.local.set({ token : userToken, preferences : localPreferences });
+		document.getElementById("simplifierCheckBox").setAttribute("aria-checked", "false");
+		preferencesPort.postMessage({ simplifier : false }); 
 	}
 }
 

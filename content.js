@@ -79,7 +79,7 @@ function activatePreferences(preferences)  {
 	if (preferences.hasOwnProperty('simplifier')) {
 	  if (preferences['simplifier']) {
 	    console.log('Simplifier has been activated'); 
-		simplifyPage(); 
+		  simplifyPage(); 
 	  }
 	}
     
