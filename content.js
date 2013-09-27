@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function(e) {
   chrome.storage.local.get({ 'token' : "", 'preferences': {} }, function(results) {
     if (chrome.runtime.lastError) {
 	} else {
+	  console.log(results['preferences']);
 	  activatePreferences(results['preferences']); 
 	}
   }); 

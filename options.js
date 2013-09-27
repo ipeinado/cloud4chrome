@@ -219,15 +219,18 @@ function invertRBOPClicked() {
 function zoom100OPClicked() {
   document.documentElement.removeAttribute('zoom'); 
   preferences['magnification'] = 1;
+  preferences['magnifierEnabled'] = false;
 }
 
 function zoom200OPClicked() {
   document.documentElement.setAttribute('zoom', '200%');
+  preferences['magnifierEnabled'] = true;
   preferences['magnification'] = 2;
 }
 
 function zoom300OPClicked() {
   document.documentElement.setAttribute('zoom', '300%'); 
+  preferences['magnifierEnabled'] = true;
   preferences['magnification'] = 3;
 }
 
