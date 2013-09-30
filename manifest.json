@@ -21,7 +21,7 @@
 	],
 	
 	"background": {
-	  "scripts": ["common.js"]
+	  "page": "background.html"
 	},
 	
 	"browser_action": {
