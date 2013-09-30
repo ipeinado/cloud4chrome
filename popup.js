@@ -146,8 +146,8 @@ function setPreferencesForm(npsetObject) {
 		          }
 		        } catch (e) {
 		          console.log('Error in screen reader management: ' + e.message);
-			        document.querySelector('#screenReaderDivCVInstalled').style.display = 'none';
-			        document.querySelector('#screenReaderDivCVNotInstalled').style.display = 'block';
+			      document.querySelector('#screenReaderDivCVInstalled').style.display = 'none';
+			      document.querySelector('#screenReaderDivCVNotInstalled').style.display = 'block';
 		        }
 		      });
 	      } // if screenreader
@@ -257,6 +257,14 @@ function signOutBtnClicked(e) {
   document.documentElement.removeAttribute('hc');
   document.documentElement.removeAttribute('ts');
   document.documentElement.removeAttribute('zoom');
+  
+  chrome.management.get('kgejglhpjiefppelpmljglcjbhoiplfn', function(extInfo) {
+	if (extInfo.enabled) {
+	  chrome.management.setEnabled(extInfo.id, false, function() {
+	    console.log("ChromeVox has been deactivated"); 
+	  });
+	}
+  });
   
 }
 
