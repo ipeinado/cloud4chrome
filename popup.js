@@ -94,7 +94,7 @@ function setPreferencesForm(npsetObject) {
 	  
 	    console.log('set of needs and preferences not stored locally');
 	    document.querySelector('#preferencesContainer').style.display = 'none';
-  	  document.querySelector('#tokenFormContainer').style.display = 'block';
+  	  	document.querySelector('#tokenFormContainer').style.display = 'block';
 	    document.querySelector('#tokenInput').focus(); 
 	    chrome.tts.speak("Welcome to Cloud For All. Press TAB for options.");
 	
@@ -299,7 +299,7 @@ function zoom100Clicked() {
   localPreferences['magnifierEnabled'] = false;
   localPreferences['magnification'] = 1;
   chrome.storage.local.set({ token: userToken, preferences: localPreferences}); 
-  preferencesPort.postMessage({ magnifierEnabled : false, magnification : 1 }); 
+  //preferencesPort.postMessage({ magnifierEnabled : false, magnification : 1 }); 
   document.documentElement.removeAttribute('zoom');
 }
 
@@ -307,7 +307,7 @@ function zoom200Clicked() {
   localPreferences['magnifierEnabled'] = true;
   localPreferences['magnification'] = 2;
   chrome.storage.local.set({ token: userToken, preferences: localPreferences});
-  preferencesPort.postMessage({ magnifierEnabled : true, magnification : 2 });   
+  //preferencesPort.postMessage({ magnifierEnabled : true, magnification : 2 });   
   document.documentElement.setAttribute('zoom', '200%'); 
 }
 
@@ -325,21 +325,21 @@ function zoom300Clicked() {
 function textSizeNormalClicked() {
   localPreferences['fontSize'] = 'medium';
   chrome.storage.local.set({ token: userToken, preferences: localPreferences });
-  preferencesPort.postMessage({ fontSize : 'medium' }); 
+  //preferencesPort.postMessage({ fontSize : 'medium' }); 
   document.documentElement.removeAttribute('ts');
 }
 
 function textSizeLargeClicked() {
   localPreferences['fontSize'] = 'large';
   chrome.storage.local.set({ token: userToken, preferences: localPreferences });
-  preferencesPort.postMessage({ fontSize : 'large' }); 
+  //preferencesPort.postMessage({ fontSize : 'large' }); 
   document.documentElement.setAttribute("ts", "large");
 }
 
 function textSizeXLargeClicked() {
   localPreferences['fontSize'] = 'x-large';
   chrome.storage.local.set({ token: userToken, preferences: localPreferences });
-  preferencesPort.postMessage({ fontSize : 'x-large' }); 
+  //preferencesPort.postMessage({ fontSize : 'x-large' }); 
   document.documentElement.setAttribute("ts", "x-large");
 	// chrome.storage.sync.set({textSize: "x-large"}, function() {
 	  // document.documentElement.setAttribute("ts", "x-large");
@@ -349,14 +349,14 @@ function textSizeXLargeClicked() {
 function noHighContrastClicked() {
   localPreferences['highContrast'] = 'none';
   chrome.storage.local.set({ token: userToken, preferences: localPreferences });
-  preferencesPort.postMessage({ highContrast : 'none' }); 
+  //preferencesPort.postMessage({ highContrast : 'none' }); 
   document.documentElement.removeAttribute("hc");
 }
 
 function invertRBClicked() {
   localPreferences['highContrast'] = 'invert';
   chrome.storage.local.set({ token: userToken, preferences: localPreferences });
-  preferencesPort.postMessage({ highContrast : 'invert' }); 
+  //preferencesPort.postMessage({ highContrast : 'invert' }); 
   document.documentElement.setAttribute("hc", "invert"); 
 }
 
@@ -365,12 +365,12 @@ function simplifierCheckBoxClicked() {
 		localPreferences['simplifier'] = true;
 		chrome.storage.local.set({ token : userToken, preferences : localPreferences });
 		document.getElementById("simplifierCheckBox").setAttribute("aria-checked", "true"); 
-		preferencesPort.postMessage({ simplifier : true }); 
+		// preferencesPort.postMessage({ simplifier : true }); 
 	} else {
 	  localPreferences['simplifier'] = false;
 		chrome.storage.local.set({ token : userToken, preferences : localPreferences });
 		document.getElementById("simplifierCheckBox").setAttribute("aria-checked", "false");
-		preferencesPort.postMessage({ simplifier : false }); 
+		// preferencesPort.postMessage({ simplifier : false }); 
 	}
 }
 

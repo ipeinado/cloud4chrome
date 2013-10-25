@@ -15,13 +15,13 @@ document.addEventListener('DOMContentLoaded', function(e) {
   }); 
 });
 
-chrome.runtime.onConnect.addListener(function(port) {
-  console.log("Connection port: " + port.name);
-  port.onMessage.addListener(function(preferences) {
-	console.log(preferences); 
-    activatePreferences(preferences); 
-  }); 
-}); 
+// chrome.runtime.onConnect.addListener(function(port) {
+//   console.log("Connection port: " + port.name);
+//   port.onMessage.addListener(function(preferences) {
+// 	console.log(preferences); 
+//     activatePreferences(preferences); 
+//   }); 
+// }); 
 
 function activatePreferences(preferences)  {
   if (!isEmpty(preferences)) {
