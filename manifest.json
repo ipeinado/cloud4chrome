@@ -4,6 +4,8 @@
 	"description": "Personalize Google Chrome and store your preferences in the Cloud",
 	
 	"manifest_version": 2,
+
+	"default_locale": "en",
 	
 	"icons": {
 	  "16": "images/icon16.png",
