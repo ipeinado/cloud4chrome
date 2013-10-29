@@ -9,15 +9,15 @@
 	<body>
 	  <!-- Form to insert the token -->
 	  <div id='tokenFormContainer'>
-	    <h1 id="welcomeMessage">Welcome</h1>
+	    <h1 id="welcomeMessage"></h1>
 		<form id='tokenForm'>
 		  <label for='tokenInput' class='tokenFormLabel'></label>
-		  <input type='text' name='token' id='tokenInput' placeholder='insert your token'>
+		  <input type='text' name='token' id='tokenInput'>
 		  <input type='submit' value='submit' id='tokenSubmit' />
 		</form>
 		<div id='results'></div>
 		<div id='options'>
-		  <a id='optionsLink' href=''>or edit your preferences</a>
+		  <a id='optionsLink' href=''></a>
 		</div>
 	  </div>
 	  
@@ -25,9 +25,9 @@
 	  <div id = 'preferencesContainer'>
 	  
 	    <div id='header'>
-		  <h2 id='configTitle' tabindex='1'>Welcome</h2>
-		  <p>These are your preferences in Cloud4all - 
-		  <a href="" title='see all preferences' class='seemore' id='seeallprefs'>see all preferences</a>
+		  <h2 id='configTitle' tabindex='1'></h2>
+		  <p><span id="configDescription"></span>
+		  <a id='seeallprefs' href="" title='see all preferences' class='seemore'>See all preferences</a>
 		  </p>
 		</div>
 		
@@ -35,34 +35,34 @@
   		  
 
 		  <div class='config_option' id="screenReaderDiv">
-		    <h3 tabindex='2'>Screen reader</h3>
+		    <h3 tabindex='2' id='screenReaderTitle'></h3>
 			  <div id='screenReaderDivCVInstalled'>
 				<input type='checkbox' name='screen reader checkbox' id='screenReaderCheckBox' role='checkbox' tabindex='3' />
-				<label for='screenReaderCheckBox' id='screenReaderLabel'>Activate ChromeVox</label>
+				<label for='screenReaderCheckBox' id='screenReaderLabel'></label>
 			  </div>
 			  
 			  <div id='screenReaderDivCVNotInstalled' style='display: none;'>
-				<p>ChromeVox is not installed</p>
-				<p><button id='installCVButton' role='button' tabindex='3'>Install ChromeVox</a></p>
+				<p id="chromeVoxNotInstalledWarning"></p>
+				<p><button id='installCVButton' role='button' tabindex='3'></a></p>
 			  </div>
 		  </div>
 			
 		  <div class='config_option' id='highContrastOptions'>
-			<h3 id='highContrastRg' tabindex='4'>High Contrast</h3>
+			<h3 id='highContrastRgTitle' tabindex='4'></h3>
 			  <ul class= 'radiogroup' role='radiogroup' aria-labelledby='highContrastRg'>
 				<li>
 			      <input type='radio' name='highContrast' id='NoHighContrastRB' value='noHighContrast' role='radio' tabindex="" />
-				  <label for='NoHighContrastRB2' id='noHighContrastLabel'>None</label>
+				  <label for='NoHighContrastRB2' id='noHighContrastLabel'></label>
 				</li>
 				<li>
 				  <input type='radio' name='highContrast' id='invertRB' value='invertColors' role='radio' tabindex='5'/>
-				  <label for='invertRB' id='invertLabel'>Invert colors</label>
+				  <label for='invertRB' id='invertLabel'></label>
 				</li>
 			  </ul>
 		  </div>
 			
 		  <div class='config_option' id='zoomOptions'>
-			<h3 id='zoomrg' tabindex='6'>Zoom</h3>
+			<h3 id='zoomRgTitle' tabindex='6'></h3>
 			  <ul class='radiogroup' role='radiogroup' aria-labelledby='zoomrg'>
 				<li>
 				  <input type='radio' name='zoom' id='zoom100' value='100' tabindex='7' role='radio'>
@@ -81,29 +81,29 @@
 		  </div>
 			
 		  <div class='config_option' id='fontSizeOptions'>
-			<h3 id='fontsizerg' tabindex='10'>Font size</h3>
+			<h3 id='fontSizeRGTitle' tabindex='10'></h3>
 		      <ul class='radiogroup' role='radiogroup' aria-labelledby='fontsizerg'>
 				<li>
 				  <input type='radio' name='textSize' id='textSizeNormal' value='medium' tabindex='11' role='radio'>
-				  <label for='textSizeMedium'><span class='textSizeMedium'>Medium</span></label>
+				  <label for='textSizeMedium'><span class='textSizeMedium' id='textSizeMediumLabel'></span></label>
 				</li>
 				
 				<li>
 				  <input type='radio' name='textSize' id='textSizeLarge' value='large' tabindex="12" role="radio">
-				  <label for='textSizeLarge'><span class='textSizeLarge'>Large</span></label>
+				  <label for='textSizeLarge'><span class='textSizeLarge' id='textSizeLargeLabel'></span></label>
 				</li>
 				
 				<li>
 				  <input type='radio' name='textSize' id='textSizeXLarge' value='x-large' tabindex='13' role='radio'>
-				  <label for='textSizeXLarge'><span class="textSizeXLarge">X-Large</span></label>
+				  <label for='textSizeXLarge'><span class="textSizeXLarge" id='textSizeXLargeLabel'></span></label>
 				</li>
 			  </ul>
 		  </div>
 		  
 		  <div class='config_option' id='simplifierOptions'>
-			<h3 tabindex='14'>Simplifier (Beta)</h3>
+			<h3 tabindex='14' id="simplifierTitle"></h3>
 			  <input type='checkbox' name='simplifier checkbox' id='simplifierCheckBox' role='checkbox' tabindex='15'/>
-			  <label for='simplifierCheckBox' id='simplifierCheckBoxLabel'>Enable simplification</label>
+			  <label for='simplifierCheckBox' id='simplifierCheckBoxLabel'></label>
 		  </div>
 		  
 		  <div class='config_option' id='prefOptions'>

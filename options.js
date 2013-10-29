@@ -4,7 +4,7 @@ var preferences = {},
 	  localPreferences = {},
 	  preferencesFormatObject = { 'http://registry.gpii.org/applications/org.chrome.cloud4chrome' : [] };
 
-window.onload = function() {
+document.addEventListener('DOMContentLoaded', function() {
   document.querySelector('#screenReaderCheckBoxOP').addEventListener('click', screenReaderCheckBoxOPClicked); 
   document.querySelector('#noHighContrastRBOP').addEventListener('click', noHighContrastRBOPClicked); 
   document.querySelector('#invertRBOP').addEventListener('click', invertRBOPClicked);
@@ -17,7 +17,30 @@ window.onload = function() {
   document.querySelector('#simplifierCheckBoxOP').addEventListener('click', simplifierCheckBoxOPClicked);
   
   document.querySelector('#preferencesFormOP').addEventListener('submit', formPreferenceSubmit);
-  
+
+  document.querySelector('#optionsPageTitle').innerText = chrome.i18n.getMessage("optionsPageTitleText");
+  document.querySelector('#optionsPageSubtitle').innerText = chrome.i18n.getMessage("optionsPageSubtitleText");
+  document.querySelector('#formTokenWarning').innerText = chrome.i18n.getMessage("formTokenWarningText");
+  document.querySelector('#tokenTitle').innerText = chrome.i18n.getMessage("tokenTitleText");
+  document.querySelector('#newTokenInputOP').setAttribute('placeholder', chrome.i18n.getMessage("tokenInputPlaceholder"));
+  document.querySelector('#screenReaderTitle').innerText = chrome.i18n.getMessage("screenReaderTitleText");
+  document.querySelector('#screenReaderLabel').innerText = chrome.i18n.getMessage("screenReaderLabelText");
+  document.querySelector('#chromeVoxNotInstalledWarning').innerText = chrome.i18n.getMessage("chromeVoxNotInstalledWarningText");
+  document.querySelector('#installCVButton').innerText = chrome.i18n.getMessage("installCVButtonText");
+  document.querySelector('#highContrastRgTitle').innerText = chrome.i18n.getMessage("highContrastRgTitleText");
+  document.querySelector('#noHighContrastLabel').innerText = chrome.i18n.getMessage("NoHighContrastRB2Text");
+  document.querySelector('#invertLabel').innerText = chrome.i18n.getMessage("invertLabelText");
+  document.querySelector('#zoomrg').innerText = chrome.i18n.getMessage("zoomRgTitleText");
+  document.querySelector('#fontsizerg').innerText = chrome.i18n.getMessage("fontSizeRGTitleText");
+  document.querySelector('#textSizeMediumLabel').innerText = chrome.i18n.getMessage("textSizeMediumLabelText");
+  document.querySelector('#textSizeLargeLabel').innerText = chrome.i18n.getMessage("textSizeLargeLabelText");
+  document.querySelector('#textSizeXLargeLabel').innerText = chrome.i18n.getMessage("textSizeXLargeLabelText");
+  document.querySelector('#simplifierTitle').innerText = chrome.i18n.getMessage("simplifierTitleText");
+  document.querySelector('#simplifierCheckBoxLabel').innerText = chrome.i18n.getMessage("simplifierCheckBoxLabelText");
+  document.querySelector('#savePrefsBtn').setAttribute('value', chrome.i18n.getMessage("saveButtonText"));
+  document.querySelector('#clearBtn').innerText = chrome.i18n.getMessage("clearBtnText");
+  document.querySelector('#clearBtn').setAttribute('title', chrome.i18n.getMessage("clearBtnTitleText"));
+
   chrome.storage.local.get({'token' : "" , 'preferences': {} }, function(results) {
     setPreferencesFormOP({token: results['token'], preferences: results['preferences']});
   });
@@ -25,7 +48,7 @@ window.onload = function() {
   xhrupload.upload.addEventListener('load', transferComplete, false);
   xhrupload.upload.addEventListener('error', transferFailed, false);
   xhrupload.upload.addEventListener('abort', transferCanceled, false); 
-} 
+}); 
 
 function setPreferencesFormOP(npsetObject) {
 

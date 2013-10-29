@@ -4,7 +4,7 @@
         "description": "name of the extension"
     },
     "extDescription": {
-        "message": "Personaliza Google Chrome y guarda tus preferencias en la nube",
+        "message": "Personaliza Google Chrome y almacena tu perfil en la nube",
         "description": "information about the extension that will be shown in the extensions tab"
     },
     "popupDefaultTitle": {
@@ -14,5 +14,94 @@
     "welcomeMessage": {
         "message": "Bienvenido a Cloud4all",
         "description": "message in the popup"
+    },
+    "tokenInputPlaceholder": {
+        "message": "nombre de usuario",
+        "description": "placeholder of the input for the token"
+    },
+    "optionsLinkText": {
+        "message": "o edita tus preferencias",
+        "description": "link to the PMT in the popup's main screen"
+    },
+    "configTitleText": {
+        "message": "Bienvenido",
+        "description": "Welcome text for the configuration popup"
+    },
+    "configTitleTextWithToken": {
+        "message": "Bienvenido, "
+    },
+    "configDescriptionText": {
+        "message": "Estas son tus preferencias en Cloud4all - ",
+        "description": "Text explaining preferences"
+    },
+    "seeAllPrefsText": {
+        "message": "ver todas las opciones",
+        "description": "link to the PMT from the configuration popup"
+    },
+    "screenReaderTitleText": {
+        "message": "Lector de pantalla"
+    },
+    "screenReaderLabelText": {
+        "message": "Activar ChromeVox"
+    },
+    "chromeVoxNotInstalledWarningText": {
+        "message": "ChromeVox no está instalado"
+    },
+    "installCVButtonText": {
+        "message": "Instalar ChromeVox"
+    },
+    "highContrastRgTitleText": {
+        "message": "Alto contraste"
+    },
+    "NoHighContrastRB2Text": {
+        "message": "No"
+    },
+    "invertLabelText": {
+        "message": "Invertir colores"
+    },
+    "zoomRgTitleText": {
+        "message": "Zoom"
+    },
+    "fontSizeRGTitleText": {
+        "message": "Tamaño de letra"
+    },
+    "textSizeMediumLabelText": {
+        "message": "normal"
+    },
+    "textSizeLargeLabelText": {
+        "message": "grande"
+    },
+    "textSizeXLargeLabelText": {
+        "message": "X-grande"
+    },
+    "simplifierTitleText": {
+        "message": "Simplificador (Beta)"
+    },
+    "simplifierCheckBoxLabelText": {
+        "message": "Simplificar páginas"
+    },
+    "signOutBtnText": {
+        "message": "Salir"
+    },
+    "optionsPageTitleText": {
+        "message": "Edita tus preferencias"
+    },
+    "optionsPageSubtitleText": {
+        "message": "Edita tus preferencias en Cloud4all"
+    },
+    "formTokenWarningText": {
+        "message": "Please insert a valid token"
+    },
+    "tokenTitleText": {
+        "message": "Nombre de usuario *"
+    },
+    "saveButtonText": {
+        "message": "Guardar"
+    },
+    "clearBtnText": {
+        "message": "Borrar"
+    },
+    "clearBtnTitleText": {
+        "message": "Borrar todas las preferencias"
     }
 }
