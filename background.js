@@ -6,10 +6,11 @@ var value,
 	userprefs = { token: "", preferences: {} },
 	npset,
 	xhrstatus = { status: 0, isError: true };
-	
-chrome.runtime.onInstalled.addListener(function() {
-	// initialization when your extension is installed or upgraded
-}); 
+
+// initialization when your extension is installed or upgraded	
+chrome.runtime.onInstalled.addListener(function(details) {
+	chrome.storage.local.set({ "token" : "", "preferences" : {} });
+});
 
 chrome.runtime.onSuspend.addListener(function() {
   chrome.storage.local.clear();
@@ -73,16 +74,52 @@ xhr.onreadystatechange = function() {
   }
 }
 
+chrome.tabs.onActivated.addListener(function(activeInfo) {
+	chrome.storage.local.get({ 'token' : "", 'preferences' : {} }, function(results) {
+		if (!(chrome.runtime.lastError)) {
+			if (!(isEmpty(results['preferences']))) {
+				setPreferences(results['preferences']);
+			}
+		}
+	});
+});
+
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+	if (changeInfo.status == 'complete') {
+		chrome.storage.local.get({'token' : "", "preferences" : {} }, function(results) {
+			if (!(chrome.runtime.lastError)) {
+				if (!(isEmpty(results['preferences']))) {
+					setPreferences(results['preferences']);
+				}
+			}
+		});
+	}
+});
+
 
 chrome.storage.onChanged.addListener(function(changes, local) {
 	console.log("changes detected in background: " + changes);
 	var newPrefs = changes.preferences.newValue,
-	    oldPrefs = changes.preferences.oldValud;
+	    oldPrefs = changes.preferences.oldValue;
 
-	if (typeof newPrefs != 'undefined') {
+	if (!(isEmpty(newPrefs))) {
 		setPreferences(newPrefs);
 	} else {
-		console.log("Pues que no, oiga");
+		if (oldPrefs != undefined) {
+			var simplifierIsOn = oldPrefs['simplifier'] || false;
+			console.log("SimplifierIsOn: " + simplifierIsOn);
+			chrome.tabs.query({currentWindow : true} , function(tabs) {
+				for (var i = 0; i < tabs.length; i++) {
+					chrome.tabs.executeScript( 	tabs[i].id, 
+												{ code : 'document.documentElement.removeAttribute("ts");document.documentElement.removeAttribute("zoom");document.documentElement.removeAttribute("hc");' }
+											  );
+				}
+			});
+			if (simplifierIsOn) {
+				chrome.tabs.reload();
+			}
+
+		}
 	}
 });
 
@@ -107,16 +144,16 @@ function setPreferences(preferences) {
 		}
 	}
 
-	if (preferences.hasOwnProperty['magnification']) {
+	if (preferences.hasOwnProperty('magnification')) {
 		switch (preferences['magnification']) {
 			case 1:
 				chrome.tabs.executeScript({ code : 'document.documentElement.removeAttribute("zoom");' });
 				break;
 			case 2:
-				chrome.tabs.executeScript({ code : 'document.documentElement.setAttribute("zoom", "100%");' });
+				chrome.tabs.executeScript({ code : 'document.documentElement.setAttribute("zoom", "200%");' });
 				break;
 			case 3:
-				chrome.tabs.executeScript({ code : 'document.documentElement.setAttribute("zoom", "200%");' });
+				chrome.tabs.executeScript({ code : 'document.documentElement.setAttribute("zoom", "300%");' });
 				break;
 			default:
 				break;
@@ -134,7 +171,9 @@ function setPreferences(preferences) {
 	}
 
 	if (preferences.hasOwnProperty('simplifier')) {
-		console.log("NEW simplification: " + preferences['magnification']);
+		if (preferences['simplifier']) {
+			chrome.tabs.executeScript(null, { file : "js/simplifier.js "});
+		}
 	}
 }
 

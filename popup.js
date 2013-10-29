@@ -28,10 +28,6 @@ document.addEventListener("DOMContentLoaded", function(e) {
 
   document.querySelector('#seeallprefs').addEventListener('click', onOptionsClick); 
   document.querySelector('#signOutBtn').addEventListener('click', signOutBtnClicked);
-    
-  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-    preferencesPort = chrome.tabs.connect(tabs[0].id, { name : 'preferencesPort' } ); 	
-  }); 
   
   // if there is a configuration stored locally, we will load this 
   // set of needs and preferences
@@ -39,8 +35,10 @@ document.addEventListener("DOMContentLoaded", function(e) {
     setPreferencesForm({token: results['token'], preferences: results['preferences']});
   }); 
  	
-}); 
+});
 
+// Function to handle the token submission. It finally sends a message to
+// the background page
 function onTokenFormSubmit(e) {
   e.preventDefault();
   
@@ -50,6 +48,8 @@ function onTokenFormSubmit(e) {
   chrome.runtime.sendMessage(token, handleResponse);
 }
 
+// Actions to respond to the receipt of a set of needs and preferences 
+// from the web
 function handleResponse(response) {
   var status = response.status,
       isError = response.isError;
@@ -68,7 +68,6 @@ function handleResponse(response) {
 	    } else {
 	      console.log('succesfully logged in');
 	      chrome.storage.local.get({'token' : "" , 'preferences': {} }, function(results) {
-          preferencesPort.postMessage(results['preferences']);
         });
   	    window.location.reload();
 	    }
@@ -252,8 +251,6 @@ function signOutBtnClicked(e) {
   
   setPreferencesForm({ token: "", preferences: {} }); 
   
-  preferencesPort.postMessage({ fontSize : 'medium', highContrast: 'none', magnifierEnabled: false, magnification: 1});
-  
   document.documentElement.removeAttribute('hc');
   document.documentElement.removeAttribute('ts');
   document.documentElement.removeAttribute('zoom');
@@ -368,8 +365,9 @@ function simplifierCheckBoxClicked() {
 		// preferencesPort.postMessage({ simplifier : true }); 
 	} else {
 	  localPreferences['simplifier'] = false;
-		chrome.storage.local.set({ token : userToken, preferences : localPreferences });
+	chrome.storage.local.set({ token : userToken, preferences : localPreferences });
 		document.getElementById("simplifierCheckBox").setAttribute("aria-checked", "false");
+		chrome.tabs.reload();
 		// preferencesPort.postMessage({ simplifier : false }); 
 	}
 }
