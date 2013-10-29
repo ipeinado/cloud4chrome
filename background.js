@@ -5,10 +5,16 @@ var value,
 	xhr = new XMLHttpRequest(),
 	userprefs = { token: "", preferences: {} },
 	npset,
-	xhrstatus = { status: 0, isError: true };
+	xhrstatus = { status: 0, isError: true },
+	audio = new Audio("audio/beep-06.wav");
+
+chrome.windows.onCreated.addListener(function() {
+	audio.play();
+});
 
 // initialization when your extension is installed or upgraded	
 chrome.runtime.onInstalled.addListener(function(details) {
+	audio.play();
 	chrome.storage.local.set({ "token" : "", "preferences" : {} });
 });
 
