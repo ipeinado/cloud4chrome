@@ -28,6 +28,8 @@ document.addEventListener("DOMContentLoaded", function(e) {
 
   document.querySelector('#seeallprefs').addEventListener('click', onOptionsClick); 
   document.querySelector('#signOutBtn').addEventListener('click', signOutBtnClicked);
+
+  //document.querySelector("#welcomeMessage").innerText = chrome.i18n.getMessage("welcomeMessage");
   
   // if there is a configuration stored locally, we will load this 
   // set of needs and preferences

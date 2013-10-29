@@ -1,3 +1,18 @@
 {
-	
+    "extName": {
+        "message": "Cloud4all para Chrome (Ctrl + Shift + 4)",
+        "description": "name of the extension"
+    },
+    "extDescription": {
+        "message": "Personaliza Google Chrome y guarda tus preferencias en la nube",
+        "description": "information about the extension that will be shown in the extensions tab"
+    },
+    "popupDefaultTitle": {
+        "message": "Pulsa para editar tus preferencias",
+        "description": "text that will appear when hovering over the extension's icon"
+    },
+    "welcomeMessage": {
+        "message": "Bienvenido a Cloud4all",
+        "description": "message in the popup"
+    }
 }
