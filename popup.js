@@ -28,6 +28,29 @@ document.addEventListener("DOMContentLoaded", function(e) {
 
   document.querySelector('#seeallprefs').addEventListener('click', onOptionsClick); 
   document.querySelector('#signOutBtn').addEventListener('click', signOutBtnClicked);
+
+  // Initialize all text to make the extension localizable
+  document.querySelector("#welcomeMessage").innerText = chrome.i18n.getMessage("welcomeMessage");
+  document.querySelector('#tokenInput').setAttribute('placeholder', chrome.i18n.getMessage("tokenInputPlaceholder"));
+  document.querySelector('#optionsLink').innerText = chrome.i18n.getMessage("optionsLinkText");
+  document.querySelector('#configTitle').innerText = chrome.i18n.getMessage("configTitleText");
+  document.querySelector('#configDescription').innerText = chrome.i18n.getMessage("configDescriptionText");
+  document.querySelector('#seeallprefs').innerText = chrome.i18n.getMessage("seeAllPrefsText");
+  document.querySelector('#screenReaderTitle').innerText = chrome.i18n.getMessage("screenReaderTitleText");
+  document.querySelector('#screenReaderLabel').innerText = chrome.i18n.getMessage("screenReaderLabelText");
+  document.querySelector('#chromeVoxNotInstalledWarning').innerText = chrome.i18n.getMessage("chromeVoxNotInstalledWarningText");
+  document.querySelector('#installCVButton').innerText = chrome.i18n.getMessage("installCVButtonText");
+  document.querySelector('#highContrastRgTitle').innerText = chrome.i18n.getMessage("highContrastRgTitleText");
+  document.querySelector('#noHighContrastLabel').innerText = chrome.i18n.getMessage("NoHighContrastRB2Text");
+  document.querySelector('#invertLabel').innerText = chrome.i18n.getMessage("invertLabelText");
+  document.querySelector('#zoomRgTitle').innerText = chrome.i18n.getMessage("zoomRgTitleText");
+  document.querySelector('#fontSizeRGTitle').innerText = chrome.i18n.getMessage("fontSizeRGTitleText");
+  document.querySelector('#textSizeMediumLabel').innerText = chrome.i18n.getMessage("textSizeMediumLabelText");
+  document.querySelector('#textSizeLargeLabel').innerText = chrome.i18n.getMessage("textSizeLargeLabelText");
+  document.querySelector('#textSizeXLargeLabel').innerText = chrome.i18n.getMessage("textSizeXLargeLabelText");
+  document.querySelector('#simplifierTitle').innerText = chrome.i18n.getMessage("simplifierTitleText");
+  document.querySelector('#simplifierCheckBoxLabel').innerText = chrome.i18n.getMessage("simplifierCheckBoxLabelText");
+  document.querySelector('#signOutBtn').innerText = chrome.i18n.getMessage("signOutBtnText");
   
   // if there is a configuration stored locally, we will load this 
   // set of needs and preferences
@@ -106,7 +129,7 @@ function setPreferencesForm(npsetObject) {
 	    if (npsetObject['token'] != "") {
 	      // The token is a valid string
 		    userToken = npsetObject['token'];
-	      document.querySelector('#configTitle').innerText = "Welcome, " + npsetObject['token'];
+	      document.querySelector('#configTitle').innerText = chrome.i18n.getMessage("configTitleTextWithToken") + npsetObject['token'];
 		    chrome.tts.speak( "Welcome to Cloud For All, " + npsetObject['token'] );
 	    }
 	  

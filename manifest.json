@@ -1,9 +1,11 @@
 ﻿{
-	"name": "Cloud4all for Chrome (Ctrl + Shift + 4)",
+	"name": "__MSG_extName__",
 	"version": "0.2",
-	"description": "Personalize Google Chrome and store your preferences in the Cloud",
+	"description": "__MSG_extDescription__",
 	
 	"manifest_version": 2,
+
+	"default_locale": "en",
 	
 	"icons": {
 	  "16": "images/icon16.png",
@@ -29,7 +31,7 @@
 	    "19": "images/icon19.png",
 		"38": "images/icon38.png"
 	  },
-	  "default_title" : "fine tune your preferences",
+	  "default_title" : "__MSG_popupDefaultTitle__",
 	  "default_popup": "popup.html"
 	},
 	
