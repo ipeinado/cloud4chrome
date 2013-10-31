@@ -78,3 +78,53 @@ input[type='submit']:hover {
 span.tooltipToken {
   font-size: 0.8em;
 }
+
+.blackonwhite {
+  background: white;
+  color: black;
+}
+
+.whiteonblack {
+  background: black;
+  color: white;
+}
+
+.yellowonblack {
+  background: black;
+  color: yellow;
+}
+
+.blackonyellow {
+  background: yellow;
+  color: black;
+}
+
+html[hc = 'bw'] {
+  -webkit-filter: contrast(2) grayscale(100%);
+}
+
+
+html[hc = 'wb'] {
+  background: black;
+}
+
+html[hc = 'wb'] > body {
+  background: black;
+  color: white;
+}
+
+html[hc = 'yb'] {
+  background: black;
+}
+html[hc = 'yb'] > body {
+  background: black;
+  color: yellow;
+}
+
+html[hc = 'by'] {
+  background: yellow;
+}
+html[hc = 'by'] > body{
+  background: yellow;
+  color: black;
+}

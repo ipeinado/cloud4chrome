@@ -1,4 +1,4 @@
-html[hc="invert"] {
+html[ic="invert"] {
 	-webkit-filter: invert();
 }
 
@@ -16,6 +16,37 @@ html[zoom="200%"] body {
 
 html[zoom="300%"] body {
   zoom: 3;
+}
+
+html[hc = 'bw'] {
+  -webkit-filter: contrast(2) grayscale(100%);
+}
+
+
+html[hc = 'wb'] {
+  background: black;
+}
+
+html[hc = 'wb'] > body {
+  background: black;
+  color: white;
+}
+
+html[hc = 'yb'] {
+  background: black;
+  color: yellow;
+}
+html[hc = 'yb'] > body {
+  background: black;
+  color: yellow;
+}
+
+html[hc = 'by'] {
+  background: yellow;
+}
+html[hc = 'by'] > body{
+  background: yellow;
+  color: black;
 }
 
 .simpWarn {

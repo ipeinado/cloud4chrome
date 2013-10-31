@@ -17,7 +17,11 @@ document.addEventListener("DOMContentLoaded", function(e) {
   
   document.querySelector('#screenReaderCheckBox').addEventListener('click', screenReaderCBClicked);
   document.querySelector('#NoHighContrastRB').addEventListener('click', noHighContrastClicked);
-  document.querySelector('#invertRB').addEventListener('click', invertRBClicked);
+  document.querySelector('#highContrastBlackWhite').addEventListener('click', highContrastBlackWhiteClicked);
+  document.querySelector('#highContrastWhiteBlack').addEventListener('click', highContrastWhiteBlackClicked);
+  document.querySelector('#highContrastYellowBlack').addEventListener('click', highContrastYellowBlackClicked);
+  document.querySelector('#highContrastBlackYellow').addEventListener('click', highContrastBlackYellowClicked);
+  document.querySelector('#invertColorsCheckbox').addEventListener('click', invertRBClicked);
   document.querySelector('#zoom100').addEventListener('click', zoom100Clicked);
   document.querySelector('#zoom200').addEventListener('click', zoom200Clicked);
   document.querySelector('#zoom300').addEventListener('click', zoom300Clicked);
@@ -42,6 +46,11 @@ document.addEventListener("DOMContentLoaded", function(e) {
   document.querySelector('#installCVButton').innerText = chrome.i18n.getMessage("installCVButtonText");
   document.querySelector('#highContrastRgTitle').innerText = chrome.i18n.getMessage("highContrastRgTitleText");
   document.querySelector('#noHighContrastLabel').innerText = chrome.i18n.getMessage("NoHighContrastRB2Text");
+  document.querySelector('#highContrastBlackWhiteLabel').innerText = chrome.i18n.getMessage("highContrastBlackWhiteLabelText");
+  document.querySelector('#highContrastWhiteBlackLabel').innerText = chrome.i18n.getMessage("highContrastWhiteBlackLabelText");
+  document.querySelector('#highContrastYellowBlackLabel').innerText = chrome.i18n.getMessage("highContrastYellowBlackLabelText");
+  document.querySelector('#highContrastBlackYellowLabel').innerText = chrome.i18n.getMessage("highContrastBlackYellowLabelText");
+  document.querySelector('#invertColoursTitle').innerText = chrome.i18n.getMessage("invertColoursTitleText");
   document.querySelector('#invertLabel').innerText = chrome.i18n.getMessage("invertLabelText");
   document.querySelector('#zoomRgTitle').innerText = chrome.i18n.getMessage("zoomRgTitleText");
   document.querySelector('#fontSizeRGTitle').innerText = chrome.i18n.getMessage("fontSizeRGTitleText");
@@ -139,121 +148,173 @@ function setPreferencesForm(npsetObject) {
 		
 	    } else {
 	      // The preferences object is not empty
-	      localPreferences = npsetObject['preferences'];
+	      	localPreferences = npsetObject['preferences'];
 		
 		    // Initialize screenreader
 		    if (localPreferences.hasOwnProperty('screenReaderTTSEnabled')) {
-	        chrome.management.get('kgejglhpjiefppelpmljglcjbhoiplfn', function(extInfo) {
-		        try {
-		          console.log(extInfo.name + " is installed.");
+	        	chrome.management.get('kgejglhpjiefppelpmljglcjbhoiplfn', function(extInfo) {
+		       		try {
+		         			console.log(extInfo.name + " is installed.");
 			
-			        if (localPreferences['screenReaderTTSEnabled']) {
-			          document.querySelector('#screenReaderCheckBox').checked = true;
-			          console.log("Screen reader checkbox initialized to true in background");
+			        	if (localPreferences['screenReaderTTSEnabled']) {
+			        		document.querySelector('#screenReaderCheckBox').checked = true;
+			        		console.log("Screen reader checkbox initialized to true in background");
 			  
-			          if (!extInfo.enabled) {
-			            chrome.management.setEnabled(extInfo.id, true, function() {
-				            console.log("ChromeVox has been enabled in initialization");
-				          }); 
-			          }
-		          } else {
-			          document.querySelector('#screenReaderCheckBox').checked = false;
-			          console.log("Screen reader checkbox initializated to false in background");
+			        		if (!extInfo.enabled) {
+			           			chrome.management.setEnabled(extInfo.id, true, function() {
+				           			console.log("ChromeVox has been enabled in initialization");
+				       			}); 
+			        		}
+		          		} else {
+			        		document.querySelector('#screenReaderCheckBox').checked = false;
+			        		console.log("Screen reader checkbox initializated to false in background");
 			  
-			          if (extInfo.enabled) {
-			            chrome.management.setEnabled(extInfo.id, false, function() {
-			              console.log("ChromeVox has been disabled in initialization");
-			            }); 
-			          }
-		          }
-		        } catch (e) {
-		          console.log('Error in screen reader management: ' + e.message);
-			      document.querySelector('#screenReaderDivCVInstalled').style.display = 'none';
-			      document.querySelector('#screenReaderDivCVNotInstalled').style.display = 'block';
-		        }
-		      });
-	      } // if screenreader
+			        		if (extInfo.enabled) {
+			          			chrome.management.setEnabled(extInfo.id, false, function() {
+			           				console.log("ChromeVox has been disabled in initialization");
+			           			}); 
+			        		}
+		          		}
+		        	} catch (e) {
+		          		console.log('Error in screen reader management: ' + e.message);
+			      		document.querySelector('#screenReaderDivCVInstalled').style.display = 'none';
+			      		document.querySelector('#screenReaderDivCVNotInstalled').style.display = 'block';
+		        	}
+		      	});
+	      	} // if screenreader
 	     
 		    // Initialize high contrast
-		    if (localPreferences.hasOwnProperty('highContrast')) {
-	        switch (localPreferences['highContrast']) {
-		        case 'none': 
-		          document.querySelector('#NoHighContrastRB').checked = true;
-			        document.documentElement.removeAttribute('hc');
-			        console.log('High contrast initialized to none in popup');
-		          break;
-		        case 'invert': 
-		          document.querySelector('#invertRB').checked = true;
-			        document.documentElement.setAttribute('hc', 'invert');
-			        console.log('High contrast initialized to invert in popup');
-		          break;
-			      default:
-			        document.querySelector('#NoHighContrastRB').checked = true;
-			        document.documentElement.removeAttribute('hc');
-		      }
-		    } // if high contrast
-		
-		    if (localPreferences.hasOwnProperty('magnification')) {
-          switch (localPreferences['magnification']) {
-		        case 1: 
-			        // Magnification 100%
-		          document.querySelector('#zoom100').checked = true;
+		    if (localPreferences.hasOwnProperty('highContrastEnabled')) {
+		    	if (localPreferences['highContrastEnabled']) {
+		    		console.log("High Contrast is enabled");
+		    		if (localPreferences.hasOwnProperty('highContrastTheme')) {
+		    			console.log("there is a high contrast theme");
+		    			switch (localPreferences['highContrastTheme']) {
+		    				case 'black-white':
+		    					document.querySelector('#highContrastBlackWhite').checked = true;
+		    					document.documentElement.setAttribute('hc', 'bw');
+		    					break;
+		    				case 'white-black':
+		    					document.querySelector('#highContrastWhiteBlack').checked = true;
+		    					document.documentElement.setAttribute('hc', 'wb');
+		    					break;
+		    				case 'yellow-black':
+		    					document.querySelector('#highContrastYellowBlack').checked = true;
+		    					document.documentElement.setAttribute('hc', 'yb');
+		    					break;
+		    				case 'black-yellow':
+		    					document.querySelector('#highContrastBlackYellow').checked = true;
+		    					document.documentElement.setAttribute('hc', 'by');
+		    					break;
+		    				default:
+		    					break;
+		    			}
+		    		// HighContrast is enabled but there is no highContrastTheme
+		    		} else {
+						document.querySelector('#NoHighContrastRB').checked = true;
+		    			document.documentElement.removeAttribute('hc');
+		    		}
+
+		    	// if not highContrastEnabled
+		    	} else {
+		    		document.querySelector('#NoHighContrastRB').checked = true;
+		    		document.documentElement.removeAttribute('hc');
+		    	}
+		    // there is no property highContrastEnabled
+		    } else {
+		    	document.querySelector('#NoHighContrastRB').checked = true;
+		    	document.documentElement.removeAttribute('hc');
+		    }
+
+		    // Invert Colours
+		    if (localPreferences.hasOwnProperty('invertColours')) {
+		    	if (localPreferences['invertColours']) {
+		    		document.querySelector('#invertColorsCheckbox').checked = true;
+		    		document.documentElement.setAttribute('ic', 'invert');
+		    	} else {
+		    		document.querySelector('#invertColorsCheckbox').checked = false;
+		    		document.documentElement.removeAttribute('ic');
+		    	}
+		    } // end of if Invert Colours
+
+		    // magnification
+		    if (localPreferences.hasOwnProperty('magnifierEnabled')) {
+		    	if (localPreferences['magnifierEnabled']) {
+		    	// magnifier is enabled
+		    		if (localPreferences.hasOwnProperty('magnification')) {
+		    		// magnifier is enabled and there is a value for magnification
+		    			switch (localPreferences['magnification']) {
+		    				case 1:
+		    				// Magnification 100%
+		    					document.querySelector('#zoom100').checked = true;
+			        			document.documentElement.removeAttribute('zoom');
+		    					break;
+		    				case 2:
+		    				// Magnification 200%
+		    					document.querySelector('#zoom200').checked = true;
+			        			document.documentElement.setAttribute('zoom', '200%');
+		    					break;
+		    				case 3:
+		    				// Magnification 300%
+		          				document.querySelector('#zoom300').checked = true;
+			        			document.documentElement.setAttribute('zoom', '300%');
+			        			console.log("Zoom initilialized to 300% in background");
+		    					break;
+		    				default:
+		    					document.querySelector('#zoom100').checked = true;
+			        			document.documentElement.removeAttribute('zoom');
+		    					break;
+		    			}
+
+		    		} else {
+		    		// magnifier is enabled but there is not a value for magnification
+		    			document.querySelector('#zoom100').checked = true;
+			        	document.documentElement.removeAttribute('zoom');
+		    		}
+
+		    	} else {
+		    	// magnifier is no enabled
+					document.querySelector('#zoom100').checked = true;
 			        document.documentElement.removeAttribute('zoom');
-			        console.log("Zoom initilialized to 100% in background");
-		          break;
-		        case 2: 
-			        // Magnification 200%
-		          document.querySelector('#zoom200').checked = true;
-			        document.documentElement.setAttribute('zoom', '200%');
-			        console.log("Zoom initilialized to 200% in background");
-		          break;
-		        case 3: 
-			        // Magnification 300%
-		          document.querySelector('#zoom300').checked = true;
-			        document.documentElement.setAttribute('zoom', '300%');
-			        console.log("Zoom initilialized to 300% in background");
-		          break;
-		        default:
-			        // No correct value of magnification selected
-		          document.querySelector('#zoom100').defaultChecked;
-			        console.log("Not valid value for magnification");
-          } 		  
-	      } // if magnification
-		
-	      if (localPreferences.hasOwnProperty('fontSize')) {
-		      // There is a property font Size
-	        console.log(localPreferences['fontSize']);
-	        switch (localPreferences['fontSize']) {
-		        case 'medium': 
-		          document.querySelector('#textSizeNormal').checked = true;
-			        document.documentElement.removeAttribute('ts');
-			        console.log("Text size initialized to normal in background");
-		          break;
-		        case 'large': 
-		          document.querySelector('#textSizeLarge').checked = true; 
-			        document.documentElement.setAttribute('ts', 'large');
-			        console.log("Text size initialized to large in background"); 
-		          break;
-		        case 'x-large': 
-		          document.querySelector('#textSizeXLarge').checked = true;
-			        document.documentElement.setAttribute('ts', 'x-large');
-			        console.log("Text size initializated to x-large in background");
-		          break;
-		        default:
-		          console.log('text size value is not properly defined');
-	        } 
-	      } // fontSize
+		    	}
+		    } // End of magnification if
+
+	
+	      	if (localPreferences.hasOwnProperty('fontSize')) {
+		    // There is a property font Size
+	        	console.log(localPreferences['fontSize']);
+	        	switch (localPreferences['fontSize']) {
+		        	case 'medium': 
+		          		document.querySelector('#textSizeNormal').checked = true;
+			        	document.documentElement.removeAttribute('ts');
+			        	console.log("Text size initialized to normal in background");
+		          		break;
+		        	case 'large': 
+		          		document.querySelector('#textSizeLarge').checked = true; 
+			        	document.documentElement.setAttribute('ts', 'large');
+			        	console.log("Text size initialized to large in background"); 
+		          		break;
+		        	case 'x-large': 
+		          		document.querySelector('#textSizeXLarge').checked = true;
+			        	document.documentElement.setAttribute('ts', 'x-large');
+			        	console.log("Text size initializated to x-large in background");
+		          	break;
+		        	default:
+		          		document.querySelector('#textSizeNormal').checked = true;
+			        	document.documentElement.removeAttribute('ts');
+	        	} 
+	      	} // fontSize
 		
 		    // Initialize simplifier
 		    if (localPreferences.hasOwnProperty('simplifier')) {
-	        if (localPreferences['simplifier']) {
-		        document.querySelector('#simplifierCheckBox').checked = true;
-		          console.log("Simplification set to true in background");
-		      } else {
-		        document.querySelector('#simplifierCheckBox').checked = false;
-		        console.log("Simplification set to false in background");
-		      }
-	      } // end if simplifier
+	        	if (localPreferences['simplifier']) {
+		        	document.querySelector('#simplifierCheckBox').checked = true;
+		          	console.log("Simplification set to true in background");
+		      	} else {
+		        	document.querySelector('#simplifierCheckBox').checked = false;
+		        	console.log("Simplification set to false in background");
+		      	}
+	      	} // end if simplifier
 		
 	    } // The preferences object is empty ifelse
 	  } // The preferences object is empty and the token is an empty string
@@ -335,7 +396,7 @@ function zoom300Clicked() {
   localPreferences['magnifierEnabled'] = true;
   localPreferences['magnification'] = 3;
   chrome.storage.local.set({ token: userToken, preferences: localPreferences});
-  preferencesPort.postMessage({ magnifierEnabled : true, magnification : 3 }); 
+  // preferencesPort.postMessage({ magnifierEnabled : true, magnification : 3 }); 
   document.documentElement.setAttribute('zoom', '300%');
   // chrome.storage.sync.set({zoom: "300%"}, function() {
     // document.documentElement.setAttribute("zoom", "300%");
@@ -367,17 +428,55 @@ function textSizeXLargeClicked() {
 }
 
 function noHighContrastClicked() {
-  localPreferences['highContrast'] = 'none';
+  localPreferences['highContrastEnabled'] = false;
+  localPreferences['highContrastTheme'] = "";
   chrome.storage.local.set({ token: userToken, preferences: localPreferences });
   //preferencesPort.postMessage({ highContrast : 'none' }); 
   document.documentElement.removeAttribute("hc");
 }
 
+function highContrastBlackWhiteClicked() {
+	localPreferences['highContrastTheme'] = 'black-white';
+	localPreferences['highContrastEnabled'] = true;
+    chrome.storage.local.set({ token: userToken, preferences: localPreferences });
+	document.documentElement.setAttribute('hc', 'bw');
+	console.log("Black on white");
+}
+
+function highContrastWhiteBlackClicked() {
+	localPreferences['highContrastTheme'] = 'white-black';
+	localPreferences['highContrastEnabled'] = true;
+    chrome.storage.local.set({ token: userToken, preferences: localPreferences });
+	document.documentElement.setAttribute('hc', 'wb');
+	console.log("White on Black");
+}
+
+function highContrastYellowBlackClicked() {
+	localPreferences['highContrastEnabled'] = true;
+	localPreferences['highContrastTheme'] = 'yellow-black';
+    chrome.storage.local.set({ token: userToken, preferences: localPreferences });
+	document.documentElement.setAttribute('hc', 'yb');
+	console.log("Yellow on Black");
+}
+
+function highContrastBlackYellowClicked() {
+	localPreferences['highContrastEnabled'] = true;
+	localPreferences['highContrastTheme'] = 'black-yellow';
+    chrome.storage.local.set({ token: userToken, preferences: localPreferences });
+	document.documentElement.setAttribute('hc', 'by');
+	console.log("Black on Yellow");
+}
+
 function invertRBClicked() {
-  localPreferences['highContrast'] = 'invert';
-  chrome.storage.local.set({ token: userToken, preferences: localPreferences });
-  //preferencesPort.postMessage({ highContrast : 'invert' }); 
-  document.documentElement.setAttribute("hc", "invert"); 
+	if (this.checked) {
+		localPreferences['invertColours'] = true;
+		chrome.storage.local.set({ token: userToken, preferences: localPreferences });
+		document.documentElement.setAttribute('ic', 'invert');
+	} else {
+		localPreferences['invertColours'] = false;
+		chrome.storage.local.set({ token: userToken, preferences: localPreferences });
+		document.documentElement.removeAttribute('ic');
+	}
 }
 
 function simplifierCheckBoxClicked() {

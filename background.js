@@ -134,6 +134,7 @@ function setPreferences(preferences) {
 		console.log("NEW screenReaderTTSEnabled: " + preferences['screenReaderTTSEnabled']);
 	}
 
+	// FONT SIZE
 	if (preferences.hasOwnProperty('fontSize')) {
 		switch (preferences['fontSize']) {
 			case 'medium':
@@ -146,36 +147,80 @@ function setPreferences(preferences) {
 				chrome.tabs.executeScript({ code : 'document.documentElement.setAttribute("ts", "x-large");' });
 				break;
 			default:
-			  	break;
+				chrome.tabs.executeScript({ code : 'document.documentElement.removeAttribute("ts");' });
 		}
 	}
 
-	if (preferences.hasOwnProperty('magnification')) {
-		switch (preferences['magnification']) {
-			case 1:
+	// MAGNIFICATION
+	if (preferences.hasOwnProperty('magnifierEnabled')) {
+		if (preferences['magnifierEnabled']) {
+		// magnifier is enabled
+			if (preferences.hasOwnProperty('magnification')) {
+			// magnifier is enabled and there is a value for magnification
+				switch (preferences['magnification']) {
+					case 1:
+						chrome.tabs.executeScript({ code : 'document.documentElement.removeAttribute("zoom");' });
+						break;
+					case 2:
+						chrome.tabs.executeScript({ code : 'document.documentElement.setAttribute("zoom", "200%");' });
+						break;
+					case 3:
+						chrome.tabs.executeScript({ code : 'document.documentElement.setAttribute("zoom", "300%");' });
+						break;
+				}
+			} else {
+			// magnifier is enabled but there is no value for magnification
 				chrome.tabs.executeScript({ code : 'document.documentElement.removeAttribute("zoom");' });
-				break;
-			case 2:
-				chrome.tabs.executeScript({ code : 'document.documentElement.setAttribute("zoom", "200%");' });
-				break;
-			case 3:
-				chrome.tabs.executeScript({ code : 'document.documentElement.setAttribute("zoom", "300%");' });
-				break;
-			default:
-				break;
-		}
-	}
-
-	if (preferences.hasOwnProperty('highContrast')) {
-		if (preferences['highContrast'] == 'none') {
-			chrome.tabs.executeScript({ code : 'document.documentElement.removeAttribute("hc");' });
-		} else {
-			if (preferences['highContrast'] == 'invert') {
-				chrome.tabs.executeScript({ code : 'document.documentElement.setAttribute("hc", "invert");' });
 			}
+		} else {
+		// magnifier is not enabled
+			chrome.tabs.executeScript({ code : 'document.documentElement.removeAttribute("zoom");' });
 		}
 	}
 
+	// HIGH CONTRAST
+	if (preferences.hasOwnProperty('highContrastEnabled')) {
+		if (preferences['highContrastEnabled']) {
+		// high contrast is enabled
+			if (preferences.hasOwnProperty('highContrastTheme')) {
+			// high contrast is enabled and there is a high contrast theme
+				switch (preferences['highContrastTheme']) {
+					case 'black-white':
+						chrome.tabs.executeScript({ code : 'document.documentElement.setAttribute("hc", "bw");' });
+						break;
+					case 'white-black':
+						chrome.tabs.executeScript({ code : 'document.documentElement.setAttribute("hc", "wb");' });
+			 			break;
+					case 'yellow-black':
+						chrome.tabs.executeScript({ code : 'document.documentElement.setAttribute("hc", "yb");' }); 
+						break;
+					case 'black-yellow':
+						chrome.tabs.executeScript({ code : 'document.documentElement.setAttribute("hc", "by");' });
+						break;
+					default:
+						chrome.tabs.executeScript({ code : 'document.documentElement.removeAttribute("hc");' });
+				}
+			}
+
+		} else {
+		// high contrast is not enabled
+			chrome.tabs.executeScript({ code : 'document.documentElement.removeAttribute("hc");' });
+		}
+	} // End High Contrast
+
+
+	//INVERT COLOURS
+	if (preferences.hasOwnProperty('invertColours')) {
+		if (preferences['invertColours']) {
+			console.log("inverting colours");
+			chrome.tabs.executeScript({ code : 'document.documentElement.setAttribute("ic", "invert");' });
+		} else {
+			chrome.tabs.executeScript({ code : 'document.documentElement.removeAttribute("ic");' });
+			console.log("NOOO");
+		}
+	}
+
+	// SIMPLIFIER
 	if (preferences.hasOwnProperty('simplifier')) {
 		if (preferences['simplifier']) {
 			chrome.tabs.executeScript(null, { file : "js/simplifier.js "});

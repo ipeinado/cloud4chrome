@@ -56,6 +56,21 @@
     "NoHighContrastRB2Text": {
         "message": "No"
     },
+    "highContrastBlackWhiteLabelText": {
+        "message": "Negro sobre Blanco"
+    },
+    "highContrastWhiteBlackLabelText": {
+        "message": "Blanco sobre Negro"
+    },
+    "highContrastYellowBlackLabelText": {
+        "message": "Amarillo sobre Negro"
+    },
+    "highContrastBlackYellowLabelText": {
+        "message": "Negro sobre amarillo"
+    },
+    "invertColoursTitleText": {
+        "message": "Invertir colores"
+    },
     "invertLabelText": {
         "message": "Invertir colores"
     },

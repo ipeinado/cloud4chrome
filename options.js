@@ -7,7 +7,13 @@ var preferences = {},
 document.addEventListener('DOMContentLoaded', function() {
   document.querySelector('#screenReaderCheckBoxOP').addEventListener('click', screenReaderCheckBoxOPClicked); 
   document.querySelector('#noHighContrastRBOP').addEventListener('click', noHighContrastRBOPClicked); 
-  document.querySelector('#invertRBOP').addEventListener('click', invertRBOPClicked);
+  document.querySelector('#highContrastBlackWhite').addEventListener('click', highContrastBlackWhiteClicked);
+  document.querySelector('#highContrastWhiteBlack').addEventListener('click', highContrastWhiteBlackClicked);
+  document.querySelector('#highContrastYellowBlack').addEventListener('click', highContrastYellowBlackClicked);
+  document.querySelector('#highContrastBlackYellow').addEventListener('click', highContrastBlackYellowClicked);
+
+  document.querySelector('#invertColorsCheckbox').addEventListener('click', invertColorsCheckboxClicked);
+
   document.querySelector('#zoom100OP').addEventListener('click', zoom100OPClicked);
   document.querySelector('#zoom200OP').addEventListener('click', zoom200OPClicked);
   document.querySelector('#zoom300OP').addEventListener('click', zoom300OPClicked);
@@ -29,6 +35,11 @@ document.addEventListener('DOMContentLoaded', function() {
   document.querySelector('#installCVButton').innerText = chrome.i18n.getMessage("installCVButtonText");
   document.querySelector('#highContrastRgTitle').innerText = chrome.i18n.getMessage("highContrastRgTitleText");
   document.querySelector('#noHighContrastLabel').innerText = chrome.i18n.getMessage("NoHighContrastRB2Text");
+  document.querySelector('#highContrastBlackWhiteLabel').innerText = chrome.i18n.getMessage("highContrastBlackWhiteLabelText");
+  document.querySelector('#highContrastWhiteBlackLabel').innerText = chrome.i18n.getMessage("highContrastWhiteBlackLabelText");
+  document.querySelector('#highContrastYellowBlackLabel').innerText = chrome.i18n.getMessage("highContrastYellowBlackLabelText");
+  document.querySelector('#highContrastBlackYellowLabel').innerText = chrome.i18n.getMessage("highContrastBlackYellowLabelText");
+  document.querySelector('#invertColoursTitle').innerText = chrome.i18n.getMessage("invertColoursTitleText");
   document.querySelector('#invertLabel').innerText = chrome.i18n.getMessage("invertLabelText");
   document.querySelector('#zoomrg').innerText = chrome.i18n.getMessage("zoomRgTitleText");
   document.querySelector('#fontsizerg').innerText = chrome.i18n.getMessage("fontSizeRGTitleText");
@@ -57,7 +68,7 @@ function setPreferencesFormOP(npsetObject) {
   
 	  if (isEmpty(npsetObject['preferences']) && npsetObject['token'] == "") {
 	    // The preferences object is empty and the token is an empty string
-	    console.log('set of needs and preferences not stored locally at setPreferencesFormOP');
+	    initializeForm();
 	
 	  } else {
 	    // Either the token is a valid string or there are actual preferences 
@@ -69,7 +80,7 @@ function setPreferencesFormOP(npsetObject) {
 	  
 	    if (isEmpty(npsetObject['preferences'])) {
 	      // The preferences object is empty
-	      console.log("Preferences object is empty");
+	      initializeForm()
 		
 	    } else {
 	      // The preferences object is not empty
@@ -109,50 +120,83 @@ function setPreferencesFormOP(npsetObject) {
 	      } // if screenreader
 	     
 		    // Initialize high contrast
-		    if (localPreferences.hasOwnProperty('highContrast')) {
-	        switch (localPreferences['highContrast']) {
-		        case 'none': 
-		          document.querySelector('#NoHighContrastRBOP').checked = true;
-			        document.documentElement.removeAttribute('hc');
-			        console.log('High contrast initialized to none in popup');
-		          break;
-		        case 'invert': 
-		          document.querySelector('#invertRBOP').checked = true;
-			        document.documentElement.setAttribute('hc', 'invert');
-			        console.log('High contrast initialized to invert in popup');
-		          break;
-			      default:
-			        document.querySelector('#NoHighContrastRBOP').checked = true;
-			        document.documentElement.removeAttribute('hc');
-		      }
-		    } // if high contrast
-		
-		    if (localPreferences.hasOwnProperty('magnification')) {
-          switch (localPreferences['magnification']) {
-		        case 1: 
-			        // Magnification 100%
-		          document.querySelector('#zoom100OP').checked = true;
+		    if (localPreferences.hasOwnProperty('highContrastEnabled')) {
+		    	if (localPreferences['highContrastEnabled']) {
+		    		if (localPreferences.hasOwnProperty('highContrastTheme')) {
+		    			switch (localPreferences['highContrastTheme']) {
+		    				case 'bw':
+		    					document.querySelector['#highContrastBlackWhite'].checked = true;
+		    					document.documentElement.setAttribute('hc', 'bw');
+		    					break;
+		    				case 'wb':
+		    					document.querySelector['#highContrastWhiteBlack'].checked = true;
+		    					document.documentElement.setAttribute('hc', 'wb');
+		    					break;
+		    				case 'yb':
+		    					document.querySelector['#highContrastYellowBlack'].checked = true;
+		    					document.documentElement.setAttribute('hc', 'yb');
+		    					break;
+		    				case 'by':
+		    					document.querySelector['#highContrastBlackYellow'].checked = true;
+		    					document.documentElement.setAttribute('hc', 'by');
+		    					break;
+		    			}
+		    		}
+		    	// localPreferences hasOwnProperty highContrastEnabled
+		    	} else { 
+		    		document.querySelector('#noHighContrastRBOP').checked = true;
+		    		document.documentElement.removeAttribute('hc');
+		    	}
+		    }
+
+		    if (localPreferences.hasOwnProperty('invertColours')) {
+		    	if (localPreferences['invertColours']) {
+		    		document.querySelector('#invertColorsCheckbox').checked = true;
+		    		document.documentElement.setAttribute('ic', 'invert');
+		    	} else {
+		    		document.querySelector('#invertColorsCheckbox').checked = false;
+		    		document.documentElement.removeAttribute('ic');
+		    	}
+		    }
+
+		    if (localPreferences.hasOwnProperty('magnifierEnabled')) {
+		    	if (localPreferences['magnifierEnabled']) {
+		    		if (localPreferences.hasOwnProperty('magnification')) {
+		    			switch (localPreferences['magnification']) {
+		    				case 1: 
+			        		// Magnification 100%
+		          				document.querySelector('#zoom100OP').checked = true;
+			        			document.documentElement.removeAttribute('zoom');
+			        			console.log("Zoom initilialized to 100% in background");
+		          				break;
+		        			case 2: 
+			        		// Magnification 200%
+		          				document.querySelector('#zoom200OP').checked = true;
+			        			document.documentElement.setAttribute('zoom', '200%');
+			        			console.log("Zoom initilialized to 200% in background");
+		          				break;
+		        			case 3: 
+			        		// Magnification 300%
+		          				document.querySelector('#zoom300OP').checked = true;
+			        			document.documentElement.setAttribute('zoom', '300%');
+			        			console.log("Zoom initilialized to 300% in background");
+		          				break;
+		        			default:
+			        		// No correct value of magnification selected
+		          			document.querySelector('#zoom100OP').defaultChecked;
+			        		console.log("Not valid value for magnification");
+		    			}
+		    		// Magnifier is enabled but there is no a magnification value
+		    		} else {
+		    			document.querySelector('#zoom100OP').checked = true;
+			        	document.documentElement.removeAttribute('zoom');		
+		    		}
+		    	// Magnifier is not enabled
+		    	} else {
+					document.querySelector('#zoom100OP').checked = true;
 			        document.documentElement.removeAttribute('zoom');
-			        console.log("Zoom initilialized to 100% in background");
-		          break;
-		        case 2: 
-			        // Magnification 200%
-		          document.querySelector('#zoom200OP').checked = true;
-			        document.documentElement.setAttribute('zoom', '200%');
-			        console.log("Zoom initilialized to 200% in background");
-		          break;
-		        case 3: 
-			        // Magnification 300%
-		          document.querySelector('#zoom300OP').checked = true;
-			        document.documentElement.setAttribute('zoom', '300%');
-			        console.log("Zoom initilialized to 300% in background");
-		          break;
-		        default:
-			        // No correct value of magnification selected
-		          document.querySelector('#zoom100OP').defaultChecked;
-			        console.log("Not valid value for magnification");
-          } 		  
-	      } // if magnification
+		    	}
+		    }
 		
 	      if (localPreferences.hasOwnProperty('fontSize')) {
 		      // There is a property font Size
@@ -226,17 +270,50 @@ function screenReaderCheckBoxOPClicked() {
   } else {
     preferences['screenReaderTTSEnabled'] = false;
   }
-
 }
 
 function noHighContrastRBOPClicked() {
   document.documentElement.removeAttribute('hc'); 
-  preferences['highContrast'] = 'none';
+  preferences['highContrastEnabled'] = false;
 }
 
-function invertRBOPClicked() {
-  document.documentElement.setAttribute('hc', 'invert'); 
-  preferences['highContrast'] = 'invert';
+function highContrastBlackWhiteClicked() {
+	console.log("Black on white");
+	preferences['highContrastEnabled'] = true;
+	preferences['highContrastTheme'] = 'black-white';
+	document.documentElement.setAttribute('hc', 'bw');
+}
+
+function highContrastWhiteBlackClicked() {
+	console.log("White on Black");
+	preferences['highContrastEnabled'] = true;
+	preferences['highContrastTheme'] = 'white-black';
+	document.documentElement.setAttribute('hc', 'wb');
+}
+
+function highContrastYellowBlackClicked() {
+	console.log("Yellow on Black");
+	preferences['highContrastEnabled'] = true;
+	preferences['highContrastTheme'] = 'yellow-black';
+	document.documentElement.setAttribute('hc', 'yb');
+}
+
+function highContrastBlackYellowClicked() {
+	console.log("Black on Yellow");
+	preferences['highContrastEnabled'] = true;
+	preferences['highContrastTheme'] = 'black-yellow';
+	document.documentElement.setAttribute('hc', 'by');
+
+}
+
+function invertColorsCheckboxClicked() {
+	if (document.querySelector('#invertColorsCheckbox').checked) {
+		document.documentElement.setAttribute('hc', 'invert');
+		preferences['invertColours'] = true; 		
+	} else {
+		document.documentElement.removeAttribute('hc');
+		preferences['invertColours'] = false;
+	}
 }
 
 function zoom100OPClicked() {
@@ -279,6 +356,21 @@ function simplifierCheckBoxOPClicked() {
    } else {
      preferences['simplifier'] = false;
    }
+}
+
+// In case there ar no preferences stored, initialize form and all preferences
+function initializeForm() {
+	console.log("Preferences object is empty");
+	preferences['screenReaderTTSEnabled'] = false;
+	document.querySelector('#noHighContrastRBOP').checked = true;
+	preferences['highContrastEnabled'] = false;
+	preferences['invertColours'] = false;
+	document.querySelector('#zoom100OP').checked = true;
+	preferences['magnifierEnabled'] = false;
+	preferences['magnification'] = 1;
+	document.querySelector('#textSizeNormalOP').checked = true;
+	preferences['fontSize'] = 'medium';
+	preferences['simplifier'] = false;
 }
 
 function formPreferenceSubmit(e) {
