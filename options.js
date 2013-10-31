@@ -308,10 +308,10 @@ function highContrastBlackYellowClicked() {
 
 function invertColorsCheckboxClicked() {
 	if (document.querySelector('#invertColorsCheckbox').checked) {
-		document.documentElement.setAttribute('hc', 'invert');
+		document.documentElement.setAttribute('ic', 'invert');
 		preferences['invertColours'] = true; 		
 	} else {
-		document.documentElement.removeAttribute('hc');
+		document.documentElement.removeAttribute('ic');
 		preferences['invertColours'] = false;
 	}
 }
