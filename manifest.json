@@ -17,8 +17,7 @@
 	  {
 	    "matches": ["http://*/*", "https://*/*", "<all_urls>"],
 		"js": ["js/simplifier.js", 
-			   "js/setAttributeToAllElements.js",
-			   "js/resetHC.js"],
+			   "js/setAttributeToAllElements.js"],
 		"css": ["content.css"],
 		"run_at": "document_start"
 	  }

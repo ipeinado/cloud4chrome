@@ -429,7 +429,7 @@ function textSizeXLargeClicked() {
 
 function noHighContrastClicked() {
   localPreferences['highContrastEnabled'] = false;
-  localPreferences['highContrastTheme'] = "";
+  localPreferences['highContrastTheme'] = "none";
   chrome.storage.local.set({ token: userToken, preferences: localPreferences });
   //preferencesPort.postMessage({ highContrast : 'none' }); 
   document.documentElement.removeAttribute("hc");

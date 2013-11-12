@@ -164,7 +164,11 @@ function setPreferences(preferences) {
 				break;
 			default:
 				delete attributes['ts'];
-				chrome.tabs.executeScript({ code : 'document.documentElement.removeAttribute("ts");' });
+				chrome.tabs.executeScript( {code: 'var attributes = ' + JSON.stringify(attributes) + ';' } ,
+					    					function() {
+												chrome.tabs.executeScript( { file: 'js/setAttributeToAllElements.js' } );
+											}
+										  );
 		}
 	}
 
@@ -234,13 +238,21 @@ function setPreferences(preferences) {
 						break;
 					default:
 						delete attributes['hc'];
-						chrome.tabs.executeScript({ file : 'js/resetHC.js' });
+						chrome.tabs.executeScript({code: 'var attributes = ' + JSON.stringify(attributes) + ';' } ,
+													function() {
+														chrome.tabs.executeScript( { file: 'js/setAttributeToAllElements.js' } );
+													});
+						
 				}
 			}
 
 		} else {
 		// high contrast is not enabled
-			chrome.tabs.executeScript({ file: 'js/resetHC.js' });
+			delete attributes['hc'];
+			chrome.tabs.executeScript({code: 'var attributes = ' + JSON.stringify(attributes) + ';' } ,
+													function() {
+														chrome.tabs.executeScript( { file: 'js/setAttributeToAllElements.js' } );
+													});
 		}
 	} // End High Contrast
 

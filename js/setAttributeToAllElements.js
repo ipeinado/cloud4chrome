@@ -3,21 +3,13 @@ var elements = document.querySelectorAll('*'),
 	max = elements.length;
 
 if (attributes.hasOwnProperty('ts')) {
- 	for (var i = 0; i < max; i++) {
- 		elements[i].setAttribute('ts', attributes['ts']);
-	}
+ 	[].forEach.call(elements, function(element) { element.setAttribute('ts', attributes['ts']) }); 
 } else {
-	for (var i = 0; i < max; i++) {
-		elements[i].removeAttribute('ts');
-	}
+	[].forEach.call(elements, function(element) { element.removeAttribute('ts'); });
 }
 
 if (attributes.hasOwnProperty('hc')) {
-	for (var i = 0; i < max; i++) {
-		elements[i].setAttribute('hc', attributes['hc']);
-	}
+ 	[].forEach.call(elements, function(element) { element.setAttribute('hc', attributes['hc']) }); 
 } else {
-	for (var i = 0; i < max; i++) {
-		elements[i].removeAttribute('hc');
-	}
+	[].forEach.call(elements, function(element) { element.removeAttribute('hc'); });
 }

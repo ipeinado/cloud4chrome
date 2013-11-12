@@ -154,7 +154,7 @@ h5[ts='large'], dt[ts='large'],
 table[ts='large'], th[ts='large'], tr[ts='large'], td[ts='large'], pre[ts='large'], code[ts='large'],
 article[ts='large'], nav[ts='large'], section[ts='large'] {
   font-size: 1em !important;
-  line-height: 1em !important;
+  line-height: 1.3em !important;
 }
 
 li[ts='large'] {
@@ -187,7 +187,7 @@ h5[ts='x-large'],
 table[ts='x-large'], th[ts='x-large'], tr[ts='x-large'], td[ts='x-large'], pre[ts='x-large'], code[ts='x-large'],
 article[ts='x-large'], nav[ts='x-large'], section[ts='x-large'] {
   font-size: 1em !important;
-  line-height: 1.1em !important;
+  line-height: 1.3em !important;
 }
 
 li[ts='x-large'] {
