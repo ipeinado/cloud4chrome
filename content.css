@@ -3,11 +3,11 @@ html[ic="invert"] {
 }
 
 html[ts="large"] body {
-  font-size: large !important;
+  font-size: 1.2em !important;
 }
 
 html[ts="x-large"] body {
-  font-size: x-large !important;
+  font-size: 1.4em !important;
 }
 
 html[zoom="200%"] body {
@@ -27,6 +27,38 @@ html[hc = 'wb'] {
   background: black;
 }
 
+div[hc = 'wb'], span[hc = 'wb'], p[hc = 'wb'], ul[hc = 'wb'], li[hc = 'wb'],
+h1[hc = 'wb'], h2[hc = 'wb'], h3[hc = 'wb'], h4[hc = 'wb'], h5[hc = 'wb'],
+table[hc = 'wb'], th[hc = 'wb'], tr[hc = 'wb'], td[hc = 'wb'], pre[hc = 'wb'], code[hc = 'wb'] {
+  background: black !important;
+  color: white !important;
+  text-shadow: none !important;
+}
+
+a[hc = 'wb'] {
+  background: black !important;
+  background-color: black !important;
+  color: #C2CFFF !important;
+  text-decoration: underline !important;
+  text-shadow: none !important;
+}
+
+a[hc='wb']:visited, a[hc = 'wb']:hover {
+  color: white !important;
+}
+
+input[hc='wb'] {
+  color: white;
+  background: black;
+  border: 1px solid white;
+}
+
+button[hc='wb'] {
+  color: #C2CFFF;
+  background: black;
+  border: 1px solid #C2CFFF;
+}
+
 html[hc = 'wb'] > body {
   background: black;
   color: white;
@@ -41,12 +73,77 @@ html[hc = 'yb'] > body {
   color: yellow;
 }
 
+div[hc = 'yb'], span[hc = 'yb'], p[hc = 'yb'], ul[hc = 'yb'], li[hc = 'yb'],
+h1[hc = 'yb'], h2[hc = 'yb'], h3[hc = 'yb'], h4[hc = 'yb'], h5[hc = 'yb'],
+table[hc = 'yb'], th[hc = 'yb'], tr[hc = 'yb'], td[hc = 'yb'], pre[hc = 'yb'], code[hc = 'yb'],
+article[hc='yb'], nav[hc='yb'], section[hc='yb'] {
+  background: black !important;
+  color: yellow !important;
+  text-shadow: none !important;
+}
+
+a[hc = 'yb'] {
+  background: black !important;
+  background-color: black !important;
+  color: yellow !important;
+  text-decoration: underline !important;
+  text-shadow: none !important;
+}
+
+a[hc='yb']:visited, a[hc = 'yb']:hover {
+  color: yellow !important;
+}
+
+input[hc='yb'] {
+  color: yellow;
+  background: black;
+  border: 1px solid yellow;
+}
+
+button[hc='yb'] {
+  color: yellow;
+  background: black;
+  border: 1px solid yellow;
+}
+
 html[hc = 'by'] {
   background: yellow;
 }
 html[hc = 'by'] > body{
   background: yellow;
   color: black;
+}
+div[hc = 'by'], span[hc = 'by'], p[hc = 'by'], ul[hc = 'by'], li[hc = 'by'],
+h1[hc = 'by'], h2[hc = 'by'], h3[hc = 'by'], h4[hc = 'by'], h5[hc = 'by'],
+table[hc = 'by'], th[hc = 'by'], tr[hc = 'by'], td[hc = 'by'], pre[hc = 'by'], code[hc = 'by'],
+article[hc='by'], nav[hc='by'], section[hc='by'] {
+  background: yellow !important;
+  color: black !important;
+  text-shadow: none !important;
+}
+
+a[hc = 'by'] {
+  background: yellow !important;
+  background-color: yellow !important;
+  color: black !important;
+  text-decoration: underline !important;
+  text-shadow: none !important;
+}
+
+a[hc='by']:visited, a[hc = 'by']:hover {
+  color: #333 !important;
+}
+
+input[hc='by'] {
+  color: black;
+  background: yellow;
+  border: 1px solid black;
+}
+
+button[hc='by'] {
+  color: black;
+  background: yellow;
+  border: 1px solid yellow;
 }
 
 .simpWarn {

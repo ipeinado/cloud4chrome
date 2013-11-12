@@ -16,7 +16,9 @@
 	"content_scripts": [
 	  {
 	    "matches": ["http://*/*", "https://*/*", "<all_urls>"],
-		"js": ["js/simplifier.js"],
+		"js": ["js/simplifier.js", 
+			   "js/setAttributeToAllElements.js",
+			   "js/resetHC.js"],
 		"css": ["content.css"],
 		"run_at": "document_start"
 	  }

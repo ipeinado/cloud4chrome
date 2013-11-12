@@ -6,7 +6,8 @@ var value,
 	userprefs = { token: "", preferences: {} },
 	npset,
 	xhrstatus = { status: 0, isError: true },
-	audio = new Audio("audio/beep-06.wav");
+	audio = new Audio("audio/beep-06.wav"),
+	attributes = {};
 
 chrome.windows.onCreated.addListener(function() {
 	audio.play();
@@ -117,7 +118,7 @@ chrome.storage.onChanged.addListener(function(changes, local) {
 			chrome.tabs.query({currentWindow : true} , function(tabs) {
 				for (var i = 0; i < tabs.length; i++) {
 					chrome.tabs.executeScript( 	tabs[i].id, 
-												{ code : 'document.documentElement.removeAttribute("ts");document.documentElement.removeAttribute("zoom");document.documentElement.removeAttribute("hc");' }
+												{ 	file : 'js/resetTab.js' }
 											  );
 				}
 			});
@@ -138,15 +139,31 @@ function setPreferences(preferences) {
 	if (preferences.hasOwnProperty('fontSize')) {
 		switch (preferences['fontSize']) {
 			case 'medium':
-				chrome.tabs.executeScript({ code : 'document.documentElement.removeAttribute("ts");' });
+				attributes['ts'] = 'medium';
+				chrome.tabs.executeScript( {code: 'var attributes = ' + JSON.stringify(attributes) + ';' } ,
+					    					function() {
+												chrome.tabs.executeScript( { file: 'js/setAttributeToAllElements.js' } );
+											}
+										  );
 			  	break;
 			case 'large': 
-				chrome.tabs.executeScript({ code : 'document.documentElement.setAttribute("ts", "large");' });
-			  	break;
+				attributes['ts'] = 'large';
+				chrome.tabs.executeScript( {code: 'var attributes = ' + JSON.stringify(attributes) + ';' } ,
+					    					function() {
+												chrome.tabs.executeScript( { file: 'js/setAttributeToAllElements.js' } );
+											}
+										  );			  	
+				break;
 			case 'x-large':
-				chrome.tabs.executeScript({ code : 'document.documentElement.setAttribute("ts", "x-large");' });
+				attributes['ts'] = 'x-large';
+				chrome.tabs.executeScript( {code: 'var attributes = ' + JSON.stringify(attributes) + ';' } ,
+					    					function() {
+												chrome.tabs.executeScript( { file: 'js/setAttributeToAllElements.js' } );
+											}
+										  );
 				break;
 			default:
+				delete attributes['ts'];
 				chrome.tabs.executeScript({ code : 'document.documentElement.removeAttribute("ts");' });
 		}
 	}
@@ -186,25 +203,44 @@ function setPreferences(preferences) {
 			// high contrast is enabled and there is a high contrast theme
 				switch (preferences['highContrastTheme']) {
 					case 'black-white':
-						chrome.tabs.executeScript({ code : 'document.documentElement.setAttribute("hc", "bw");' });
+						attributes['hc'] = 'bw';
+						chrome.tabs.executeScript( {code: 'var attributes = ' + JSON.stringify(attributes) + ';' } ,
+													function() {
+														chrome.tabs.executeScript( { file: 'js/setAttributeToAllElements.js' } );
+													}
+												  );
 						break;
 					case 'white-black':
-						chrome.tabs.executeScript({ code : 'document.documentElement.setAttribute("hc", "wb");' });
+						attributes['hc'] = 'wb';
+						console.log('inside white-black');
+						chrome.tabs.executeScript( { code : 'var attributes = ' + JSON.stringify(attributes) + ';' }, 
+												   function() {
+												   		chrome.tabs.executeScript( { file : "js/setAttributeToAllElements.js" } );
+												   }); 
 			 			break;
 					case 'yellow-black':
-						chrome.tabs.executeScript({ code : 'document.documentElement.setAttribute("hc", "yb");' }); 
+						attributes['hc'] = 'yb';
+						chrome.tabs.executeScript({code: 'var attributes = ' + JSON.stringify(attributes) + ';' } ,
+													function() {
+														chrome.tabs.executeScript( { file: 'js/setAttributeToAllElements.js' } );
+													}); 
 						break;
 					case 'black-yellow':
-						chrome.tabs.executeScript({ code : 'document.documentElement.setAttribute("hc", "by");' });
+						attributes['hc'] = 'by';
+						chrome.tabs.executeScript({code: 'var attributes = ' + JSON.stringify(attributes) + ';' } ,
+													function() {
+														chrome.tabs.executeScript( { file: 'js/setAttributeToAllElements.js' } );
+													});
 						break;
 					default:
-						chrome.tabs.executeScript({ code : 'document.documentElement.removeAttribute("hc");' });
+						delete attributes['hc'];
+						chrome.tabs.executeScript({ file : 'js/resetHC.js' });
 				}
 			}
 
 		} else {
 		// high contrast is not enabled
-			chrome.tabs.executeScript({ code : 'document.documentElement.removeAttribute("hc");' });
+			chrome.tabs.executeScript({ file: 'js/resetHC.js' });
 		}
 	} // End High Contrast
 
@@ -216,7 +252,6 @@ function setPreferences(preferences) {
 			chrome.tabs.executeScript({ code : 'document.documentElement.setAttribute("ic", "invert");' });
 		} else {
 			chrome.tabs.executeScript({ code : 'document.documentElement.removeAttribute("ic");' });
-			console.log("NOOO");
 		}
 	}
 
