@@ -19,7 +19,7 @@ html[zoom="300%"] body {
 }
 
 html[hc = 'bw'] {
-  -webkit-filter: contrast(2) grayscale(100%);
+  -webkit-filter: grayscale(100%);
 }
 
 
@@ -29,7 +29,8 @@ html[hc = 'wb'] {
 
 div[hc = 'wb'], span[hc = 'wb'], p[hc = 'wb'], ul[hc = 'wb'], li[hc = 'wb'],
 h1[hc = 'wb'], h2[hc = 'wb'], h3[hc = 'wb'], h4[hc = 'wb'], h5[hc = 'wb'],
-table[hc = 'wb'], th[hc = 'wb'], tr[hc = 'wb'], td[hc = 'wb'], pre[hc = 'wb'], code[hc = 'wb'] {
+table[hc = 'wb'], th[hc = 'wb'], tr[hc = 'wb'], td[hc = 'wb'], pre[hc = 'wb'], code[hc = 'wb'], header[hc='wb'],
+dt[hc='wb'], dl[hc='wb'] {
   background: black !important;
   color: white !important;
   text-shadow: none !important;
@@ -76,7 +77,8 @@ html[hc = 'yb'] > body {
 div[hc = 'yb'], span[hc = 'yb'], p[hc = 'yb'], ul[hc = 'yb'], li[hc = 'yb'],
 h1[hc = 'yb'], h2[hc = 'yb'], h3[hc = 'yb'], h4[hc = 'yb'], h5[hc = 'yb'],
 table[hc = 'yb'], th[hc = 'yb'], tr[hc = 'yb'], td[hc = 'yb'], pre[hc = 'yb'], code[hc = 'yb'],
-article[hc='yb'], nav[hc='yb'], section[hc='yb'] {
+article[hc='yb'], nav[hc='yb'], section[hc='yb'], header[hc='by'], 
+dl[hc='yb'], dt[hc='yb'] {
   background: black !important;
   color: yellow !important;
   text-shadow: none !important;
@@ -116,7 +118,8 @@ html[hc = 'by'] > body{
 div[hc = 'by'], span[hc = 'by'], p[hc = 'by'], ul[hc = 'by'], li[hc = 'by'],
 h1[hc = 'by'], h2[hc = 'by'], h3[hc = 'by'], h4[hc = 'by'], h5[hc = 'by'],
 table[hc = 'by'], th[hc = 'by'], tr[hc = 'by'], td[hc = 'by'], pre[hc = 'by'], code[hc = 'by'],
-article[hc='by'], nav[hc='by'], section[hc='by'] {
+article[hc='by'], nav[hc='by'], section[hc='by'], header[hc='by'],
+dl[hc='by'], dt[hc='by'] {
   background: yellow !important;
   color: black !important;
   text-shadow: none !important;
@@ -144,6 +147,72 @@ button[hc='by'] {
   color: black;
   background: yellow;
   border: 1px solid yellow;
+}
+
+div[ts='large'], span[ts='large'], p[ts='large'], ul[ts='large'], 
+h5[ts='large'], dt[ts='large'],
+table[ts='large'], th[ts='large'], tr[ts='large'], td[ts='large'], pre[ts='large'], code[ts='large'],
+article[ts='large'], nav[ts='large'], section[ts='large'] {
+  font-size: 1em !important;
+  line-height: 1em !important;
+}
+
+li[ts='large'] {
+  font-size: 1em !important;
+  line-height: 1.2em !important;
+}
+
+h1[ts='large'] {
+  font-size: 1.6em !important;
+  line-height: 1.6em !important;
+}
+
+h2[ts='large'] {
+  font-size: 1.5em !important;
+  line-height: 1.5em !important;
+}
+
+h3[ts='large'] {
+  font-size: 1.4em !important;
+  line-height: 1.4em !important;
+}
+
+h4[ts='large'] {
+  font-size: 1.3em !important;
+  line-height: 1.3em !important;
+}
+
+div[ts='x-large'], span[ts='x-large'], p[ts='x-large'], ul[ts='x-large'], 
+h5[ts='x-large'],
+table[ts='x-large'], th[ts='x-large'], tr[ts='x-large'], td[ts='x-large'], pre[ts='x-large'], code[ts='x-large'],
+article[ts='x-large'], nav[ts='x-large'], section[ts='x-large'] {
+  font-size: 1em !important;
+  line-height: 1.1em !important;
+}
+
+li[ts='x-large'] {
+  font-size: 1em !important;
+  line-height: 1.2em !important;
+}
+
+h1[ts='x-large'] {
+  font-size: 1.6em !important;
+  line-height: 1.6em !important;
+}
+
+h2[ts='x-large'] {
+  font-size: 1.5em !important;
+  line-height: 1.5em !important;
+}
+
+h3[ts='x-large'] {
+  font-size: 1.4em !important;
+  line-height: 1.4em !important;
+}
+
+h4[ts='x-large'] {
+  font-size: 1.3em !important;
+  line-height: 1.3em !important;
 }
 
 .simpWarn {

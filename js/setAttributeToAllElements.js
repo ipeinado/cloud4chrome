@@ -1,4 +1,6 @@
 console.log('inside setAttributeToAllElements with attributesJSON ' + attributes);
+var elements = document.querySelectorAll('*'),
+	max = elements.length;
 
 if (attributes.hasOwnProperty('ts')) {
  	for (var i = 0; i < max; i++) {
