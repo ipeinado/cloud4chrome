@@ -30,8 +30,12 @@ document.addEventListener("DOMContentLoaded", function(e) {
   document.querySelector('#textSizeXLarge').addEventListener('click', textSizeXLargeClicked);
   document.querySelector('#simplifierCheckBox').addEventListener('click', simplifierCheckBoxClicked);
 
-  document.querySelector('#seeallprefs').addEventListener('click', onOptionsClick); 
-  document.querySelector('#signOutBtn').addEventListener('click', signOutBtnClicked);
+  document.querySelector('#seeallprefs').addEventListener('click', onOptionsClick);
+  [].forEach.call(document.querySelectorAll('.signOutBtn'), function(button) {
+  	button.addEventListener('click', signOutBtnClicked);
+  	button.innerText = chrome.i18n.getMessage("signOutBtnText");
+
+  }); 
 
   // Initialize all text to make the extension localizable
   document.querySelector("#welcomeMessage").innerText = chrome.i18n.getMessage("welcomeMessage");
@@ -58,9 +62,7 @@ document.addEventListener("DOMContentLoaded", function(e) {
   document.querySelector('#textSizeLargeLabel').innerText = chrome.i18n.getMessage("textSizeLargeLabelText");
   document.querySelector('#textSizeXLargeLabel').innerText = chrome.i18n.getMessage("textSizeXLargeLabelText");
   document.querySelector('#simplifierTitle').innerText = chrome.i18n.getMessage("simplifierTitleText");
-  document.querySelector('#simplifierCheckBoxLabel').innerText = chrome.i18n.getMessage("simplifierCheckBoxLabelText");
-  document.querySelector('#signOutBtn').innerText = chrome.i18n.getMessage("signOutBtnText");
-  
+  document.querySelector('#simplifierCheckBoxLabel').innerText = chrome.i18n.getMessage("simplifierCheckBoxLabelText");  
   // if there is a configuration stored locally, we will load this 
   // set of needs and preferences
   chrome.storage.local.get({'token' : "" , 'preferences': {} }, function(results) {
