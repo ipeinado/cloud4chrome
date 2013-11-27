@@ -270,7 +270,7 @@ function setPreferences(preferences) {
 	// SIMPLIFIER
 	if (preferences.hasOwnProperty('simplifier')) {
 		if (preferences['simplifier']) {
-			chrome.tabs.executeScript(null, { file : "js/simplifier.js "});
+			chrome.tabs.executeScript({ file : "js/simplifier.js" });
 		}
 	}
 }
