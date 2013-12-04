@@ -1,13 +1,18 @@
 var value,
 	html = document.documentElement,
-	uri = 'http://registry.gpii.org/applications/org.chrome.cloud4chrome',
-	npserver = 'http://preferences.gpii.net/user/',
+	uri = 'org.chrome.cloud4chrome',
+	npserver = 'http://127.0.0.1:8081/',
+	suffix = '/settings/%7B"OS":%7B"id":"web"%7D,"solutions":[%7B"id":"org.chrome.cloud4chrome"%7D]%7D',
 	xhr = new XMLHttpRequest(),
 	userprefs = { token: "", preferences: {} },
-	npset,
-	xhrstatus = { status: 0, isError: true },
+	npset = {}
+	xhrstatus = { status: 0, isError: true, errorMessage: "" },
 	audio = new Audio("audio/beep-06.wav"),
 	attributes = {};
+
+(function() {
+	xhr.onreadystatechange = handleStateChange;
+})();
 
 chrome.windows.onCreated.addListener(function() {
 	audio.play();
@@ -22,63 +27,82 @@ chrome.runtime.onInstalled.addListener(function(details) {
 chrome.runtime.onSuspend.addListener(function() {
   chrome.storage.local.clear();
 }); 
-	
+
+// Receives a message from the popup with the token when the token form is submitted	
 chrome.runtime.onMessage.addListener(
   function(message, sender, sendResponse) {
-    var isError = true;
-    getNP(message);
-    console.log('status at addlistener: ' + xhrstatus.status );
-	  if (xhrstatus.status == 1) {
-	    if (npset.hasOwnProperty(uri)) {
-	      var preferences = npset[uri][0].value;
-	      isError = false;
-	      chrome.storage.local.set(
-	        {
-		        token: message,
-		        preferences: preferences
-		      },
-		      function() {
-		        if (chrome.runtime.lastError) {
-		          console.log('Error storing preferences locally');
-		        } else {
-		          console.log('Preferences saved locally');
-		        }
-		      }
-	      );
-	    } 
-	  }
-	  sendResponse({ status: xhrstatus.status, isError: isError });
+  	var isError = true;
+  	getNP(message.token);
+  	
+  	if (xhrstatus.status == 1) {
+  	// The data transfer has been complete and JSON parsing has worked
+  	  if (!(isEmpty(npset)) && npset.hasOwnProperty(uri)) {
+  	  	isError = false;
+  	  	chrome.storage.local.set(
+  	  	  {
+  	  	  	token: message.token,
+  	  	  	preferences: npset[uri]
+  	  	  },
+  	  	  function() {
+  	  	  	if (chrome.runtime.lastError) {
+  	  	  		console.log("Error storing preferences locally");
+  	  	  	} else {
+  	  	  		console.log("Preferences saved locally");
+  	  	  	}
+  	  	  }
+  	  	);
+  	  } else {
+  	  	// npset is empty or has not property uri
+  	  	xhrstatus.status = 0;
+  	  	xhrstatus.errorMessage = "The preferences set is not well built";
+  	  }
+  	} 
+
+  	sendResponse({ status : xhrstatus.status, isError: isError, errorMessage: xhrstatus.errorMessage});
   }
 );
 
 function getNP(token) {
+  var url= npserver + token + suffix; 
   try {
-    xhr.open("GET", npserver + token , false);
+    xhr.open("GET", url , false);
     xhr.send();
   } catch (e) {
     console.log("Error: " + e.message);
   }
 }
 
-xhr.onreadystatechange = function() {
-  if (xhr.readyState == 4) {
-    if (xhr.status == 200) {
-	  console.log("code 200");
-	  try {
-		npset = JSON.parse(xhr.response);
-		xhrstatus.status = 1;
-  	  } catch (e) {
-		console.log('JSON file is not valid');
-		xhrstatus.status = 2;
-		npset = undefined;
-	  }
-	} else {
-	  console.log("no code 200");
-	  xhrstatus.status = 0;
-	  npset = undefined;
-	}
-	console.log(npset);
-  }
+function handleStateChange() {
+  if (this.readyState == this.DONE) {
+    // The data transfer has been complete
+    switch (this.status) {
+    	case 200:
+    	  try {
+    	  	npset = JSON.parse(this.response);
+    	  	xhrstatus.status = 1;
+    	  	console.log(npset);
+    	  } catch(e) {
+    	  	console.log('JSON file is not valid');
+    	  	xhrstatus.status = 0;
+    	  	xhrstatus.errorMessage = "JSON file is not valid";
+    	  	npset = {};
+    	  }
+    	  break;
+    	case 404:
+    	  xhrstatus.status = 0;
+    	  xhrstatus.errorMessage = "Error 404: Page not found";
+    	  npset = {};
+    	  break;
+    	case 500:
+    	  xhrstatus.status = 0;
+    	  xhrstatus.errorMessage = "Error 500 - Internal server error";
+    	  npset = {};
+    	default:
+    	  xhrstatus.status = 0;
+    	  xhrstatus.errorMessage = "Undefined error";
+    	  npset = {};
+    }
+  } 
 }
 
 chrome.tabs.onActivated.addListener(function(activeInfo) {

@@ -1,5 +1,4 @@
-var simpleContainer = document.createElement("div"),
-preferencesPort;
+var simpleContainer = document.createElement("div");
 	
 simpleContainer.setAttribute("id", "simpleContainer");
 

@@ -55,6 +55,8 @@
 	  "storage",
 	  "management",
 	  "http://preferences.gpii.net/",
+	  "http://127.0.0.1:8081/",
+	  "http://flowmanager.gpii.net/",
 	  "http://*/*", 
 	  "https://*/*",
 	  "<all_urls>"
