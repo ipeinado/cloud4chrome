@@ -97,6 +97,7 @@ function handleStateChange() {
     	  xhrstatus.status = 0;
     	  xhrstatus.errorMessage = "Error 500 - Internal server error";
     	  npset = {};
+    	  break;
     	default:
     	  xhrstatus.status = 0;
     	  xhrstatus.errorMessage = "Undefined error";
