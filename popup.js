@@ -137,37 +137,37 @@ function setPreferencesForm(npsetObject) {
 	      	localPreferences = npsetObject['preferences'];
 		
 		    // Initialize screenreader
-		    if (localPreferences.hasOwnProperty('screenReaderTTSEnabled')) {
-	        	chrome.management.get('kgejglhpjiefppelpmljglcjbhoiplfn', function(extInfo) {
-		       		try {
-		         			console.log(extInfo.name + " is installed.");
-			
-			        	if (localPreferences['screenReaderTTSEnabled']) {
-			        		document.querySelector('#screenReaderCheckBox').checked = true;
-			        		console.log("Screen reader checkbox initialized to true in background");
+	        chrome.management.get('kgejglhpjiefppelpmljglcjbhoiplfn', function(extInfo) {
+		      try {
+		        console.log(extInfo.name + " is installed.");
+
+				if (localPreferences.hasOwnProperty('screenReaderTTSEnabled')) {
+				  if (localPreferences['screenReaderTTSEnabled']) {
+			        document.querySelector('#screenReaderCheckBox').checked = true;
+			        console.log("Screen reader checkbox initialized to true in background");
 			  
-			        		if (!extInfo.enabled) {
-			           			chrome.management.setEnabled(extInfo.id, true, function() {
-				           			console.log("ChromeVox has been enabled in initialization");
-				       			}); 
-			        		}
-		          		} else {
-			        		document.querySelector('#screenReaderCheckBox').checked = false;
-			        		console.log("Screen reader checkbox initializated to false in background");
+			        if (!extInfo.enabled) {
+			          chrome.management.setEnabled(extInfo.id, true, function() {
+				        console.log("ChromeVox has been enabled in initialization");
+				      }); 
+			        }
+		          } else {
+			        document.querySelector('#screenReaderCheckBox').checked = false;
+			        console.log("Screen reader checkbox initializated to false in background");
 			  
-			        		if (extInfo.enabled) {
-			          			chrome.management.setEnabled(extInfo.id, false, function() {
-			           				console.log("ChromeVox has been disabled in initialization");
-			           			}); 
-			        		}
-		          		}
-		        	} catch (e) {
-		          		console.log('Error in screen reader management: ' + e.message);
-			      		document.querySelector('#screenReaderDivCVInstalled').style.display = 'none';
-			      		document.querySelector('#screenReaderDivCVNotInstalled').style.display = 'block';
-		        	}
-		      	});
-	      	} // if screenreader
+			        if (extInfo.enabled) {
+			          chrome.management.setEnabled(extInfo.id, false, function() {
+			            console.log("ChromeVox has been disabled in initialization");
+			          }); 
+			        }
+		          } 	
+				}	
+		      } catch (e) {
+		      	console.log('Error in screen reader management: ' + e.message);
+			  	document.querySelector('#screenReaderDivCVInstalled').style.display = 'none';
+			  	document.querySelector('#screenReaderDivCVNotInstalled').style.display = 'block';
+		      }
+		    });
 
 	     
 		    // Initialize high contrast
