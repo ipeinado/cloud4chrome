@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", function(e) {
   document.querySelector('#optionsLink').addEventListener('click', onOptionsClick);
   
   document.querySelector('#screenReaderCheckBox').addEventListener('click', screenReaderCBClicked);
+  document.querySelector('#installCVButton').addEventListener('click', installCV);
   document.querySelector('#NoHighContrastRB').addEventListener('click', noHighContrastClicked);
   document.querySelector('#highContrastBlackWhite').addEventListener('click', highContrastBlackWhiteClicked);
   document.querySelector('#highContrastWhiteBlack').addEventListener('click', highContrastWhiteBlackClicked);
@@ -167,6 +168,7 @@ function setPreferencesForm(npsetObject) {
 		        	}
 		      	});
 	      	} // if screenreader
+
 	     
 		    // Initialize high contrast
 		    if (localPreferences.hasOwnProperty('highContrastEnabled')) {
@@ -313,6 +315,8 @@ function onOptionsClick() {
   chrome.tabs.create({ url: 'options.html' }); 
 	window.close();
 }
+
+
 
 function signOutBtnClicked(e) {
   e.preventDefault();

@@ -160,6 +160,16 @@ a.signOutBtn {
   font-size: 0.9em;
 }
 
+button#installCVButton {
+  padding: 0.5em;
+  background: #CD3700;
+  border-radius: 4px;
+  font-weight: bold;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
 .blackonwhite {
   background: white;
   color: black;

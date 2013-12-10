@@ -300,9 +300,9 @@ function setPreferences(preferences) {
 	}
 }
 
-function installCVButtonClicked() {
+function installCV() {
+	console.log("Inside installCV");
 	chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-		console.log("button Clicked"); 
 		chrome.tabs.update(tabs[0].id, {url: "https://chrome.google.com/webstore/detail/chromevox/kgejglhpjiefppelpmljglcjbhoiplfn?hl=en"});
 		self.close();
 	}); 
