@@ -80,6 +80,8 @@ function onTokenFormSubmit(e) {
   var token = document.querySelector('#tokenInput').value;
   document.querySelector('#tokenInput').value = "";
   console.log('submitting token'); 
+  document.querySelector('#results').style.display = 'block';
+  document.querySelector('#results').innerHTML = '<img src="images/loading_icon_2_rev01.gif"> Loading';
   chrome.runtime.sendMessage({'token': token}, handleResponse);
 }
 
@@ -482,5 +484,4 @@ function simplifierCheckBoxClicked() {
 		// preferencesPort.postMessage({ simplifier : false }); 
 	}
 }
-
 

@@ -73,6 +73,7 @@ function getNP(token) {
 }
 
 function handleStateChange() {
+
   if (this.readyState == this.DONE) {
     // The data transfer has been complete
     switch (this.status) {
