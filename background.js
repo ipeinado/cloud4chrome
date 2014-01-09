@@ -156,6 +156,7 @@ chrome.storage.onChanged.addListener(function(changes, local) {
 });
 
 function setPreferences(preferences) {
+
 	if (preferences.hasOwnProperty('screenReaderTTSEnabled')) {
 		console.log("NEW screenReaderTTSEnabled: " + preferences['screenReaderTTSEnabled']);
 	}
@@ -195,6 +196,13 @@ function setPreferences(preferences) {
 											}
 										  );
 		}
+	} else {
+		delete attributes['ts'];
+		chrome.tabs.executeScript( {code: 'var attributes = ' + JSON.stringify(attributes) + ';' } ,
+		  function() {
+			chrome.tabs.executeScript( { file: 'js/setAttributeToAllElements.js' } );
+		  }
+		);
 	}
 
 	// MAGNIFICATION
@@ -222,6 +230,8 @@ function setPreferences(preferences) {
 		// magnifier is not enabled
 			chrome.tabs.executeScript({ code : 'document.documentElement.removeAttribute("zoom");' });
 		}
+	} else {
+		chrome.tabs.executeScript({ code : 'document.documentElement.removeAttribute("zoom");' });
 	}
 
 	// HIGH CONTRAST

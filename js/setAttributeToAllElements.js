@@ -1,6 +1,5 @@
 console.log('inside setAttributeToAllElements with attributesJSON ' + attributes);
-var elements = document.querySelectorAll('*'),
-	max = elements.length;
+var elements = document.querySelectorAll('*');
 
 if (attributes.hasOwnProperty('ts')) {
  	[].forEach.call(elements, function(element) { element.setAttribute('ts', attributes['ts']) }); 
