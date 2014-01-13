@@ -1,7 +1,7 @@
 var value,
 	html = document.documentElement,
 	uri = 'org.chrome.cloud4chrome',
-	npserver = 'http://127.0.0.1:8081/',
+	npserver = 'http://flowmanager.gpii.net/',
 	suffix = '/settings/%7B"OS":%7B"id":"web"%7D,"solutions":[%7B"id":"org.chrome.cloud4chrome"%7D]%7D',
 	xhr = new XMLHttpRequest(),
 	userprefs = { token: "", preferences: {} },

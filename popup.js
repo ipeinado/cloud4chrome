@@ -329,6 +329,7 @@ function signOutBtnClicked(e) {
   document.documentElement.removeAttribute('hc');
   document.documentElement.removeAttribute('ts');
   document.documentElement.removeAttribute('zoom');
+  document.documentElement.removeAttribute('ic');
   
   chrome.management.get('kgejglhpjiefppelpmljglcjbhoiplfn', function(extInfo) {
 	if (extInfo.enabled) {
