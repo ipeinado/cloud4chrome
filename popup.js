@@ -5,71 +5,75 @@
 
 var userToken = "",
     localPreferences = {},
-	  preferencesPort;
+    recognition;
 
-document.addEventListener("DOMContentLoaded", function(e) {
+$(document).ready(function(e) {
 
-  document.querySelector('#tokenForm').addEventListener('submit', onTokenFormSubmit);
-  document.querySelector('#tokenInput').addEventListener('focus', function(e) { chrome.tts.speak('Insert your token and press Enter'); });
+  $('#tokenForm').submit(onTokenFormSubmit);
   
-  document.querySelector('#optionsLink').addEventListener('focus', function(e) { chrome.tts.speak('Click to edit your preferences');});
-  document.querySelector('#optionsLink').addEventListener('click', onOptionsClick);
+  /* document.querySelector('#optionsLink').addEventListener('focus', function(e) { chrome.tts.speak('Click to edit your preferences');}); */
+  $('#optionsLink').click(onOptionsClick);
   
-  document.querySelector('#screenReaderCheckBox').addEventListener('click', screenReaderCBClicked);
-  document.querySelector('#installCVButton').addEventListener('click', installCV);
-  document.querySelector('#NoHighContrastRB').addEventListener('click', noHighContrastClicked);
-  document.querySelector('#highContrastBlackWhite').addEventListener('click', highContrastBlackWhiteClicked);
-  document.querySelector('#highContrastWhiteBlack').addEventListener('click', highContrastWhiteBlackClicked);
-  document.querySelector('#highContrastYellowBlack').addEventListener('click', highContrastYellowBlackClicked);
-  document.querySelector('#highContrastBlackYellow').addEventListener('click', highContrastBlackYellowClicked);
-  document.querySelector('#invertColorsCheckbox').addEventListener('click', invertRBClicked);
-  document.querySelector('#zoom100').addEventListener('click', zoom100Clicked);
-  document.querySelector('#zoom200').addEventListener('click', zoom200Clicked);
-  document.querySelector('#zoom300').addEventListener('click', zoom300Clicked);
-  document.querySelector('#textSizeNormal').addEventListener('click', textSizeNormalClicked);
-  document.querySelector('#textSizeLarge').addEventListener('click', textSizeLargeClicked);
-  document.querySelector('#textSizeXLarge').addEventListener('click', textSizeXLargeClicked);
-  document.querySelector('#simplifierCheckBox').addEventListener('click', simplifierCheckBoxClicked);
+ $('#screenReaderCheckBox').click(screenReaderCBClicked);
+  $('#installCVButton').click(installCV);
+  $('#NoHighContrastRB').click(noHighContrastClicked);
+  $('#highContrastBlackWhite').click(highContrastBlackWhiteClicked);
+  $('#highContrastWhiteBlack').click(highContrastWhiteBlackClicked);
+  $('#highContrastYellowBlack').click(highContrastYellowBlackClicked);
+  $('#highContrastBlackYellow').click(highContrastBlackYellowClicked);
+  $('#invertColorsCheckbox').click(invertRBClicked);
+  $('#zoom100').click(zoom100Clicked);
+  $('#zoom200').click(zoom200Clicked);
+  $('#zoom300').click(zoom300Clicked);
+  $('#textSizeNormal').click(textSizeNormalClicked);
+  $('#textSizeLarge').click(textSizeLargeClicked);
+  $('#textSizeXLarge').click(textSizeXLargeClicked);
+  $('#simplifierCheckBox').click(simplifierCheckBoxClicked);
 
-  document.querySelector('#seeallprefs').addEventListener('click', onOptionsClick);
-  [].forEach.call(document.querySelectorAll('.signOutBtn'), function(button) {
-  	button.addEventListener('click', signOutBtnClicked);
-  	button.innerText = chrome.i18n.getMessage("signOutBtnText");
+  $('#seeallprefs').click(onOptionsClick);
 
-  }); 
+  $('.signOutBtn').click(signOutBtnClicked);
 
+  $('.signOutBtn').text(chrome.i18n.getMessage("signOutBtnText"));
+  
   // Initialize all text to make the extension localizable
-  document.querySelector("#welcomeMessage").innerText = chrome.i18n.getMessage("welcomeMessage");
-  document.querySelector('#tokenInput').setAttribute('placeholder', chrome.i18n.getMessage("tokenInputPlaceholder"));
-  document.querySelector('#optionsLink').innerText = chrome.i18n.getMessage("optionsLinkText");
-  document.querySelector('#configTitle').innerText = chrome.i18n.getMessage("configTitleText");
-  document.querySelector('#configDescription').innerText = chrome.i18n.getMessage("configDescriptionText");
-  document.querySelector('#seeallprefs').innerText = chrome.i18n.getMessage("seeAllPrefsText");
-  document.querySelector('#screenReaderTitle').innerText = chrome.i18n.getMessage("screenReaderTitleText");
-  document.querySelector('#screenReaderLabel').innerText = chrome.i18n.getMessage("screenReaderLabelText");
-  document.querySelector('#chromeVoxNotInstalledWarning').innerText = chrome.i18n.getMessage("chromeVoxNotInstalledWarningText");
-  document.querySelector('#installCVButton').innerText = chrome.i18n.getMessage("installCVButtonText");
-  document.querySelector('#highContrastRgTitle').innerText = chrome.i18n.getMessage("highContrastRgTitleText");
-  document.querySelector('#noHighContrastLabel').innerText = chrome.i18n.getMessage("NoHighContrastRB2Text");
-  document.querySelector('#highContrastBlackWhiteLabel').innerText = chrome.i18n.getMessage("highContrastBlackWhiteLabelText");
-  document.querySelector('#highContrastWhiteBlackLabel').innerText = chrome.i18n.getMessage("highContrastWhiteBlackLabelText");
-  document.querySelector('#highContrastYellowBlackLabel').innerText = chrome.i18n.getMessage("highContrastYellowBlackLabelText");
-  document.querySelector('#highContrastBlackYellowLabel').innerText = chrome.i18n.getMessage("highContrastBlackYellowLabelText");
-  document.querySelector('#invertColoursTitle').innerText = chrome.i18n.getMessage("invertColoursTitleText");
-  document.querySelector('#invertLabel').innerText = chrome.i18n.getMessage("invertLabelText");
-  document.querySelector('#zoomRgTitle').innerText = chrome.i18n.getMessage("zoomRgTitleText");
-  document.querySelector('#fontSizeRGTitle').innerText = chrome.i18n.getMessage("fontSizeRGTitleText");
-  document.querySelector('#textSizeMediumLabel').innerText = chrome.i18n.getMessage("textSizeMediumLabelText");
-  document.querySelector('#textSizeLargeLabel').innerText = chrome.i18n.getMessage("textSizeLargeLabelText");
-  document.querySelector('#textSizeXLargeLabel').innerText = chrome.i18n.getMessage("textSizeXLargeLabelText");
-  document.querySelector('#simplifierTitle').innerText = chrome.i18n.getMessage("simplifierTitleText");
-  document.querySelector('#simplifierCheckBoxLabel').innerText = chrome.i18n.getMessage("simplifierCheckBoxLabelText");  
+  $("#welcomeMessage").text(chrome.i18n.getMessage("welcomeMessage"));
+  $('#tokenInput').attr('placeholder', chrome.i18n.getMessage("tokenInputPlaceholder"));
+  $('#optionsLink').text(chrome.i18n.getMessage("optionsLinkText"));
+  $('#configTitle').text(chrome.i18n.getMessage("configTitleText"));
+  $('#configDescription').text(chrome.i18n.getMessage("configDescriptionText"));
+  $('#seeallprefs').text(chrome.i18n.getMessage("seeAllPrefsText"));
+  $('#screenReaderTitle').text(chrome.i18n.getMessage("screenReaderTitleText"));
+  $('#screenReaderLabel').text(chrome.i18n.getMessage("screenReaderLabelText"));
+  $('#chromeVoxNotInstalledWarning').text(chrome.i18n.getMessage("chromeVoxNotInstalledWarningText"));
+  $('#installCVButton').text(chrome.i18n.getMessage("installCVButtonText"));
+  $('#highContrastRgTitle').text(chrome.i18n.getMessage("highContrastRgTitleText"));
+  $('#noHighContrastLabel').text(chrome.i18n.getMessage("NoHighContrastRB2Text"));
+  $('#highContrastBlackWhiteLabel').text(chrome.i18n.getMessage("highContrastBlackWhiteLabelText"));
+  $('#highContrastWhiteBlackLabel').text(chrome.i18n.getMessage("highContrastWhiteBlackLabelText"));
+  $('#highContrastYellowBlackLabel').text(chrome.i18n.getMessage("highContrastYellowBlackLabelText"));
+  $('#highContrastBlackYellowLabel').text(chrome.i18n.getMessage("highContrastBlackYellowLabelText"));
+  $('#invertColoursTitle').text(chrome.i18n.getMessage("invertColoursTitleText"));
+  $('#invertLabel').text(chrome.i18n.getMessage("invertLabelText"));
+  $('#zoomRgTitle').text(chrome.i18n.getMessage("zoomRgTitleText"));
+  $('#fontSizeRGTitle').text(chrome.i18n.getMessage("fontSizeRGTitleText"));
+  $('#textSizeMediumLabel').text(chrome.i18n.getMessage("textSizeMediumLabelText"));
+  $('#textSizeLargeLabel').text(chrome.i18n.getMessage("textSizeLargeLabelText"));
+  $('#textSizeXLargeLabel').text(chrome.i18n.getMessage("textSizeXLargeLabelText"));
+  $('#simplifierTitle').text(chrome.i18n.getMessage("simplifierTitleText"));
+  $('#simplifierCheckBoxLabel').text(chrome.i18n.getMessage("simplifierCheckBoxLabelText"));  
   // if there is a configuration stored locally, we will load this 
   // set of needs and preferences
   chrome.storage.local.get({'token' : "" , 'preferences': {} }, function(results) {
     setPreferencesForm({token: results['token'], preferences: results['preferences']});
   }); 
- 	
+
+  recognition = new webkitSpeechRecognition();
+
+  recognition.continuous = false;
+  recognition.onstart = function() { console.log("Web recognition started"); };
+  recognition.onerror = function(e) { console.log("ERROR: " + e)};
+  recognition.onend = function() { console.log("Not working, biatch"); };
 });
 
 // Function to handle the token submission. It finally sends a message to
@@ -77,11 +81,11 @@ document.addEventListener("DOMContentLoaded", function(e) {
 function onTokenFormSubmit(e) {
   e.preventDefault();
   
-  var token = document.querySelector('#tokenInput').value;
-  document.querySelector('#tokenInput').value = "";
+  var token = $('#tokenInput').val();
+  $('#tokenInput').val("");
   console.log('submitting token'); 
-  document.querySelector('#results').style.display = 'block';
-  document.querySelector('#results').innerHTML = '<img src="images/loading_icon_2_rev01.gif"> Loading';
+  $('#results').show();
+  $('#results').html('<img src="/images/loading_icon_2_rev01.gif"> Loading');
   chrome.runtime.sendMessage({'token': token}, handleResponse);
 }
 
@@ -97,8 +101,7 @@ function handleResponse(response) {
   		window.location.reload();
   	});
   } else {
-  	document.querySelector('#results').style.display = 'block';
-    document.querySelector('#results').innerHTML = '<span class="warning">' + errorMessage + '</span>';
+  	$('#results').html('<span class="warning">' + errorMessage + '</span>').show();
   }
 }
 
@@ -112,21 +115,22 @@ function setPreferencesForm(npsetObject) {
 	    // The preferences object is empty and the token is an empty string
 	  
 	    console.log('set of needs and preferences not stored locally');
-	    document.querySelector('#preferencesContainer').style.display = 'none';
-  	  	document.querySelector('#tokenFormContainer').style.display = 'block';
-	    document.querySelector('#tokenInput').focus(); 
+	    $('#preferencesContainer').hide();
+  	  	$('#tokenFormContainer').show();
+	    $('#tokenInput').focus(); 
 	    chrome.tts.speak("Welcome to Cloud For All. Press TAB for options.");
+	    recognition.start();
 	
 	  } else {
 	    // Either the token is a valid string or there are actual preferences 
 	    console.log('set of needs and preferences stored locally');
-	    document.querySelector('#tokenFormContainer').style.display = 'none';
-	    document.querySelector('#preferencesContainer').style.display = 'block';
+	    $('#tokenFormContainer').hide();
+	    $('#preferencesContainer').show();
 	    
 	    if (npsetObject['token'] != "") {
-	      // The token is a valid string
-		    userToken = npsetObject['token'];
-	      document.querySelector('#configTitle').innerText = chrome.i18n.getMessage("configTitleTextWithToken") + npsetObject['token'];
+	    	// The token is a valid string
+		   	userToken = npsetObject['token'];
+	      	$('#configTitle').text(chrome.i18n.getMessage("configTitleTextWithToken") + npsetObject['token']);
 		    chrome.tts.speak( "Welcome to Cloud For All, " + npsetObject['token'] );
 	    }
 	  
@@ -145,7 +149,7 @@ function setPreferencesForm(npsetObject) {
 
 				if (localPreferences.hasOwnProperty('screenReaderTTSEnabled')) {
 				  if (localPreferences['screenReaderTTSEnabled']) {
-			        document.querySelector('#screenReaderCheckBox').checked = true;
+			        $('#screenReaderCheckBox').prop('checked', true);
 			        console.log("Screen reader checkbox initialized to true in background");
 			  
 			        if (!extInfo.enabled) {
@@ -166,8 +170,8 @@ function setPreferencesForm(npsetObject) {
 				}	
 		      } catch (e) {
 		      	console.log('Error in screen reader management: ' + e.message);
-			  	document.querySelector('#screenReaderDivCVInstalled').style.display = 'none';
-			  	document.querySelector('#screenReaderDivCVNotInstalled').style.display = 'block';
+			  	$('#screenReaderDivCVInstalled').hide();
+			  	$('#screenReaderDivCVNotInstalled').show();
 		      }
 		    });
 
@@ -180,49 +184,49 @@ function setPreferencesForm(npsetObject) {
 		    			console.log("there is a high contrast theme");
 		    			switch (localPreferences['highContrastTheme']) {
 		    				case 'black-white':
-		    					document.querySelector('#highContrastBlackWhite').checked = true;
-		    					document.documentElement.setAttribute('hc', 'bw');
+		    					$('#highContrastBlackWhite').prop('checked', true);
+		    					$('html').attr('hc', 'bw');
 		    					break;
 		    				case 'white-black':
-		    					document.querySelector('#highContrastWhiteBlack').checked = true;
-		    					document.documentElement.setAttribute('hc', 'wb');
+		    					$('#highContrastWhiteBlack').prop('checked', true);
+		    					$('html').attr('hc', 'wb');
 		    					break;
 		    				case 'yellow-black':
-		    					document.querySelector('#highContrastYellowBlack').checked = true;
-		    					document.documentElement.setAttribute('hc', 'yb');
+		    					$('#highContrastYellowBlack').prop('checked', true);
+		    					$('html').attr('hc', 'yb');
 		    					break;
 		    				case 'black-yellow':
-		    					document.querySelector('#highContrastBlackYellow').checked = true;
-		    					document.documentElement.setAttribute('hc', 'by');
+		    					$('#highContrastBlackYellow').prop('checked', true);
+		    					$('html').attr('hc', 'by');
 		    					break;
 		    				default:
 		    					break;
 		    			}
 		    		// HighContrast is enabled but there is no highContrastTheme
 		    		} else {
-						document.querySelector('#NoHighContrastRB').checked = true;
-		    			document.documentElement.removeAttribute('hc');
+						$('#NoHighContrastRB').prop('checked', true);
+		    			$('html').removeAttr('hc');
 		    		}
 
 		    	// if not highContrastEnabled
 		    	} else {
-		    		document.querySelector('#NoHighContrastRB').checked = true;
-		    		document.documentElement.removeAttribute('hc');
+		    		$('#NoHighContrastRB').prop('checked', true);
+		    		$('html').removeAttr('hc');
 		    	}
 		    // there is no property highContrastEnabled
 		    } else {
-		    	document.querySelector('#NoHighContrastRB').checked = true;
-		    	document.documentElement.removeAttribute('hc');
+		    	$('#NoHighContrastRB').prop('checked', true);
+		    	$('html').removeAttr('hc');
 		    }
 
 		    // Invert Colours
 		    if (localPreferences.hasOwnProperty('invertColours')) {
 		    	if (localPreferences['invertColours']) {
-		    		document.querySelector('#invertColorsCheckbox').checked = true;
-		    		document.documentElement.setAttribute('ic', 'invert');
+		    		$('#invertColorsCheckbox').prop('checked', true);
+		    		$('html').attr('ic', 'invert');
 		    	} else {
-		    		document.querySelector('#invertColorsCheckbox').checked = false;
-		    		document.documentElement.removeAttribute('ic');
+		    		$('#invertColorsCheckbox').prop('checked', false);
+		    		$('html').removeAttr('ic');
 		    	}
 		    } // end of if Invert Colours
 
@@ -235,72 +239,67 @@ function setPreferencesForm(npsetObject) {
 		    			switch (localPreferences['magnification']) {
 		    				case 1:
 		    				// Magnification 100%
-		    					document.querySelector('#zoom100').checked = true;
-			        			document.documentElement.removeAttribute('zoom');
+		    					$('#zoom100').prop('checked', true);
+			        			$('html').removeAttr('zoom');
 		    					break;
 		    				case 2:
 		    				// Magnification 200%
-		    					document.querySelector('#zoom200').checked = true;
-			        			document.documentElement.setAttribute('zoom', '200%');
+		    					$('#zoom200').prop('checked', true);
+			        			$('html').attr('zoom', '200%');
 		    					break;
 		    				case 3:
 		    				// Magnification 300%
-		          				document.querySelector('#zoom300').checked = true;
-			        			document.documentElement.setAttribute('zoom', '300%');
-			        			console.log("Zoom initilialized to 300% in background");
+		          				$('#zoom300').prop('checked', true);
+			        			$('html').attr('zoom', '300%');
 		    					break;
 		    				default:
-		    					document.querySelector('#zoom100').checked = true;
-			        			document.documentElement.removeAttribute('zoom');
+		    					$('#zoom100').prop('checked', true);
+			        			$('html').removeAttr('zoom');
 		    					break;
 		    			}
 
 		    		} else {
 		    		// magnifier is enabled but there is not a value for magnification
-		    			document.querySelector('#zoom100').checked = true;
-			        	document.documentElement.removeAttribute('zoom');
+		    			$('#zoom100').prop('checked', true);
+			        	$('html').removeAttr('zoom');
 		    		}
 
 		    	} else {
 		    	// magnifier is no enabled
-					document.querySelector('#zoom100').checked = true;
-			        document.documentElement.removeAttribute('zoom');
+					$('#zoom100').prop('checked', true);
+			        $('html').removeAttr('zoom');
 		    	}
 		    } // End of magnification if
 
 	
 	      	if (localPreferences.hasOwnProperty('fontSize')) {
 		    // There is a property font Size
-	        	console.log(localPreferences['fontSize']);
 	        	switch (localPreferences['fontSize']) {
 		        	case 'medium': 
-		          		document.querySelector('#textSizeNormal').checked = true;
-			        	document.documentElement.removeAttribute('ts');
-			        	console.log("Text size initialized to normal in background");
+		          		$('#textSizeNormal').prop('checked', true);
+			        	$('html').removeAttr('ts');
 		          		break;
 		        	case 'large': 
-		          		document.querySelector('#textSizeLarge').checked = true; 
-			        	document.documentElement.setAttribute('ts', 'large');
-			        	console.log("Text size initialized to large in background"); 
+		          		$('#textSizeLarge').prop('checked', true); 
+			        	$('html').attr('ts', 'large');
 		          		break;
 		        	case 'x-large': 
-		          		document.querySelector('#textSizeXLarge').checked = true;
-			        	document.documentElement.setAttribute('ts', 'x-large');
-			        	console.log("Text size initializated to x-large in background");
+		          		$('#textSizeXLarge').prop('checked', true);
+			        	$('html').attr('ts', 'x-large');
 		          	break;
 		        	default:
-		          		document.querySelector('#textSizeNormal').checked = true;
-			        	document.documentElement.removeAttribute('ts');
+		          		$('#textSizeNormal').prop('checked', true);
+			        	$('html').removeAttr('ts');
 	        	} 
 	      	} // fontSize
 		
 		    // Initialize simplifier
 		    if (localPreferences.hasOwnProperty('simplifier')) {
 	        	if (localPreferences['simplifier']) {
-		        	document.querySelector('#simplifierCheckBox').checked = true;
+		        	$('#simplifierCheckBox').prop('checked', true);
 		          	console.log("Simplification set to true in background");
 		      	} else {
-		        	document.querySelector('#simplifierCheckBox').checked = false;
+		        	$('#simplifierCheckBox').prop('checked', false);
 		        	console.log("Simplification set to false in background");
 		      	}
 	      	} // end if simplifier

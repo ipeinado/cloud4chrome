@@ -4,6 +4,7 @@
 	  <link rel='stylesheet' type='text/javascript' href='content.css' />
 	  <link rel='stylesheet' type='text/javascript' href='popup.css' />
 	  <link rel='chrome-webstore-item' href="https://chrome.google.com/webstore/detail/chromevox/kgejglhpjiefppelpmljglcjbhoiplfn?hl=en" />
+  	  <script type='text/javascript' src='lib/jquery-1.9.1.min.js'></script>
 	  <script type='text/javascript' src='popup.js'></script>
 	  <script type='text/javascript' src='background.js'></script>
 	</head>
@@ -13,7 +14,7 @@
 	    <h1 id="welcomeMessage"></h1>
 		<form id='tokenForm'>
 		  <label for='tokenInput' class='tokenFormLabel'></label>
-		  <input type='text' name='token' id='tokenInput'>
+		  <input type='text' name='token' id='tokenInput' x-webkit-speech>
 		  <input type='submit' value='submit' id='tokenSubmit' />
 		</form>
 		<div id='results'></div>
