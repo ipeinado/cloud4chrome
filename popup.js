@@ -67,13 +67,6 @@ $(document).ready(function(e) {
   chrome.storage.local.get({'token' : "" , 'preferences': {} }, function(results) {
     setPreferencesForm({token: results['token'], preferences: results['preferences']});
   }); 
-
-  recognition = new webkitSpeechRecognition();
-
-  recognition.continuous = false;
-  recognition.onstart = function() { console.log("Web recognition started"); };
-  recognition.onerror = function(e) { console.log("ERROR: " + e)};
-  recognition.onend = function() { console.log("Not working, biatch"); };
 });
 
 // Function to handle the token submission. It finally sends a message to
@@ -119,8 +112,7 @@ function setPreferencesForm(npsetObject) {
   	  	$('#tokenFormContainer').show();
 	    $('#tokenInput').focus(); 
 	    chrome.tts.speak("Welcome to Cloud For All. Press TAB for options.");
-	    recognition.start();
-	
+
 	  } else {
 	    // Either the token is a valid string or there are actual preferences 
 	    console.log('set of needs and preferences stored locally');
