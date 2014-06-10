@@ -124,7 +124,7 @@ chrome.storage.onChanged.addListener(function(changes, local) {
 			var simplifierIsOn = oldPrefs['simplifier'] || false;
 			chrome.tabs.query({currentWindow : true} , function(tabs) {
 				for (var i = 0; i < tabs.length; i++) {
-					chrome.tabs.executeScript({ code : " document.documentElement.removeAttribute('zoom');document.documentElement.removeAttribute('hc');document.documentElement.removeAttribute('ic');[].forEach.call(document.querySelectorAll('body *'), function(node) { node.removeAttribute('ts');node.removeAttribute('hc'); });" }, function() {
+					chrome.tabs.executeScript({ code : " document.documentElement.removeAttribute('ff');document.documentElement.removeAttribute('zoom');document.documentElement.removeAttribute('hc');document.documentElement.removeAttribute('ic');[].forEach.call(document.querySelectorAll('body *'), function(node) { node.removeAttribute('ts');node.removeAttribute('hc'); });" }, function() {
 						if (chrome.runtime.lastError) {
 							console.log("Error in tag: " + chrome.runtime.lastError.message);
 						} 
@@ -143,7 +143,7 @@ function setPreferences(preferences) {
 
 	// SCREEN READER ENABLED
 	if (preferences.hasOwnProperty('screenReaderTTSEnabled')) {
-		console.log("NEW screenReaderTTSEnabled: " + preferences['screenReaderTTSEnabled']);
+		console.log("screenReaderTTSEnabled: " + preferences['screenReaderTTSEnabled']);
 	}
 
 	// FONT SIZE
@@ -173,6 +173,14 @@ function setPreferences(preferences) {
 		chrome.tabs.executeScript( {code: "[].forEach.call(document.querySelectorAll('body *'), function(node) { node.removeAttribute('ts'); });" }, function() {
 			if (chrome.runtime.lastError) { console.log("Error in removing attribute ts" + chrome.runtime.lastError.message ); }
 		}); 
+	}
+
+	// FONT FACE
+	if (preferences.hasOwnProperty('fontFace')) {
+		var fontFace = preferences.fontFace;
+		chrome.tabs.executeScript({ code : "document.documentElement.setAttribute('ff', '" + fontFace + "'); " }, function() {
+			if (chrome.runtime.lastError) { console.log("Error changing font face: " + chrome.runtime.lastError.message); }
+		});
 	}
 
 	// MAGNIFICATION

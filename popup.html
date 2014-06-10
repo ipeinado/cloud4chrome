@@ -103,7 +103,8 @@
 		  </div>
 			
 		  <div class='config_option' id='fontSizeOptions'>
-			<h3 id='fontSizeRGTitle' tabindex='10'></h3>
+			<h3 id='fontOptionsTitle' tabindex='10'></h3>
+			  <h4 id="fontSizeTitle"></h4>
 		      <ul class='radiogroup' role='radiogroup' aria-labelledby='fontsizerg'>
 				<li>
 				  <input type='radio' name='textSize' id='textSizeNormal' value='medium' tabindex='11' role='radio'>
@@ -120,6 +121,16 @@
 				  <label for='textSizeXLarge'><span class="textSizeXLarge" id='textSizeXLargeLabel'></span></label>
 				</li>
 			  </ul>
+
+			  <h4 id="fontFaceTitle"></h4>
+			  <select name="select" id="fontFaceSelect">
+			  	<option value="none" id="fontFaceNone">--</option>
+			  	<option value="Arial" id="fontFaceArial">Arial</option>
+			  	<option value="Verdana" id="fontFaceVerdana">Verdana</option>
+			  	<option value="Courier" id="fontFaceCourier">Courier</option>
+			  	<option value="Comic Sans MS" id="fontFaceComicSans">Comic Sans MS</option>
+			  </select>
+
 		  </div>
 		  
 		  <div class='config_option' id='simplifierOptions'>

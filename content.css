@@ -250,3 +250,27 @@ div#simpleContainer img {
 	clear: left;
 	margin: 0 1em 1em 0; 
 }
+
+html[ff="Arial"], html[ff="Arial"] body, html[ff="Arial"] p, html[ff="Arial"] h1, html[ff="Arial"] h2, 
+html[ff="Arial"] h3, html[ff="Arial"] h4, html[ff="Arial"] h5, html[ff="Arial"] h6, 
+html[ff="Arial"] blockquote, html[ff="Arial"] article, html[ff="Arial"] div, html[ff="Arial"] span, html[ff="Arial"] a {
+  font-family: Arial, sans-serif !important; 
+}
+
+html[ff="Verdana"], html[ff="Verdana"] body, html[ff="Verdana"] p, html[ff="Verdana"] h1, html[ff="Verdana"] h2, 
+html[ff="Verdana"] h3, html[ff="Verdana"] h4, html[ff="Verdana"] h5, html[ff="Verdana"] h6, 
+html[ff="Verdana"] blockquote, html[ff="Verdana"] article, html[ff="Verdana"] div, html[ff="Verdana"] span, html[ff="Verdana"] a {
+  font-family: Verdana, sans-serif !important; 
+}
+
+html[ff="Courier"], html[ff="Courier"] body, html[ff="Courier"] p, html[ff="Courier"] h1, html[ff="Courier"] h2, 
+html[ff="Courier"] h3, html[ff="Courier"] h4, html[ff="Courier"] h5, html[ff="Courier"] h6, 
+html[ff="Courier"] blockquote, html[ff="Courier"] article, html[ff="Courier"] div, html[ff="Courier"] span, html[ff="Courier"] a {
+  font-family: Courier, sans-serif !important; 
+}
+
+html[ff="Comic Sans MS"], html[ff="Comic Sans MS"] body, html[ff="Comic Sans MS"] p, html[ff="Comic Sans MS"] h1, html[ff="Comic Sans MS"] h2, 
+html[ff="Comic Sans MS"] h3, html[ff="Comic Sans MS"] h4, html[ff="Comic Sans MS"] h5, html[ff="Comic Sans MS"] h6, 
+html[ff="Comic Sans MS"] blockquote, html[ff="Comic Sans MS"] article, html[ff="Comic Sans MS"] div, html[ff="Comic Sans MS"] span, html[ff="Comic Sans MS"] a {
+  font-family: "Comic Sans MS", sans-serif !important; 
+}

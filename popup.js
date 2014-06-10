@@ -30,6 +30,7 @@ $(document).ready(function(e) {
   $('#textSizeNormal').click(textSizeNormalClicked);
   $('#textSizeLarge').click(textSizeLargeClicked);
   $('#textSizeXLarge').click(textSizeXLargeClicked);
+  $('#fontFaceSelect').change(fontFaceChanged);
   $('#simplifierCheckBox').click(simplifierCheckBoxClicked);
 
   $('#seeallprefs').click(onOptionsClick);
@@ -58,7 +59,9 @@ $(document).ready(function(e) {
   $('#invertColoursTitle').text(chrome.i18n.getMessage("invertColoursTitleText"));
   $('#invertLabel').text(chrome.i18n.getMessage("invertLabelText"));
   $('#zoomRgTitle').text(chrome.i18n.getMessage("zoomRgTitleText"));
-  $('#fontSizeRGTitle').text(chrome.i18n.getMessage("fontSizeRGTitleText"));
+  $('#fontOptionsTitle').text(chrome.i18n.getMessage("fontOptionsTitleText"));
+  $('#fontSizeTitle').text(chrome.i18n.getMessage("fontSizeTitleText"));
+  $('#fontFaceTitle').text(chrome.i18n.getMessage("fontFaceTitleText"));
   $('#textSizeMediumLabel').text(chrome.i18n.getMessage("textSizeMediumLabelText"));
   $('#textSizeLargeLabel').text(chrome.i18n.getMessage("textSizeLargeLabelText"));
   $('#textSizeXLargeLabel').text(chrome.i18n.getMessage("textSizeXLargeLabelText"));
@@ -298,6 +301,24 @@ function setPreferencesForm(npsetObject) {
 			        	$('html').removeAttr('ts');
 	        	} 
 	      	} // fontSize
+
+	      	if (localPreferences.hasOwnProperty('fontFace')) {
+	      		switch (localPreferences.fontFace) {
+	      			case 'Arial':
+	      				$('#fontFaceArial').prop('selected', true);
+	      				break;
+	      			case 'Verdana':
+	      				$('#fontFaceVerdana').prop('selected', true);
+	      				break;
+	      			case 'Courier':
+	      				$('#fontFaceCourier').prop('selected', true);
+	      				break;
+	      			case 'Comic Sans MS':
+	      				$('#fontFaceComicSans').prop('selected', true);
+	      				break;
+	      			default:
+	      		}
+	      	}
 		
 		    // Initialize simplifier
 		    if (localPreferences.hasOwnProperty('simplifier')) {
@@ -431,6 +452,11 @@ function textSizeXLargeClicked() {
 	// chrome.storage.sync.set({textSize: "x-large"}, function() {
 	  // document.documentElement.setAttribute("ts", "x-large");
 	// });
+}
+
+function fontFaceChanged() {
+	localPreferences.fontFace = $("#fontFaceSelect").val();
+	chrome.storage.local.set({ preferences : localPreferences });
 }
 
 function noHighContrastClicked() {

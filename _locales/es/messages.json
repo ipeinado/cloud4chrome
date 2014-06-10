@@ -77,7 +77,10 @@
     "zoomRgTitleText": {
         "message": "Zoom"
     },
-    "fontSizeRGTitleText": {
+    "fontOptionsTitleText": {
+        "message": "Opciones de letra"
+    },
+    "fontSizeTitleText": {
         "message": "Tamaño de letra"
     },
     "textSizeMediumLabelText": {
@@ -88,6 +91,9 @@
     },
     "textSizeXLargeLabelText": {
         "message": "X-grande"
+    },
+    "fontFaceTitleText": {
+        "message": "Tipo de fuente"
     },
     "simplifierTitleText": {
         "message": "Simplificador (Beta)"
