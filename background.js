@@ -35,32 +35,6 @@ chrome.runtime.onMessage.addListener(
   		console.log("Token submitted received");
 		requestPreferences(message.token);
   	}
-  	
-  	// if (xhrstatus.status == 1) {
-  	// // The data transfer has been complete and JSON parsing has worked
-  	//   if (!(isEmpty(npset)) && npset.hasOwnProperty(uri)) {
-  	//   	isError = false;
-  	//   	chrome.storage.local.set(
-  	//   	  {
-  	//   	  	token: message.token,
-  	//   	  	preferences: npset[uri]
-  	//   	  },
-  	//   	  function() {
-  	//   	  	if (chrome.runtime.lastError) {
-  	//   	  		console.log("Error storing preferences locally");
-  	//   	  	} else {
-  	//   	  		console.log("Preferences saved locally");
-  	//   	  	}
-  	//   	  }
-  	//   	);
-  	//   } else {
-  	//   	// npset is empty or has not property uri
-  	//   	xhrstatus.status = 0;
-  	//   	xhrstatus.errorMessage = "The preferences set is not well built";
-  	//   }
-  	// } 
-
-  	// sendResponse({ status : xhrstatus.status, isError: isError, errorMessage: xhrstatus.errorMessage});
   }
 );
 
@@ -87,42 +61,6 @@ function requestPreferences(token) {
 
 	xhr.send(); 
 }
-
-// function handleXHRStateChange() {
-
-// 	console.log("inside handleXHRStateChange");
-// 	console.log(this.response);
-
-// 	// The transfer has been complete (this.readyState -> 4)
-// 	if (xhr.readyState == 4) {
-// 		if (xhr.status == 200) {
-// 			processPreferences(xhr.response); 
-// 		} else {
-// 			console.log("Error downloading preferences");
-// 			chrome.runtime.sendMessage({ action : "preferences downloaded", status: "error", message:xhr.responseT});
-// 		}
-// 	}
-// 	// var 
-
- //  	if (this.readyState == this.DONE) {
- //    	// The data transfer has been complete
- //    	if (this.status == 200)
- //    		try {
-
- //    			var npset = JSON.parse(this.response);
- //    	  		xhrstatus.status = 1;
- //    	  		console.log(npset);
-
- //    		} catch(e) {
-
- //    		}
- //    	} else {
- //    		xhrstatus.status = 0;
- //    		xhrstatus.errorMessage = "Error: Page not found";
- //    		npset = {};
- //    	}
- //  	} 
-// }
 
 function processPreferences(userPreferencesDownloaded) {
 
