@@ -5,12 +5,7 @@ var value,
 	uri = 'org.chrome.cloud4chrome',
 	npserver = 'http://flowmanager.gpii.net/',
 	suffix = '/settings/%7B"OS":%7B"id":"web"%7D,"solutions":[%7B"id":"org.chrome.cloud4chrome"%7D]%7D',
-	userprefs = { token: "", preferences: {} },
-	npset = {},
-	xhr = undefined,
-	xhrstatus = { status: 0, isError: true, errorMessage: "" },
-	audio = new Audio("audio/beep-06.wav"),
-	attributes = {};
+	audio = new Audio("audio/beep-06.wav");
 
 
 chrome.windows.onCreated.addListener(function() {
@@ -32,8 +27,7 @@ chrome.runtime.onMessage.addListener(
   function(message, sender, sendResponse) {
   	
   	if (message.action == "token submitted") {
-  		console.log("Token submitted received");
-		requestPreferences(message.token);
+  		requestPreferences(message.token);
   	}
   }
 );
@@ -53,8 +47,10 @@ function requestPreferences(token) {
 
 			// Got a different response (403, 404, 500)
 			} else {
+
 				console.log("Error downloading preferences");
-				chrome.runtime.sendMessage({ action : "preferences downloaded", status: "error", message:xhr.responseText });
+				chrome.runtime.sendMessage({ action : "preferences downloaded", status: "error", message:xhr.statusText });
+			
 			}
 		}
 	};
@@ -79,6 +75,8 @@ function processPreferences(userPreferencesDownloaded) {
 				}
 			});
 
+		} else {
+			chrome.runtime.sendMessage({ action : "preferences downloaded", status : "error", message : "Preferences set is empty"});	
 		}
 
 	// There has been an error processing preferences
@@ -87,6 +85,7 @@ function processPreferences(userPreferencesDownloaded) {
 	}
 }
 
+// New window has been activated
 chrome.tabs.onActivated.addListener(function(activeInfo) {
 	chrome.storage.local.get({ 'token' : "", 'preferences' : {} }, function(results) {
 		if (!(chrome.runtime.lastError)) {
@@ -97,6 +96,8 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
 	});
 });
 
+
+// Window has been updated
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 	if (changeInfo.status == 'complete') {
 		chrome.storage.local.get({'token' : "", "preferences" : {} }, function(results) {
@@ -110,6 +111,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 });
 
 
+// Preferences have changed
 chrome.storage.onChanged.addListener(function(changes, local) {
 	console.log("changes detected in background: " + changes);
 	var newPrefs = changes.preferences.newValue,
@@ -123,9 +125,7 @@ chrome.storage.onChanged.addListener(function(changes, local) {
 			console.log("SimplifierIsOn: " + simplifierIsOn);
 			chrome.tabs.query({currentWindow : true} , function(tabs) {
 				for (var i = 0; i < tabs.length; i++) {
-					chrome.tabs.executeScript( 	tabs[i].id, 
-												{ 	file : 'js/resetTab.js' }
-											  );
+					chrome.tabs.executeScript({ code : " document.documentElement.removeAttribute('zoom');document.documentElement.removeAttribute('hc');document.documentElement.removeAttribute('ic');[].forEach.call(document.querySelectorAll('body *'), function(node) { node.removeAttribute('ts');node.removeAttribute('hc'); });" });
 				}
 			});
 			if (simplifierIsOn) {
@@ -138,6 +138,7 @@ chrome.storage.onChanged.addListener(function(changes, local) {
 
 function setPreferences(preferences) {
 
+	// SCREEN READER ENABLED
 	if (preferences.hasOwnProperty('screenReaderTTSEnabled')) {
 		console.log("NEW screenReaderTTSEnabled: " + preferences['screenReaderTTSEnabled']);
 	}
@@ -146,44 +147,19 @@ function setPreferences(preferences) {
 	if (preferences.hasOwnProperty('fontSize')) {
 		switch (preferences['fontSize']) {
 			case 'medium':
-				attributes['ts'] = 'medium';
-				chrome.tabs.executeScript( {code: 'var attributes = ' + JSON.stringify(attributes) + ';' } ,
-					    					function() {
-												chrome.tabs.executeScript( { file: 'js/setAttributeToAllElements.js' } );
-											}
-										  );
+				chrome.tabs.executeScript({ code: "[].forEach.call(document.querySelectorAll('body *'), function(node) { node.setAttribute('ts', 'medium'); });" });
 			  	break;
 			case 'large': 
-				attributes['ts'] = 'large';
-				chrome.tabs.executeScript( {code: 'var attributes = ' + JSON.stringify(attributes) + ';' } ,
-					    					function() {
-												chrome.tabs.executeScript( { file: 'js/setAttributeToAllElements.js' } );
-											}
-										  );			  	
+				chrome.tabs.executeScript({ code: "[].forEach.call(document.querySelectorAll('body *'), function(node) { node.setAttribute('ts', 'large'); });" });			  	
 				break;
 			case 'x-large':
-				attributes['ts'] = 'x-large';
-				chrome.tabs.executeScript( {code: 'var attributes = ' + JSON.stringify(attributes) + ';' } ,
-					    					function() {
-												chrome.tabs.executeScript( { file: 'js/setAttributeToAllElements.js' } );
-											}
-										  );
+				chrome.tabs.executeScript({ code: "[].forEach.call(document.querySelectorAll('body *'), function(node) { node.setAttribute('ts', 'x-large'); });" });
 				break;
 			default:
-				delete attributes['ts'];
-				chrome.tabs.executeScript( {code: 'var attributes = ' + JSON.stringify(attributes) + ';' } ,
-					    					function() {
-												chrome.tabs.executeScript( { file: 'js/setAttributeToAllElements.js' } );
-											}
-										  );
+				chrome.tabs.executeScript({ code: "[].forEach.call(document.querySelectorAll('body *'), function(node) { node.removeAttribute('ts'); });" });
 		}
 	} else {
-		delete attributes['ts'];
-		chrome.tabs.executeScript( {code: 'var attributes = ' + JSON.stringify(attributes) + ';' } ,
-		  function() {
-			chrome.tabs.executeScript( { file: 'js/setAttributeToAllElements.js' } );
-		  }
-		);
+		chrome.tabs.executeScript( {code: "[].forEach.call(document.querySelectorAll('body *'), function(node) { node.removeAttribute('ts'); });" }); 
 	}
 
 	// MAGNIFICATION
@@ -220,55 +196,29 @@ function setPreferences(preferences) {
 		if (preferences['highContrastEnabled']) {
 		// high contrast is enabled
 			if (preferences.hasOwnProperty('highContrastTheme')) {
-			// high contrast is enabled and there is a high contrast theme
+			// high contrast is enabled and there is a high contrast
 				switch (preferences['highContrastTheme']) {
 					case 'black-white':
-						attributes['hc'] = 'bw';
-						chrome.tabs.executeScript( {code: 'var attributes = ' + JSON.stringify(attributes) + ';' } ,
-													function() {
-														chrome.tabs.executeScript( { file: 'js/setAttributeToAllElements.js' } );
-													}
-												  );
+						chrome.tabs.executeScript( {code: "[].forEach.call(document.querySelectorAll('body *'), function(node) { node.removeAttribute('hc'); }); document.documentElement.setAttribute('hc', 'bw'); "});
 						break;
 					case 'white-black':
-						attributes['hc'] = 'wb';
-						console.log('inside white-black');
-						chrome.tabs.executeScript( { code : 'var attributes = ' + JSON.stringify(attributes) + ';' }, 
-												   function() {
-												   		chrome.tabs.executeScript( { file : "js/setAttributeToAllElements.js" } );
-												   }); 
+						chrome.tabs.executeScript( { code : "document.documentElement.removeAttribute('hc'); [].forEach.call(document.querySelectorAll('body *'), function(node) { node.setAttribute('hc', 'wb'); });" }); 
 			 			break;
 					case 'yellow-black':
-						attributes['hc'] = 'yb';
-						chrome.tabs.executeScript({code: 'var attributes = ' + JSON.stringify(attributes) + ';' } ,
-													function() {
-														chrome.tabs.executeScript( { file: 'js/setAttributeToAllElements.js' } );
-													}); 
+						chrome.tabs.executeScript({code: "document.documentElement.removeAttribute('hc'); [].forEach.call(document.querySelectorAll('body *'), function(node) { node.setAttribute('hc', 'yb'); });" }); 
 						break;
 					case 'black-yellow':
-						attributes['hc'] = 'by';
-						chrome.tabs.executeScript({code: 'var attributes = ' + JSON.stringify(attributes) + ';' } ,
-													function() {
-														chrome.tabs.executeScript( { file: 'js/setAttributeToAllElements.js' } );
-													});
+						chrome.tabs.executeScript({code: "document.documentElement.removeAttribute('hc'); [].forEach.call(document.querySelectorAll('body *'), function(node) { node.setAttribute('hc', 'by'); });" });
 						break;
 					default:
-						delete attributes['hc'];
-						chrome.tabs.executeScript({code: 'var attributes = ' + JSON.stringify(attributes) + ';' } ,
-													function() {
-														chrome.tabs.executeScript( { file: 'js/setAttributeToAllElements.js' } );
-													});
+						chrome.tabs.executeScript({code: "document.documentElement.removeAttribute('hc'); [].forEach.call(document.querySelectorAll('body *'), function(node) { node.removeAttribute('hc'); });" });
 						
 				}
 			}
 
 		} else {
-		// high contrast is not enabled
-			delete attributes['hc'];
-			chrome.tabs.executeScript({code: 'var attributes = ' + JSON.stringify(attributes) + ';' } ,
-													function() {
-														chrome.tabs.executeScript( { file: 'js/setAttributeToAllElements.js' } );
-													});
+			// high contrast is not enabled
+			chrome.tabs.executeScript({code: "document.documentElement.removeAttribute('hc'); [].forEach.call(document.querySelectorAll('body *'), function(node) { node.removeAttribute('hc'); });" });
 		}
 	} // End High Contrast
 
