@@ -17,7 +17,7 @@ $(document).ready(function(e) {
   $('#optionsLink').click(onOptionsClick);
   
  $('#screenReaderCheckBox').click(screenReaderCBClicked);
-  $('#installCVButton').click(installCV);
+  $('#installCVButton').click(installCVClicked);
   $('#NoHighContrastRB').click(noHighContrastClicked);
   $('#highContrastBlackWhite').click(highContrastBlackWhiteClicked);
   $('#highContrastWhiteBlack').click(highContrastWhiteBlackClicked);
@@ -92,9 +92,7 @@ function onTokenFormSubmit(e) {
   
   var token = $('#tokenInput').val();
   $('#tokenInput').val("");
-  console.log('submitting token'); 
-  $('#results').show();
-  $('#results').html('<img src="/images/loading_icon_2_rev01.gif"> Loading');
+  $('#results').html('<img src="/images/loading_icon_2_rev01.gif"> Loading').show();
   chrome.runtime.sendMessage({action: 'token submitted', token: token}, handleResponse);
 }
 
@@ -152,35 +150,35 @@ function setPreferencesForm(npsetObject) {
 		
 		    // Initialize screenreader
 	        chrome.management.get('kgejglhpjiefppelpmljglcjbhoiplfn', function(extInfo) {
-		      try {
-		        console.log(extInfo.name + " is installed.");
+	        	if (chrome.runtime.lastError) {
+					console.log('Error in screen reader management: ' + chrome.runtime.lastError.message);
+			  		$('#screenReaderDivCVInstalled').hide();
+			  		$('#screenReaderDivCVNotInstalled').show();
+	        	} else {
+		        	console.log(extInfo.name + " is installed.");
 
-				if (localPreferences.hasOwnProperty('screenReaderTTSEnabled')) {
-				  if (localPreferences['screenReaderTTSEnabled']) {
-			        $('#screenReaderCheckBox').prop('checked', true);
-			        console.log("Screen reader checkbox initialized to true in background");
-			  
-			        if (!extInfo.enabled) {
-			          chrome.management.setEnabled(extInfo.id, true, function() {
-				        console.log("ChromeVox has been enabled in initialization");
-				      }); 
-			        }
-		          } else {
-			        document.querySelector('#screenReaderCheckBox').checked = false;
-			        console.log("Screen reader checkbox initializated to false in background");
-			  
-			        if (extInfo.enabled) {
-			          chrome.management.setEnabled(extInfo.id, false, function() {
-			            console.log("ChromeVox has been disabled in initialization");
-			          }); 
-			        }
-		          } 	
-				}	
-		      } catch (e) {
-		      	console.log('Error in screen reader management: ' + e.message);
-			  	$('#screenReaderDivCVInstalled').hide();
-			  	$('#screenReaderDivCVNotInstalled').show();
-		      }
+					if (localPreferences.hasOwnProperty('screenReaderTTSEnabled')) {
+					  if (localPreferences['screenReaderTTSEnabled']) {
+				        $('#screenReaderCheckBox').prop('checked', true);
+				        console.log("Screen reader checkbox initialized to true in background");
+				  
+				        if (!extInfo.enabled) {
+				          chrome.management.setEnabled(extInfo.id, true, function() {
+					        console.log("ChromeVox has been enabled in initialization");
+					      }); 
+				        }
+			          } else {
+				        document.querySelector('#screenReaderCheckBox').checked = false;
+				        console.log("Screen reader checkbox initializated to false in background");
+				  
+				        if (extInfo.enabled) {
+				          chrome.management.setEnabled(extInfo.id, false, function() {
+				            console.log("ChromeVox has been disabled in initialization");
+				          }); 
+				        }
+			          } 	
+					}	
+	        	}
 		    });
 
 	     
@@ -339,15 +337,24 @@ function signOutBtnClicked(e) {
   document.documentElement.removeAttribute('ic');
   
   chrome.management.get('kgejglhpjiefppelpmljglcjbhoiplfn', function(extInfo) {
-	if (extInfo.enabled) {
-	  chrome.management.setEnabled(extInfo.id, false, function() {
-	    console.log("ChromeVox has been deactivated"); 
-	  });
-	}
+  	if (chrome.runtime.lastError) {
+  		console.log("ChromeVox is not installed");
+  	} else {
+  		if (extInfo.enabled) {
+	  		chrome.management.setEnabled(extInfo.id, false, function() {
+	    		console.log("ChromeVox has been deactivated"); 
+	  		});
+		}
+  	}
+	
   });
   
 }
 
+function installCVClicked(e) {
+	e.preventDefault();
+	chrome.tabs.create({ url : "https://chrome.google.com/webstore/detail/chromevox/kgejglhpjiefppelpmljglcjbhoiplfn" });
+}
 
 function screenReaderCBClicked() {
   if (this.checked == true) {

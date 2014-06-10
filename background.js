@@ -122,10 +122,13 @@ chrome.storage.onChanged.addListener(function(changes, local) {
 	} else {
 		if (oldPrefs != undefined) {
 			var simplifierIsOn = oldPrefs['simplifier'] || false;
-			console.log("SimplifierIsOn: " + simplifierIsOn);
 			chrome.tabs.query({currentWindow : true} , function(tabs) {
 				for (var i = 0; i < tabs.length; i++) {
-					chrome.tabs.executeScript({ code : " document.documentElement.removeAttribute('zoom');document.documentElement.removeAttribute('hc');document.documentElement.removeAttribute('ic');[].forEach.call(document.querySelectorAll('body *'), function(node) { node.removeAttribute('ts');node.removeAttribute('hc'); });" });
+					chrome.tabs.executeScript({ code : " document.documentElement.removeAttribute('zoom');document.documentElement.removeAttribute('hc');document.documentElement.removeAttribute('ic');[].forEach.call(document.querySelectorAll('body *'), function(node) { node.removeAttribute('ts');node.removeAttribute('hc'); });" }, function() {
+						if (chrome.runtime.lastError) {
+							console.log("Error in tag: " + chrome.runtime.lastError.message);
+						} 
+					});
 				}
 			});
 			if (simplifierIsOn) {
@@ -147,19 +150,29 @@ function setPreferences(preferences) {
 	if (preferences.hasOwnProperty('fontSize')) {
 		switch (preferences['fontSize']) {
 			case 'medium':
-				chrome.tabs.executeScript({ code: "[].forEach.call(document.querySelectorAll('body *'), function(node) { node.setAttribute('ts', 'medium'); });" });
+				chrome.tabs.executeScript({ code: "[].forEach.call(document.querySelectorAll('body *'), function(node) { node.setAttribute('ts', 'medium'); });" }, function() {
+					if (chrome.runtime.lastError) { console.log("Error in adding attribute ts = medium: " + chrome.runtime.lastError.message ); }
+				});
 			  	break;
 			case 'large': 
-				chrome.tabs.executeScript({ code: "[].forEach.call(document.querySelectorAll('body *'), function(node) { node.setAttribute('ts', 'large'); });" });			  	
+				chrome.tabs.executeScript({ code: "[].forEach.call(document.querySelectorAll('body *'), function(node) { node.setAttribute('ts', 'large'); });" }, function() {
+					if (chrome.runtime.lastError) { console.log("Error in adding attribute ts = large: " + chrome.runtime.lastError.message ); }
+				});			  	
 				break;
 			case 'x-large':
-				chrome.tabs.executeScript({ code: "[].forEach.call(document.querySelectorAll('body *'), function(node) { node.setAttribute('ts', 'x-large'); });" });
+				chrome.tabs.executeScript({ code: "[].forEach.call(document.querySelectorAll('body *'), function(node) { node.setAttribute('ts', 'x-large'); });" }, function() {
+					if (chrome.runtime.lastError) { console.log("Error in adding attribute ts = x-large: " + chrome.runtime.lastError.message ); }
+				});
 				break;
 			default:
-				chrome.tabs.executeScript({ code: "[].forEach.call(document.querySelectorAll('body *'), function(node) { node.removeAttribute('ts'); });" });
+				chrome.tabs.executeScript({ code: "[].forEach.call(document.querySelectorAll('body *'), function(node) { node.removeAttribute('ts'); });" }, function() {
+					if (chrome.runtime.lastError) { console.log("Error in removing attribute ts" + chrome.runtime.lastError.message ); }
+				});
 		}
 	} else {
-		chrome.tabs.executeScript( {code: "[].forEach.call(document.querySelectorAll('body *'), function(node) { node.removeAttribute('ts'); });" }); 
+		chrome.tabs.executeScript( {code: "[].forEach.call(document.querySelectorAll('body *'), function(node) { node.removeAttribute('ts'); });" }, function() {
+			if (chrome.runtime.lastError) { console.log("Error in removing attribute ts" + chrome.runtime.lastError.message ); }
+		}); 
 	}
 
 	// MAGNIFICATION
@@ -170,25 +183,37 @@ function setPreferences(preferences) {
 			// magnifier is enabled and there is a value for magnification
 				switch (preferences['magnification']) {
 					case 1:
-						chrome.tabs.executeScript({ code : 'document.documentElement.removeAttribute("zoom");' });
+						chrome.tabs.executeScript({ code : 'document.documentElement.removeAttribute("zoom");' }, function() {
+							if (chrome.runtime.lastError) { console.log("Error in removing attribute zoom" + chrome.runtime.lastError.message ); }
+						});
 						break;
 					case 2:
-						chrome.tabs.executeScript({ code : 'document.documentElement.setAttribute("zoom", "200%");' });
+						chrome.tabs.executeScript({ code : 'document.documentElement.setAttribute("zoom", "200%");' }, function() {
+							if (chrome.runtime.lastError) { console.log("Error in adding attribute zoom = 200" + chrome.runtime.lastError.message ); }
+						});
 						break;
 					case 3:
-						chrome.tabs.executeScript({ code : 'document.documentElement.setAttribute("zoom", "300%");' });
+						chrome.tabs.executeScript({ code : 'document.documentElement.setAttribute("zoom", "300%");' }, function() {
+							if (chrome.runtime.lastError) { console.log("Error in adding attribute zoom = 300" + chrome.runtime.lastError.message ); }
+						});
 						break;
 				}
 			} else {
 			// magnifier is enabled but there is no value for magnification
-				chrome.tabs.executeScript({ code : 'document.documentElement.removeAttribute("zoom");' });
+				chrome.tabs.executeScript({ code : 'document.documentElement.removeAttribute("zoom");' }, function() {
+					if (chrome.runtime.lastError) { console.log("Error in removing attribute zoom" + chrome.runtime.lastError.message ); }
+				});
 			}
 		} else {
 		// magnifier is not enabled
-			chrome.tabs.executeScript({ code : 'document.documentElement.removeAttribute("zoom");' });
+			chrome.tabs.executeScript({ code : 'document.documentElement.removeAttribute("zoom");' }, function() {
+				if (chrome.runtime.lastError) { console.log("Error in removing attribute zoom" + chrome.runtime.lastError.message ); }
+			});
 		}
 	} else {
-		chrome.tabs.executeScript({ code : 'document.documentElement.removeAttribute("zoom");' });
+		chrome.tabs.executeScript({ code : 'document.documentElement.removeAttribute("zoom");' }, function() {
+			if (chrome.runtime.lastError) { console.log("Error in removing attribute zoom" + chrome.runtime.lastError.message ); }
+		});
 	}
 
 	// HIGH CONTRAST
@@ -199,26 +224,38 @@ function setPreferences(preferences) {
 			// high contrast is enabled and there is a high contrast
 				switch (preferences['highContrastTheme']) {
 					case 'black-white':
-						chrome.tabs.executeScript( {code: "[].forEach.call(document.querySelectorAll('body *'), function(node) { node.removeAttribute('hc'); }); document.documentElement.setAttribute('hc', 'bw'); "});
+						chrome.tabs.executeScript( {code: "[].forEach.call(document.querySelectorAll('body *'), function(node) { node.removeAttribute('hc'); }); document.documentElement.setAttribute('hc', 'bw'); "}, function() {
+							if (chrome.runtime.lastError) { console.log("Error in setting attribute hc = bw" + chrome.runtime.lastError.message ); }
+						});
 						break;
 					case 'white-black':
-						chrome.tabs.executeScript( { code : "document.documentElement.removeAttribute('hc'); [].forEach.call(document.querySelectorAll('body *'), function(node) { node.setAttribute('hc', 'wb'); });" }); 
+						chrome.tabs.executeScript( { code : "document.documentElement.removeAttribute('hc'); [].forEach.call(document.querySelectorAll('body *'), function(node) { node.setAttribute('hc', 'wb'); });" }, function() {
+							if (chrome.runtime.lastError) { console.log("Error in setting attribute hc = wb" + chrome.runtime.lastError.message ); }
+						}); 
 			 			break;
 					case 'yellow-black':
-						chrome.tabs.executeScript({code: "document.documentElement.removeAttribute('hc'); [].forEach.call(document.querySelectorAll('body *'), function(node) { node.setAttribute('hc', 'yb'); });" }); 
+						chrome.tabs.executeScript({code: "document.documentElement.removeAttribute('hc'); [].forEach.call(document.querySelectorAll('body *'), function(node) { node.setAttribute('hc', 'yb'); });" }, function() {
+							if (chrome.runtime.lastError) { console.log("Error in setting attribute hc = yb" + chrome.runtime.lastError.message ); }
+						}); 
 						break;
 					case 'black-yellow':
-						chrome.tabs.executeScript({code: "document.documentElement.removeAttribute('hc'); [].forEach.call(document.querySelectorAll('body *'), function(node) { node.setAttribute('hc', 'by'); });" });
+						chrome.tabs.executeScript({code: "document.documentElement.removeAttribute('hc'); [].forEach.call(document.querySelectorAll('body *'), function(node) { node.setAttribute('hc', 'by'); });" }, function() {
+							if (chrome.runtime.lastError) { console.log("Error in setting attribute hc = by" + chrome.runtime.lastError.message ); }
+						});
 						break;
 					default:
-						chrome.tabs.executeScript({code: "document.documentElement.removeAttribute('hc'); [].forEach.call(document.querySelectorAll('body *'), function(node) { node.removeAttribute('hc'); });" });
+						chrome.tabs.executeScript({code: "document.documentElement.removeAttribute('hc'); [].forEach.call(document.querySelectorAll('body *'), function(node) { node.removeAttribute('hc'); });" }, function() {
+							if (chrome.runtime.lastError) { console.log("Error in removing attribute hc" + chrome.runtime.lastError.message ); }
+						});
 						
 				}
 			}
 
 		} else {
 			// high contrast is not enabled
-			chrome.tabs.executeScript({code: "document.documentElement.removeAttribute('hc'); [].forEach.call(document.querySelectorAll('body *'), function(node) { node.removeAttribute('hc'); });" });
+			chrome.tabs.executeScript({code: "document.documentElement.removeAttribute('hc'); [].forEach.call(document.querySelectorAll('body *'), function(node) { node.removeAttribute('hc'); });" }, function() {
+				if (chrome.runtime.lastError) { console.log("Error in removing attribute hc" + chrome.runtime.lastError.message ); }
+			});
 		}
 	} // End High Contrast
 
