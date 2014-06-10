@@ -160,7 +160,7 @@ a.signOutBtn {
   font-size: 0.9em;
 }
 
-button#installCVButton {
+button#installCVButton, button#installOnScreenKeyboardButton {
   padding: 0.5em;
   background: #CD3700;
   border-radius: 4px;

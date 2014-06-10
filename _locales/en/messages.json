@@ -95,6 +95,18 @@
     "fontFaceTitleText": {
         "message": "Font Face"
     },
+    "onScreenKeyboardTitleText": {
+        "message": "On Screen Keyboard"
+    },
+    "onScreenKeyboardLabelText": {
+        "message": "Activate On Screen Keyboard"
+    },
+    "onScreenKeyboardNotInstalledWarningText": {
+        "message": "Chrome Virtual Keyboard is not installed"
+    },
+    "installOnScreenKeyboardButtonText": {
+        "message": "Install Chrome Virtual Keyboard"
+    },
     "simplifierTitleText": {
         "message": "Simplifier (Beta)"
     },

@@ -16,7 +16,7 @@ $(document).ready(function(e) {
   /* document.querySelector('#optionsLink').addEventListener('focus', function(e) { chrome.tts.speak('Click to edit your preferences');}); */
   $('#optionsLink').click(onOptionsClick);
   
- $('#screenReaderCheckBox').click(screenReaderCBClicked);
+  $('#screenReaderCheckBox').click(screenReaderCBClicked);
   $('#installCVButton').click(installCVClicked);
   $('#NoHighContrastRB').click(noHighContrastClicked);
   $('#highContrastBlackWhite').click(highContrastBlackWhiteClicked);
@@ -31,6 +31,8 @@ $(document).ready(function(e) {
   $('#textSizeLarge').click(textSizeLargeClicked);
   $('#textSizeXLarge').click(textSizeXLargeClicked);
   $('#fontFaceSelect').change(fontFaceChanged);
+  $('#onScreenKeyboardCheckBox').click(onScreenKeyboardCheckBoxClicked);
+  $('#installOnScreenKeyboardButton').click(onInstallOnScreenKeyboardButtonClicked);
   $('#simplifierCheckBox').click(simplifierCheckBoxClicked);
 
   $('#seeallprefs').click(onOptionsClick);
@@ -65,6 +67,10 @@ $(document).ready(function(e) {
   $('#textSizeMediumLabel').text(chrome.i18n.getMessage("textSizeMediumLabelText"));
   $('#textSizeLargeLabel').text(chrome.i18n.getMessage("textSizeLargeLabelText"));
   $('#textSizeXLargeLabel').text(chrome.i18n.getMessage("textSizeXLargeLabelText"));
+  $('#onScreenKeyboardTitle').text(chrome.i18n.getMessage("onScreenKeyboardTitleText"));
+  $('#onScreenKeyboardLabel').text(chrome.i18n.getMessage("onScreenKeyboardLabelText"));
+  $('#onScreenKeyboardNotInstalledWarning').text(chrome.i18n.getMessage("onScreenKeyboardNotInstalledWarningText"));
+  $('#installOnScreenKeyboardButton').text(chrome.i18n.getMessage("installOnScreenKeyboardButtonText"));
   $('#simplifierTitle').text(chrome.i18n.getMessage("simplifierTitleText"));
   $('#simplifierCheckBoxLabel').text(chrome.i18n.getMessage("simplifierCheckBoxLabelText"));  
   
@@ -161,24 +167,10 @@ function setPreferencesForm(npsetObject) {
 		        	console.log(extInfo.name + " is installed.");
 
 					if (localPreferences.hasOwnProperty('screenReaderTTSEnabled')) {
-					  if (localPreferences['screenReaderTTSEnabled']) {
+					  if (localPreferences.screenReaderTTSEnabled) {
 				        $('#screenReaderCheckBox').prop('checked', true);
-				        console.log("Screen reader checkbox initialized to true in background");
-				  
-				        if (!extInfo.enabled) {
-				          chrome.management.setEnabled(extInfo.id, true, function() {
-					        console.log("ChromeVox has been enabled in initialization");
-					      }); 
-				        }
 			          } else {
-				        document.querySelector('#screenReaderCheckBox').checked = false;
-				        console.log("Screen reader checkbox initializated to false in background");
-				  
-				        if (extInfo.enabled) {
-				          chrome.management.setEnabled(extInfo.id, false, function() {
-				            console.log("ChromeVox has been disabled in initialization");
-				          }); 
-				        }
+				        $('#screenReaderCheckBox').prop('checked', false);
 			          } 	
 					}	
 	        	}
@@ -319,6 +311,23 @@ function setPreferencesForm(npsetObject) {
 	      			default:
 	      		}
 	      	}
+
+	      	chrome.management.get('pflmllfnnabikmfkkaddkoolinlfninn', function(extInfo) {
+	      		if (chrome.runtime.lastError) {
+	      			console.log(chrome.runtime.lastError.message);
+	      			$("#onScreenKeyboardDivInstalled").hide();
+	      			$("#onScreenKeyboardDivNotInstalled").show();
+	      		} else {
+	      			console.log("Chrome Virtual Keyboard is installed");
+	      			if (localPreferences.hasOwnProperty('onScreenKeyboardEnabled')) {
+	      				if (localPreferences.onScreenKeyboardEnabled) {
+	      					$('#onScreenKeyboardCheckBox').prop('checked', true);
+	      				} else {
+	      					$('#onScreenKeyboardCheckBox').prop('checked', false);
+	      				}
+	      			}
+	      		}
+	      	});
 		
 		    // Initialize simplifier
 		    if (localPreferences.hasOwnProperty('simplifier')) {
@@ -377,30 +386,27 @@ function installCVClicked(e) {
 	chrome.tabs.create({ url : "https://chrome.google.com/webstore/detail/chromevox/kgejglhpjiefppelpmljglcjbhoiplfn" });
 }
 
+function onInstallOnScreenKeyboardButtonClicked(e) {
+	e.preventDefault();
+	chrome.tabs.create({ url : "https://chrome.google.com/webstore/detail/chrome-virtual-keyboard/pflmllfnnabikmfkkaddkoolinlfninn" });
+}
+
+function onScreenKeyboardCheckBoxClicked() {
+	if (this.checked) {
+		localPreferences.onScreenKeyboardEnabled = true;
+	} else {
+		localPreferences.onScreenKeyboardEnabled = false;
+	}
+	chrome.storage.local.set({ preferences : localPreferences });
+}
+
 function screenReaderCBClicked() {
   if (this.checked == true) {
-    localPreferences['screenReaderTTSEnabled'] = true;
-    chrome.storage.local.set({ token: userToken, preferences: localPreferences});   
-    chrome.management.get('kgejglhpjiefppelpmljglcjbhoiplfn', function(extInfo) {
-      if (!extInfo.enabled) {
-        chrome.management.setEnabled(extInfo.id, true, function() {
-          chrome.tts.speak('ChromeVox has been activated');
-          console.log('ChromeVox has been activated');
-        });
-      }
-    });
+    localPreferences.screenReaderTTSEnabled = true;
   } else {
-    localPreferences['screenReaderTTSEnabled'] = false;
-    chrome.storage.local.set({ token: userToken, preferences: localPreferences});   
-    chrome.management.get('kgejglhpjiefppelpmljglcjbhoiplfn', function(extInfo) {
-      if (extInfo.enabled) {
-        chrome.management.setEnabled(extInfo.id, false, function() {
-          chrome.tts.speak('ChromeVox has been deactivated');
-          console.log('ChromeVox activated from popup');
-        });
-      }
-    });
+    localPreferences.screenReaderTTSEnabled = false;
   }
+  chrome.storage.local.set({ preferences : localPreferences });
 }
 
 function zoom100Clicked() {

@@ -131,6 +131,31 @@ chrome.storage.onChanged.addListener(function(changes, local) {
 					});
 				}
 			});
+
+			// Deactivate ChromeVox
+			chrome.management.get('kgejglhpjiefppelpmljglcjbhoiplfn', function(extInfo) {
+				if (chrome.runtime.lastError) {
+					console.log(chrome.runtime.lastError.message);
+				} else {
+					chrome.management.setEnabled(extInfo.id, false, function() {
+						console.log("ChromeVox deactivated");
+					})
+				}
+			});
+
+			// Deactivate Chrome Virtual Keyboard
+			chrome.management.get('pflmllfnnabikmfkkaddkoolinlfninn', function(extInfo) {
+				if (chrome.runtime.lastError) {
+					console.log(chrome.runtime.lastError.message);
+				} else {
+					chrome.management.setEnabled(extInfo.id, false, function() {
+						console.log("Chrome Virtual Keyboard deactivated");
+					})
+				}
+			});
+
+
+
 			if (simplifierIsOn) {
 				chrome.tabs.reload();
 			}
@@ -142,9 +167,28 @@ chrome.storage.onChanged.addListener(function(changes, local) {
 function setPreferences(preferences) {
 
 	// SCREEN READER ENABLED
-	if (preferences.hasOwnProperty('screenReaderTTSEnabled')) {
-		console.log("screenReaderTTSEnabled: " + preferences['screenReaderTTSEnabled']);
-	}
+	chrome.management.get('kgejglhpjiefppelpmljglcjbhoiplfn', function(extInfo) {
+		if (chrome.runtime.lastError) {
+			console.log(chrome.runtime.lastError.message);
+		} else {
+			if (preferences.hasOwnProperty('screenReaderTTSEnabled')) {
+				if (preferences.screenReaderTTSEnabled) {
+					if (!extInfo.enabled) {
+						chrome.management.setEnabled(extInfo.id, true, function() {
+							console.log("ChromeVox activated in background");
+						});
+					}
+				} else {
+					if (extInfo.enabled) {
+						chrome.management.setEnabled(extInfo.id, false, function() {
+							console.log("ChromeVox deactivated in background");
+						});
+					}
+				}
+			}
+		
+		}
+	}); 
 
 	// FONT SIZE
 	if (preferences.hasOwnProperty('fontSize')) {
@@ -276,6 +320,28 @@ function setPreferences(preferences) {
 		} else {
 			chrome.tabs.executeScript({ code : 'document.documentElement.removeAttribute("ic");' });
 		}
+	}
+
+	if (preferences.hasOwnProperty('onScreenKeyboardEnabled')) {
+		chrome.management.get('pflmllfnnabikmfkkaddkoolinlfninn', function(extInfo) {
+			if (chrome.runtime.lastError) {
+				console.log(chrome.runtime.lastError);
+			} else {
+				if (preferences.onScreenKeyboardEnabled) {
+					if (!extInfo.enabled) {
+						chrome.management.setEnabled(extInfo.id, true, function() {
+							console.log("Chrome Virtual Keyboard activated");
+						})
+					}
+				} else {
+					if (extInfo.enabled) {
+						chrome.management.setEnabled(extInfo.id, false, function() {
+							console.log("Chrome Virtual Keyboard has been deactivated");
+						})
+					}
+				}
+			}
+		});
 	}
 
 	// SIMPLIFIER
