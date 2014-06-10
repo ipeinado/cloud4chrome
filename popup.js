@@ -3,6 +3,8 @@
 
 // Set all handlers
 
+"use strict";
+
 var userToken = "",
     localPreferences = {},
     recognition;
@@ -62,12 +64,26 @@ $(document).ready(function(e) {
   $('#textSizeXLargeLabel').text(chrome.i18n.getMessage("textSizeXLargeLabelText"));
   $('#simplifierTitle').text(chrome.i18n.getMessage("simplifierTitleText"));
   $('#simplifierCheckBoxLabel').text(chrome.i18n.getMessage("simplifierCheckBoxLabelText"));  
+  
   // if there is a configuration stored locally, we will load this 
   // set of needs and preferences
   chrome.storage.local.get({'token' : "" , 'preferences': {} }, function(results) {
     setPreferencesForm({token: results['token'], preferences: results['preferences']});
   }); 
+
 });
+
+chrome.runtime.onMessage.addListener(
+	function(req, sen, sendResponse) {
+		if (req.action == "preferences downloaded") {
+			if (req.status == "success") {
+				window.location.reload();
+			} else {
+				$('#results').html("<span class='warning'>" + req.message + "</span>").show();
+			}
+		}
+	}
+);
 
 // Function to handle the token submission. It finally sends a message to
 // the background page
@@ -79,7 +95,7 @@ function onTokenFormSubmit(e) {
   console.log('submitting token'); 
   $('#results').show();
   $('#results').html('<img src="/images/loading_icon_2_rev01.gif"> Loading');
-  chrome.runtime.sendMessage({'token': token}, handleResponse);
+  chrome.runtime.sendMessage({action: 'token submitted', token: token}, handleResponse);
 }
 
 // Actions to respond to the receipt of a set of needs and preferences 

@@ -1,18 +1,17 @@
+'use strict';
+
 var value,
 	html = document.documentElement,
 	uri = 'org.chrome.cloud4chrome',
 	npserver = 'http://flowmanager.gpii.net/',
 	suffix = '/settings/%7B"OS":%7B"id":"web"%7D,"solutions":[%7B"id":"org.chrome.cloud4chrome"%7D]%7D',
-	xhr = new XMLHttpRequest(),
 	userprefs = { token: "", preferences: {} },
-	npset = {}
+	npset = {},
+	xhr = undefined,
 	xhrstatus = { status: 0, isError: true, errorMessage: "" },
 	audio = new Audio("audio/beep-06.wav"),
 	attributes = {};
 
-(function() {
-	xhr.onreadystatechange = handleStateChange;
-})();
 
 chrome.windows.onCreated.addListener(function() {
 	audio.play();
@@ -31,80 +30,123 @@ chrome.runtime.onSuspend.addListener(function() {
 // Receives a message from the popup with the token when the token form is submitted	
 chrome.runtime.onMessage.addListener(
   function(message, sender, sendResponse) {
-  	var isError = true;
-  	getNP(message.token);
   	
-  	if (xhrstatus.status == 1) {
-  	// The data transfer has been complete and JSON parsing has worked
-  	  if (!(isEmpty(npset)) && npset.hasOwnProperty(uri)) {
-  	  	isError = false;
-  	  	chrome.storage.local.set(
-  	  	  {
-  	  	  	token: message.token,
-  	  	  	preferences: npset[uri]
-  	  	  },
-  	  	  function() {
-  	  	  	if (chrome.runtime.lastError) {
-  	  	  		console.log("Error storing preferences locally");
-  	  	  	} else {
-  	  	  		console.log("Preferences saved locally");
-  	  	  	}
-  	  	  }
-  	  	);
-  	  } else {
-  	  	// npset is empty or has not property uri
-  	  	xhrstatus.status = 0;
-  	  	xhrstatus.errorMessage = "The preferences set is not well built";
-  	  }
-  	} 
+  	if (message.action == "token submitted") {
+  		console.log("Token submitted received");
+		requestPreferences(message.token);
+  	}
+  	
+  	// if (xhrstatus.status == 1) {
+  	// // The data transfer has been complete and JSON parsing has worked
+  	//   if (!(isEmpty(npset)) && npset.hasOwnProperty(uri)) {
+  	//   	isError = false;
+  	//   	chrome.storage.local.set(
+  	//   	  {
+  	//   	  	token: message.token,
+  	//   	  	preferences: npset[uri]
+  	//   	  },
+  	//   	  function() {
+  	//   	  	if (chrome.runtime.lastError) {
+  	//   	  		console.log("Error storing preferences locally");
+  	//   	  	} else {
+  	//   	  		console.log("Preferences saved locally");
+  	//   	  	}
+  	//   	  }
+  	//   	);
+  	//   } else {
+  	//   	// npset is empty or has not property uri
+  	//   	xhrstatus.status = 0;
+  	//   	xhrstatus.errorMessage = "The preferences set is not well built";
+  	//   }
+  	// } 
 
-  	sendResponse({ status : xhrstatus.status, isError: isError, errorMessage: xhrstatus.errorMessage});
+  	// sendResponse({ status : xhrstatus.status, isError: isError, errorMessage: xhrstatus.errorMessage});
   }
 );
 
-function getNP(token) {
-  var url= npserver + token + suffix; 
-  try {
-    xhr.open("GET", url , false);
-    xhr.send();
-  } catch (e) {
-    console.log("Error: " + e.message);
-  }
+function requestPreferences(token) {
+
+	var xhr = new XMLHttpRequest();
+	var url= npserver + token + suffix; 
+
+	xhr.open("GET", url, true);
+	xhr.onreadystatechange = function() {
+		if (this.readyState == 4) {
+
+			if (this.status == 200) {
+
+				processPreferences({ token : token, payloadJSON: this.response });
+
+			// Got a different response (403, 404, 500)
+			} else {
+				console.log("Error downloading preferences");
+				chrome.runtime.sendMessage({ action : "preferences downloaded", status: "error", message:xhr.responseText });
+			}
+		}
+	};
+
+	xhr.send(); 
 }
 
-function handleStateChange() {
+// function handleXHRStateChange() {
 
-  if (this.readyState == this.DONE) {
-    // The data transfer has been complete
-    switch (this.status) {
-    	case 200:
-    	  try {
-    	  	npset = JSON.parse(this.response);
-    	  	xhrstatus.status = 1;
-    	  	console.log(npset);
-    	  } catch(e) {
-    	  	console.log('JSON file is not valid');
-    	  	xhrstatus.status = 0;
-    	  	xhrstatus.errorMessage = "JSON file is not valid";
-    	  	npset = {};
-    	  }
-    	  break;
-    	case 404:
-    	  xhrstatus.status = 0;
-    	  xhrstatus.errorMessage = "Error 404: Page not found";
-    	  npset = {};
-    	  break;
-    	case 500:
-    	  xhrstatus.status = 0;
-    	  xhrstatus.errorMessage = "Error 500 - Internal server error";
-    	  npset = {};
-    	  break;
-    	default:
-    	  xhrstatus.status = 0;
-    	  xhrstatus.errorMessage = "Undefined error";
-    	  npset = {};
-    }
-  } 
+// 	console.log("inside handleXHRStateChange");
+// 	console.log(this.response);
+
+// 	// The transfer has been complete (this.readyState -> 4)
+// 	if (xhr.readyState == 4) {
+// 		if (xhr.status == 200) {
+// 			processPreferences(xhr.response); 
+// 		} else {
+// 			console.log("Error downloading preferences");
+// 			chrome.runtime.sendMessage({ action : "preferences downloaded", status: "error", message:xhr.responseT});
+// 		}
+// 	}
+// 	// var 
+
+ //  	if (this.readyState == this.DONE) {
+ //    	// The data transfer has been complete
+ //    	if (this.status == 200)
+ //    		try {
+
+ //    			var npset = JSON.parse(this.response);
+ //    	  		xhrstatus.status = 1;
+ //    	  		console.log(npset);
+
+ //    		} catch(e) {
+
+ //    		}
+ //    	} else {
+ //    		xhrstatus.status = 0;
+ //    		xhrstatus.errorMessage = "Error: Page not found";
+ //    		npset = {};
+ //    	}
+ //  	} 
+// }
+
+function processPreferences(userPreferencesDownloaded) {
+
+	try {
+		var token = userPreferencesDownloaded.token, 
+			payload = JSON.parse(userPreferencesDownloaded.payloadJSON);
+
+		if (!(isEmpty(payload)) && (payload.hasOwnProperty(uri))) {
+			chrome.storage.local.set({ token : token, preferences : payload[uri]}, function() {
+				if (chrome.runtime.lastError) {
+					console.log("Error storing preferences locally: " + chrome.runtime.lastError.message);
+					chrome.runtime.sendMessage({ action : "preferences downloaded", status : "error", message : "Error storing preferences locally" });
+				} else {
+					console.log("Preferences saved locally");
+					chrome.runtime.sendMessage({ action : "preferences downloaded", status : "success", message: "Preferences saved locally" });
+				}
+			});
+
+		}
+
+	// There has been an error processing preferences
+	} catch (e) {
+		chrome.runtime.sendMessage({ action : "preferences downloaded", status : "error", message : "Error processing preferences"});
+	}
 }
 
 chrome.tabs.onActivated.addListener(function(activeInfo) {
