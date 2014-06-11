@@ -9,6 +9,13 @@ var userToken = "",
     localPreferences = {},
     recognition;
 
+var notification_OnScreenReaderActivated = {
+	type: "basic",
+	title: "On Screen Keyboard Activated",
+	message: "You have activated the On Screen Keyboard. To make it work, please make sure to refresh the page",
+	iconUrl: 'images/icon48.png'
+}
+
 $(document).ready(function(e) {
 
   $('#tokenForm').submit(onTokenFormSubmit);
@@ -134,7 +141,7 @@ function setPreferencesForm(npsetObject) {
 	    $('#preferencesContainer').hide();
   	  	$('#tokenFormContainer').show();
 	    $('#tokenInput').focus(); 
-	    chrome.tts.speak("Welcome to Cloud For All. Press TAB for options.");
+	    // chrome.tts.speak("Welcome to Cloud For All. Press TAB for options.");
 
 	  } else {
 	    // Either the token is a valid string or there are actual preferences 
@@ -394,6 +401,9 @@ function onInstallOnScreenKeyboardButtonClicked(e) {
 function onScreenKeyboardCheckBoxClicked() {
 	if (this.checked) {
 		localPreferences.onScreenKeyboardEnabled = true;
+		chrome.notifications.create("OnScreenKeyboarActivated", notification_OnScreenReaderActivated, function(notificationId) {
+			console.log(notificationId + " is active");
+		});
 	} else {
 		localPreferences.onScreenKeyboardEnabled = false;
 	}

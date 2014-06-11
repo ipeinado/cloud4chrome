@@ -316,9 +316,13 @@ function setPreferences(preferences) {
 	if (preferences.hasOwnProperty('invertColours')) {
 		if (preferences['invertColours']) {
 			console.log("inverting colours");
-			chrome.tabs.executeScript({ code : 'document.documentElement.setAttribute("ic", "invert");' });
+			chrome.tabs.executeScript({ code : 'document.documentElement.setAttribute("ic", "invert");' }, function() {
+				if (chrome.runtime.lastError) { console.log(chrome.runtime.lastError.message); }
+			});
 		} else {
-			chrome.tabs.executeScript({ code : 'document.documentElement.removeAttribute("ic");' });
+			chrome.tabs.executeScript({ code : 'document.documentElement.removeAttribute("ic");' }, function() {
+				if (chrome.runtime.lastError) { console.log(chrome.runtime.lastError.message); }
+			});
 		}
 	}
 
