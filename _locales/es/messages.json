@@ -95,6 +95,18 @@
     "fontFaceTitleText": {
         "message": "Tipo de fuente"
     },
+    "cursorSizeTitleText": {
+        "message": "Tamaño del cursor"
+    },
+    "CursorSizeNormalLabelText": {
+        "message": "normal"
+    },
+    "CursorSizeLargeLabelText": {
+        "message": "grande"
+    },
+    "CursorSizeXLargeLabelText": {
+        "message": "extra grande"
+    },
     "onScreenKeyboardTitleText": {
         "message": "Teclado en pantalla"
     },
@@ -136,5 +148,11 @@
     },
     "clearBtnTitleText": {
         "message": "Borrar todas las preferencias"
+    },
+    "onScreenKeyboardNotificationTitle": {
+        "message": "Teclado en pantalla activado"
+    },
+    "onScreenKeyboardNotificationMessage": {
+        "message": "Has activado el teclado en pantalla. Para hacerlo funcionar, no olvides refrescar la página"
     }
 }

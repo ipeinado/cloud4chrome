@@ -122,15 +122,7 @@ chrome.storage.onChanged.addListener(function(changes, local) {
 	} else {
 		if (oldPrefs != undefined) {
 			var simplifierIsOn = oldPrefs['simplifier'] || false;
-			chrome.tabs.query({currentWindow : true} , function(tabs) {
-				for (var i = 0; i < tabs.length; i++) {
-					chrome.tabs.executeScript({ code : " document.documentElement.removeAttribute('ff');document.documentElement.removeAttribute('zoom');document.documentElement.removeAttribute('hc');document.documentElement.removeAttribute('ic');[].forEach.call(document.querySelectorAll('body *'), function(node) { node.removeAttribute('ts');node.removeAttribute('hc'); });" }, function() {
-						if (chrome.runtime.lastError) {
-							console.log("Error in tag: " + chrome.runtime.lastError.message);
-						} 
-					});
-				}
-			});
+
 
 			// Deactivate ChromeVox
 			chrome.management.get('kgejglhpjiefppelpmljglcjbhoiplfn', function(extInfo) {
@@ -154,11 +146,7 @@ chrome.storage.onChanged.addListener(function(changes, local) {
 				}
 			});
 
-
-
-			if (simplifierIsOn) {
-				chrome.tabs.reload();
-			}
+			chrome.tabs.reload();
 
 		}
 	}
@@ -346,6 +334,30 @@ function setPreferences(preferences) {
 				}
 			}
 		});
+	}
+
+	if (preferences.hasOwnProperty('cursorSize')) {
+		switch (preferences.cursorSize) {
+			case "normal": 
+				chrome.tabs.insertCSS({ code : 'html, a { cursor : auto; }' }, function() {
+					if (chrome.runtime.lastError) { console.log(chrome.runtime.lastError.message ); }
+				});
+				break;
+			case "large":
+				chrome.tabs.insertCSS({ code : 'html { cursor : url('+ chrome.extension.getURL('images') +'/arrow_icon_large.png), auto; } a { cursor : url('+ chrome.extension.getURL('images') +'/hand_icon_large.png), auto !important; }'}, function() {
+					if (chrome.runtime.lastError) { console.log(chrome.runtime.lastError.message ); }
+				}); 
+				break;
+			case "x-large":
+				chrome.tabs.insertCSS({ code : 'html { cursor : url('+ chrome.extension.getURL('images') +'/arrow_icon_x_large.png), auto; } a { cursor : url('+ chrome.extension.getURL('images') +'/hand_icon_x_large.png), auto !important; }'}, function() {
+					if (chrome.runtime.lastError) { console.log(chrome.runtime.lastError.message ); }
+				}); 
+				break;
+			default:
+				chrome.tabs.executeScript({ code : 'document.documentElement.removeAttribute("cs");' }, function() {
+					if (chrome.runtime.lastError) { console.log(chrome.runtime.lastError.message ); }
+				});
+		}
 	}
 
 	// SIMPLIFIER

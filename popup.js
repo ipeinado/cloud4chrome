@@ -11,8 +11,8 @@ var userToken = "",
 
 var notification_OnScreenReaderActivated = {
 	type: "basic",
-	title: "On Screen Keyboard Activated",
-	message: "You have activated the On Screen Keyboard. To make it work, please make sure to refresh the page",
+	title: chrome.i18n.getMessage("onScreenKeyboardNotificationTitle"),
+	message: chrome.i18n.getMessage("onScreenKeyboardNotificationMessage"),
 	iconUrl: 'images/icon48.png'
 }
 
@@ -38,6 +38,9 @@ $(document).ready(function(e) {
   $('#textSizeLarge').click(textSizeLargeClicked);
   $('#textSizeXLarge').click(textSizeXLargeClicked);
   $('#fontFaceSelect').change(fontFaceChanged);
+  $('#cursorSizeNormal').click(cursorSizeNormalClicked);
+  $('#cursorSizeLarge').click(cursorSizeLargeClicked);
+  $('#cursorSizeXLarge').click(cursorSizeXLargeClicked);
   $('#onScreenKeyboardCheckBox').click(onScreenKeyboardCheckBoxClicked);
   $('#installOnScreenKeyboardButton').click(onInstallOnScreenKeyboardButtonClicked);
   $('#simplifierCheckBox').click(simplifierCheckBoxClicked);
@@ -74,6 +77,10 @@ $(document).ready(function(e) {
   $('#textSizeMediumLabel').text(chrome.i18n.getMessage("textSizeMediumLabelText"));
   $('#textSizeLargeLabel').text(chrome.i18n.getMessage("textSizeLargeLabelText"));
   $('#textSizeXLargeLabel').text(chrome.i18n.getMessage("textSizeXLargeLabelText"));
+  $('#cursorSizeTitle').text(chrome.i18n.getMessage("cursorSizeTitleText"));
+  $('#cursorSizeNormalLabel').text(chrome.i18n.getMessage("cursorSizeNormalLabelText"));
+  $('#cursorSizeLargeLabel').text(chrome.i18n.getMessage("cursorSizeLargeLabelText"));
+  $('#cursorSizeXLargeLabel').text(chrome.i18n.getMessage("cursorSizeXLargeLabelText"));
   $('#onScreenKeyboardTitle').text(chrome.i18n.getMessage("onScreenKeyboardTitleText"));
   $('#onScreenKeyboardLabel').text(chrome.i18n.getMessage("onScreenKeyboardLabelText"));
   $('#onScreenKeyboardNotInstalledWarning').text(chrome.i18n.getMessage("onScreenKeyboardNotInstalledWarningText"));
@@ -319,6 +326,24 @@ function setPreferencesForm(npsetObject) {
 	      		}
 	      	}
 
+	      	if (localPreferences.hasOwnProperty('cursorSize')) {
+	      		switch (localPreferences.cursorSize) {
+	      			case 'normal':
+	      				$('#cursorSizeNormal').prop('checked', true);
+	      				break;
+	      			case 'large':
+	      				$('#cursorSizeLarge').prop('checked', true);
+	      				break;
+	      			case 'x-large':
+	      				$('#cursorSizeXLarge').prop('checked', true);
+	      				break;
+	      			default: 
+	      				break;
+	      		}
+	      	} else {
+				$('#cursorSizeNormal').prop('checked', true);
+	      	}
+
 	      	chrome.management.get('pflmllfnnabikmfkkaddkoolinlfninn', function(extInfo) {
 	      		if (chrome.runtime.lastError) {
 	      			console.log(chrome.runtime.lastError.message);
@@ -472,6 +497,21 @@ function textSizeXLargeClicked() {
 
 function fontFaceChanged() {
 	localPreferences.fontFace = $("#fontFaceSelect").val();
+	chrome.storage.local.set({ preferences : localPreferences });
+}
+
+function cursorSizeNormalClicked() {
+	localPreferences.cursorSize = "normal";
+	chrome.storage.local.set({ preferences : localPreferences });
+}
+
+function cursorSizeLargeClicked() {
+	localPreferences.cursorSize = "large";
+	chrome.storage.local.set({ preferences : localPreferences });
+}
+
+function cursorSizeXLargeClicked() {
+	localPreferences.cursorSize = "x-large";
 	chrome.storage.local.set({ preferences : localPreferences });
 }
 

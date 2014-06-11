@@ -63,6 +63,10 @@
     ],
     "web_accessible_resources": [
         "lib/jquery-1.9.1.min.js",
-        "js/simplifier.js"
+        "js/simplifier.js",
+        "images/arrow_icon_large.png",
+        "images/arrow_icon_x_large.png",
+        "images/hand_icon_large.png",
+        "images/hand_icon_x_large.png"
     ]
 }

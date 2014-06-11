@@ -95,6 +95,18 @@
     "fontFaceTitleText": {
         "message": "Font Face"
     },
+    "cursorSizeTitleText": {
+        "message": "Cursor Size"
+    },
+    "CursorSizeNormalLabelText": {
+        "message": "normal"
+    },
+    "CursorSizeLargeLabelText": {
+        "message": "large"
+    },
+    "CursorSizeXLargeLabelText": {
+        "message": "x-large"
+    },
     "onScreenKeyboardTitleText": {
         "message": "On Screen Keyboard"
     },
@@ -136,5 +148,11 @@
     },
     "clearBtnTitleText": {
     	"message": "Clear all preferences"
+    },
+    "onScreenKeyboardNotificationTitle": {
+        "message": "On Screen Keyboard activated"
+    },
+    "onScreenKeyboardNotificationMessage": {
+        "message": "You have activated the on screen keyboard. If you wish to make it active, please make sure to refresh the page"
     }
 }
