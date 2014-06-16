@@ -5,8 +5,13 @@ var value,
 	uri = 'org.chrome.cloud4chrome',
 	npserver = 'http://flowmanager.gpii.net/',
 	suffix = '/settings/%7B"OS":%7B"id":"web"%7D,"solutions":[%7B"id":"org.chrome.cloud4chrome"%7D]%7D',
-	audio = new Audio("audio/beep-06.wav");
+	audio = new Audio("audio/beep-06.wav"),
+	locale = "en-GB";
 
+(function() {
+	locale = chrome.i18n.getUILanguage();
+	console.log(locale);
+})();
 
 chrome.windows.onCreated.addListener(function() {
 	audio.play();

@@ -274,3 +274,26 @@ html[ff="Comic Sans MS"] h3, html[ff="Comic Sans MS"] h4, html[ff="Comic Sans MS
 html[ff="Comic Sans MS"] blockquote, html[ff="Comic Sans MS"] article, html[ff="Comic Sans MS"] div, html[ff="Comic Sans MS"] span, html[ff="Comic Sans MS"] a {
   font-family: "Comic Sans MS", sans-serif !important; 
 }
+
+.tooltip {
+  position: fixed;   
+  background: black;
+  color: white;
+  border-radius: 6px;
+  padding: 1em;
+  font-size: 12px;
+  margin: 20px;
+  width: 300px;
+}
+
+.tooltip .help-paragraph {
+  font-style: italic;
+  font-size: 0.8em;
+}
+
+.tooltip h1 {
+  color: white;
+  font-size: 1em;
+  font-weight: bold !important;
+  text-decoration: underline;
+}

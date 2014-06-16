@@ -19,7 +19,7 @@
             "js": [
                 "lib/jquery-1.9.1.min.js",
                 "js/simplifier.js",
-                "js/contextual_help.js"
+                "js/synonyms_en.js"
             ],
             "css": [
                 "content.css"
