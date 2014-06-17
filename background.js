@@ -8,11 +8,6 @@ var value,
 	audio = new Audio("audio/beep-06.wav"),
 	locale = "en-GB";
 
-(function() {
-	locale = chrome.i18n.getUILanguage();
-	console.log(locale);
-})();
-
 chrome.windows.onCreated.addListener(function() {
 	audio.play();
 });
