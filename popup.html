@@ -1,8 +1,9 @@
 <!doctype html>
 <html>
 	<head>
-	  <link rel='stylesheet' type='text/javascript' href='content.css' />
-	  <link rel='stylesheet' type='text/javascript' href='popup.css' />
+	  <link rel='stylesheet' href='content.css' />
+	  <link rel='stylesheet' href='popup.css' />
+	  <link rel='stylesheet' href='https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css' />
 	  <link rel='chrome-webstore-item' href="https://chrome.google.com/webstore/detail/chromevox/kgejglhpjiefppelpmljglcjbhoiplfn?hl=en" />
   	  <script type='text/javascript' src='lib/jquery-1.9.1.min.js'></script>
 	  <script type='text/javascript' src='popup.js'></script>
@@ -10,24 +11,26 @@
 	</head>
 	<body>
 	  <!-- Form to insert the token -->
-	  <div id='tokenFormContainer'>
-	    <h1 id="welcomeMessage"></h1>
-		<form id='tokenForm'>
-		  <label for='tokenInput' class='tokenFormLabel'></label>
-		  <input type='text' name='token' id='tokenInput' required />
-		  <input type='submit' value='submit' id='tokenSubmit' />
+	  <div id='token-form-container'>
+	  	<img alt="Cloud4all logo" src='/images/icon48.png' id='c4a-logo'>
+	    <h1 id="welcome-message"></h1>
+		<form id='token-form'>
+			<div class='form-group'>
+		  		<label for='token-input' class='sr-only' id='token-input-label'></label>
+		  		<input type='text' name='token' class='form-control' id='token-input' aria-labelled-by='token-input-label' required />
+		  	</div>
 		</form>
 		<div id='results'></div>
 		<div id='options'>
-		  <a id='optionsLink' href=''></a>
+		  <a id='options-link' href=''></a> | <a href='' id='c4a-website-link' title="link to Cloud4all website"></a>
 		</div>
-	  </div>
+	  </div> <!-- token-form-container -->
 	  
 	  <!-- Preferences configurator -->
 	  <div id = 'preferencesContainer'>
 	  
 	    <div id='header'>
-	      <a href="" class="signOutBtn" title="Sign out of Cloud4all" >Sign out</a>
+	      <a href="" class="btn btn-warning sign-out-btn" title="Sign out of Cloud4all" >Sign out</a>
 		  <h2 id='configTitle' tabindex='1'></h2>
 		  <p><span id="configDescription"></span>
 		  <a id='seeallprefs' href="" title='see all preferences' class='seemore'>See all preferences</a>
@@ -173,7 +176,7 @@
 		  </div>
 		  
 		  <div class='config_option' id='prefOptions'>
-		  	<a href="" class="signOutBtn" title="Sign out of Cloud4all" ></a>
+		  	<a href="" class="btn btn-warning sign-out-btn" title="Sign out of Cloud4all" ></a>
 		  </div>
 		</form>
 	  </div> <!-- prefContainer -->

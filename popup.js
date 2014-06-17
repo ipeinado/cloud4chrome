@@ -18,10 +18,11 @@ var notification_OnScreenReaderActivated = {
 
 $(document).ready(function(e) {
 
-  $('#tokenForm').submit(onTokenFormSubmit);
+  $('#token-form').submit(onTokenFormSubmit);
   
   /* document.querySelector('#optionsLink').addEventListener('focus', function(e) { chrome.tts.speak('Click to edit your preferences');}); */
-  $('#optionsLink').click(onOptionsClick);
+  $('#options-link').click(onOptionsClick);
+  $("#c4a-website-link").click(onC4aWebsiteLinkClick);
   
   $('#screenReaderCheckBox').click(screenReaderCBClicked);
   $('#installCVButton').click(installCVClicked);
@@ -47,14 +48,17 @@ $(document).ready(function(e) {
 
   $('#seeallprefs').click(onOptionsClick);
 
-  $('.signOutBtn').click(signOutBtnClicked);
+  $('.sign-out-btn').click(signOutBtnClicked);
 
-  $('.signOutBtn').text(chrome.i18n.getMessage("signOutBtnText"));
+  $('.sign-out-btn').text(chrome.i18n.getMessage("signOutBtnText"));
   
   // Initialize all text to make the extension localizable
-  $("#welcomeMessage").text(chrome.i18n.getMessage("welcomeMessage"));
-  $('#tokenInput').attr('placeholder', chrome.i18n.getMessage("tokenInputPlaceholder"));
-  $('#optionsLink').text(chrome.i18n.getMessage("optionsLinkText"));
+  $("#welcome-message").text(chrome.i18n.getMessage("welcomeMessage"));
+  $('#token-input').attr('placeholder', chrome.i18n.getMessage("tokenInputPlaceholder"));
+  $('#token-input-label').text(chrome.i18n.getMessage("tokenInputLabelText"));
+  $('#options-link').text(chrome.i18n.getMessage("optionsLinkText"));
+  $('#c4a-website-link').attr('title', chrome.i18n.getMessage('c4aWebsiteLinkTitle'));
+  $('#c4a-website-link').text(chrome.i18n.getMessage('c4aWebsiteLinkText'));
   $('#configTitle').text(chrome.i18n.getMessage("configTitleText"));
   $('#configDescription').text(chrome.i18n.getMessage("configDescriptionText"));
   $('#seeallprefs').text(chrome.i18n.getMessage("seeAllPrefsText"));
@@ -113,8 +117,8 @@ chrome.runtime.onMessage.addListener(
 function onTokenFormSubmit(e) {
   e.preventDefault();
   
-  var token = $('#tokenInput').val();
-  $('#tokenInput').val("");
+  var token = $('#token-input').val();
+  $('#token-input').val("");
   $('#results').html('<img src="/images/loading_icon_2_rev01.gif"> Loading').show();
   chrome.runtime.sendMessage({action: 'token submitted', token: token}, handleResponse);
 }
@@ -146,14 +150,14 @@ function setPreferencesForm(npsetObject) {
 	  
 	    console.log('set of needs and preferences not stored locally');
 	    $('#preferencesContainer').hide();
-  	  	$('#tokenFormContainer').show();
-	    $('#tokenInput').focus(); 
+  	  	$('#token-form-container').show();
+	    $('#token-input').focus(); 
 	    // chrome.tts.speak("Welcome to Cloud For All. Press TAB for options.");
 
 	  } else {
 	    // Either the token is a valid string or there are actual preferences 
 	    console.log('set of needs and preferences stored locally');
-	    $('#tokenFormContainer').hide();
+	    $('#token-form-container').hide();
 	    $('#preferencesContainer').show();
 	    
 	    if (npsetObject['token'] != "") {
@@ -383,6 +387,10 @@ function setPreferencesForm(npsetObject) {
 function onOptionsClick() {
   chrome.tabs.create({ url: 'options.html' }); 
 	window.close();
+}
+
+function onC4aWebsiteLinkClick() {
+	chrome.tabs.create({ url : 'http://cloud4all.info' });
 }
 
 

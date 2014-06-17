@@ -15,6 +15,9 @@
         "message": "Welcome to Cloud4all",
         "description": "message in the popup"
     },
+    "tokenInputLabelText": {
+        "message": "Cloud4all token"
+    },
     "tokenInputPlaceholder": {
         "message": "insert your token",
         "description": "placeholder of the input for the token"
@@ -22,6 +25,12 @@
     "optionsLinkText": {
         "message": "or edit your preferences",
         "description": "link to the PMT in the popup's main screen"
+    },
+    "c4aWebsiteLinkTitle": {
+        "message": "visit Cloud4all website"
+    },
+    "c4aWebsiteLinkText": {
+        "message": "What's Cloud4all?"
     },
     "configTitleText": {
         "message": "Welcome",
