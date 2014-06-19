@@ -45,6 +45,8 @@ function requestPreferences(token) {
 
 				processPreferences({ token : token, payloadJSON: this.response });
 
+				chrome.tabs.reload();
+
 			// Got a different response (403, 404, 500)
 			} else {
 

@@ -132,7 +132,6 @@ function handleResponse(response) {
   if (status == 1) {
   	console.log("succesfully logged in");
   	chrome.storage.local.get({'token': "", 'preferences': {}}, function(results) {
-  		chrome.tabs.reload();
   		window.location.reload();
   	});
   } else {
