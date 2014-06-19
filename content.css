@@ -2,20 +2,12 @@ html[ic="invert"] {
 	-webkit-filter: invert();
 }
 
-html[ts="large"] body {
-  font-size: 1.2em !important;
+html[ts="large"], html[ts="large"] body {
+  font-size: 1.2rem !important;
 }
 
-html[ts="x-large"] body {
-  font-size: 1.4em !important;
-}
-
-html[zoom="200%"] body {
-  zoom: 2;
-}
-
-html[zoom="300%"] body {
-  zoom: 3;
+html[ts="x-large"], html[ts="x-large"] > body {
+  font-size: 1.4rem !important;
 }
 
 html[hc = 'bw'] {
@@ -48,7 +40,7 @@ a[hc='wb']:visited, a[hc = 'wb']:hover {
   color: white !important;
 }
 
-input[hc='wb'] {
+input[hc='wb'], input[type='number'][hc='wb'] {
   color: white;
   background: black;
   border: 1px solid white;
@@ -61,7 +53,7 @@ button[hc='wb'] {
 }
 
 html[hc = 'wb'] > body {
-  background: black;
+  background: black !important;
   color: white;
 }
 
@@ -70,7 +62,7 @@ html[hc = 'yb'] {
   color: yellow;
 }
 html[hc = 'yb'] > body {
-  background: black;
+  background: black !important;
   color: yellow;
 }
 
@@ -112,7 +104,7 @@ html[hc = 'by'] {
   background: yellow;
 }
 html[hc = 'by'] > body{
-  background: yellow;
+  background: yellow !important;
   color: black;
 }
 div[hc = 'by'], span[hc = 'by'], p[hc = 'by'], ul[hc = 'by'], li[hc = 'by'],

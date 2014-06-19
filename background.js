@@ -3,18 +3,18 @@
 var value,
 	html = document.documentElement,
 	uri = 'org.chrome.cloud4chrome',
-	npserver = 'http://flowmanager.gpii.net/',
+	npserver = 'http://127.0.0.1:8081/',
 	suffix = '/settings/%7B"OS":%7B"id":"web"%7D,"solutions":[%7B"id":"org.chrome.cloud4chrome"%7D]%7D',
 	audio = new Audio("audio/beep-06.wav"),
 	locale = "en-GB";
 
 chrome.windows.onCreated.addListener(function() {
-	audio.play();
+	// audio.play();
 });
 
 // initialization when your extension is installed or upgraded	
 chrome.runtime.onInstalled.addListener(function(details) {
-	audio.play();
+	// audio.play();
 	chrome.storage.local.set({ "token" : "", "preferences" : {} });
 });
 
@@ -178,84 +178,6 @@ function setPreferences(preferences) {
 		}
 	}); 
 
-	// FONT SIZE
-	if (preferences.hasOwnProperty('fontSize')) {
-		switch (preferences['fontSize']) {
-			case 'medium':
-				chrome.tabs.executeScript({ code: "[].forEach.call(document.querySelectorAll('body *'), function(node) { node.setAttribute('ts', 'medium'); });" }, function() {
-					if (chrome.runtime.lastError) { console.log("Error in adding attribute ts = medium: " + chrome.runtime.lastError.message ); }
-				});
-			  	break;
-			case 'large': 
-				chrome.tabs.executeScript({ code: "[].forEach.call(document.querySelectorAll('body *'), function(node) { node.setAttribute('ts', 'large'); });" }, function() {
-					if (chrome.runtime.lastError) { console.log("Error in adding attribute ts = large: " + chrome.runtime.lastError.message ); }
-				});			  	
-				break;
-			case 'x-large':
-				chrome.tabs.executeScript({ code: "[].forEach.call(document.querySelectorAll('body *'), function(node) { node.setAttribute('ts', 'x-large'); });" }, function() {
-					if (chrome.runtime.lastError) { console.log("Error in adding attribute ts = x-large: " + chrome.runtime.lastError.message ); }
-				});
-				break;
-			default:
-				chrome.tabs.executeScript({ code: "[].forEach.call(document.querySelectorAll('body *'), function(node) { node.removeAttribute('ts'); });" }, function() {
-					if (chrome.runtime.lastError) { console.log("Error in removing attribute ts" + chrome.runtime.lastError.message ); }
-				});
-		}
-	} else {
-		chrome.tabs.executeScript( {code: "[].forEach.call(document.querySelectorAll('body *'), function(node) { node.removeAttribute('ts'); });" }, function() {
-			if (chrome.runtime.lastError) { console.log("Error in removing attribute ts" + chrome.runtime.lastError.message ); }
-		}); 
-	}
-
-	// FONT FACE
-	if (preferences.hasOwnProperty('fontFace')) {
-		var fontFace = preferences.fontFace;
-		chrome.tabs.executeScript({ code : "document.documentElement.setAttribute('ff', '" + fontFace + "'); " }, function() {
-			if (chrome.runtime.lastError) { console.log("Error changing font face: " + chrome.runtime.lastError.message); }
-		});
-	}
-
-	// MAGNIFICATION
-	if (preferences.hasOwnProperty('magnifierEnabled')) {
-		if (preferences['magnifierEnabled']) {
-		// magnifier is enabled
-			if (preferences.hasOwnProperty('magnification')) {
-			// magnifier is enabled and there is a value for magnification
-				switch (preferences['magnification']) {
-					case 1:
-						chrome.tabs.executeScript({ code : 'document.documentElement.removeAttribute("zoom");' }, function() {
-							if (chrome.runtime.lastError) { console.log("Error in removing attribute zoom" + chrome.runtime.lastError.message ); }
-						});
-						break;
-					case 2:
-						chrome.tabs.executeScript({ code : 'document.documentElement.setAttribute("zoom", "200%");' }, function() {
-							if (chrome.runtime.lastError) { console.log("Error in adding attribute zoom = 200" + chrome.runtime.lastError.message ); }
-						});
-						break;
-					case 3:
-						chrome.tabs.executeScript({ code : 'document.documentElement.setAttribute("zoom", "300%");' }, function() {
-							if (chrome.runtime.lastError) { console.log("Error in adding attribute zoom = 300" + chrome.runtime.lastError.message ); }
-						});
-						break;
-				}
-			} else {
-			// magnifier is enabled but there is no value for magnification
-				chrome.tabs.executeScript({ code : 'document.documentElement.removeAttribute("zoom");' }, function() {
-					if (chrome.runtime.lastError) { console.log("Error in removing attribute zoom" + chrome.runtime.lastError.message ); }
-				});
-			}
-		} else {
-		// magnifier is not enabled
-			chrome.tabs.executeScript({ code : 'document.documentElement.removeAttribute("zoom");' }, function() {
-				if (chrome.runtime.lastError) { console.log("Error in removing attribute zoom" + chrome.runtime.lastError.message ); }
-			});
-		}
-	} else {
-		chrome.tabs.executeScript({ code : 'document.documentElement.removeAttribute("zoom");' }, function() {
-			if (chrome.runtime.lastError) { console.log("Error in removing attribute zoom" + chrome.runtime.lastError.message ); }
-		});
-	}
-
 	// HIGH CONTRAST
 	if (preferences.hasOwnProperty('highContrastEnabled')) {
 		if (preferences['highContrastEnabled']) {
@@ -264,28 +186,28 @@ function setPreferences(preferences) {
 			// high contrast is enabled and there is a high contrast
 				switch (preferences['highContrastTheme']) {
 					case 'black-white':
-						chrome.tabs.executeScript( {code: "[].forEach.call(document.querySelectorAll('body *'), function(node) { node.removeAttribute('hc'); }); document.documentElement.setAttribute('hc', 'bw'); "}, function() {
-							if (chrome.runtime.lastError) { console.log("Error in setting attribute hc = bw" + chrome.runtime.lastError.message ); }
+						chrome.tabs.executeScript( {code: "document.documentElement.setAttribute('hc','bw'); [].forEach.call(document.querySelectorAll('body *'), function(node) { node.removeAttribute('hc'); }); document.documentElement.setAttribute('hc', 'bw'); "}, function() {
+							if (chrome.runtime.lastError) { console.log("Error in setting attribute hc = bw: " + chrome.runtime.lastError.message ); }
 						});
 						break;
 					case 'white-black':
-						chrome.tabs.executeScript( { code : "document.documentElement.removeAttribute('hc'); [].forEach.call(document.querySelectorAll('body *'), function(node) { node.setAttribute('hc', 'wb'); });" }, function() {
-							if (chrome.runtime.lastError) { console.log("Error in setting attribute hc = wb" + chrome.runtime.lastError.message ); }
+						chrome.tabs.executeScript( { code : "document.documentElement.setAttribute('hc','wb'); [].forEach.call(document.querySelectorAll('body *'), function(node) { node.setAttribute('hc', 'wb'); });" }, function() {
+							if (chrome.runtime.lastError) { console.log("Error in setting attribute hc = wb: " + chrome.runtime.lastError.message ); }
 						}); 
 			 			break;
 					case 'yellow-black':
-						chrome.tabs.executeScript({code: "document.documentElement.removeAttribute('hc'); [].forEach.call(document.querySelectorAll('body *'), function(node) { node.setAttribute('hc', 'yb'); });" }, function() {
-							if (chrome.runtime.lastError) { console.log("Error in setting attribute hc = yb" + chrome.runtime.lastError.message ); }
+						chrome.tabs.executeScript({code: "document.documentElement.setAttribute('hc','yb'); [].forEach.call(document.querySelectorAll('body *'), function(node) { node.setAttribute('hc', 'yb'); });" }, function() {
+							if (chrome.runtime.lastError) { console.log("Error in setting attribute hc = yb: " + chrome.runtime.lastError.message ); }
 						}); 
 						break;
 					case 'black-yellow':
-						chrome.tabs.executeScript({code: "document.documentElement.removeAttribute('hc'); [].forEach.call(document.querySelectorAll('body *'), function(node) { node.setAttribute('hc', 'by'); });" }, function() {
-							if (chrome.runtime.lastError) { console.log("Error in setting attribute hc = by" + chrome.runtime.lastError.message ); }
+						chrome.tabs.executeScript({code: "document.documentElement.setAttribute('hc','by'); [].forEach.call(document.querySelectorAll('body *'), function(node) { node.setAttribute('hc', 'by'); });" }, function() {
+							if (chrome.runtime.lastError) { console.log("Error in setting attribute hc = by: " + chrome.runtime.lastError.message ); }
 						});
 						break;
 					default:
 						chrome.tabs.executeScript({code: "document.documentElement.removeAttribute('hc'); [].forEach.call(document.querySelectorAll('body *'), function(node) { node.removeAttribute('hc'); });" }, function() {
-							if (chrome.runtime.lastError) { console.log("Error in removing attribute hc" + chrome.runtime.lastError.message ); }
+							if (chrome.runtime.lastError) { console.log("Error in removing attribute hc: " + chrome.runtime.lastError.message ); }
 						});
 						
 				}
@@ -314,28 +236,73 @@ function setPreferences(preferences) {
 		}
 	}
 
-	if (preferences.hasOwnProperty('onScreenKeyboardEnabled')) {
-		chrome.management.get('pflmllfnnabikmfkkaddkoolinlfninn', function(extInfo) {
-			if (chrome.runtime.lastError) {
-				console.log(chrome.runtime.lastError);
+	// MAGNIFICATION
+	if (preferences.hasOwnProperty('magnifierEnabled')) {
+		if (preferences.magnifierEnabled) {
+		// magnifier is enabled
+			if (preferences.hasOwnProperty('magnification')) {
+			// magnifier is enabled and there is a value for magnification
+				chrome.tabs.executeScript({ code : "$('html').css('zoom', " + preferences.magnification +  ");" , runAt: "document_end" }, function() {
+					if (chrome.runtime.lastError) { console.log(chrome.runtime.lastError.message); }
+				});
+
 			} else {
-				if (preferences.onScreenKeyboardEnabled) {
-					if (!extInfo.enabled) {
-						chrome.management.setEnabled(extInfo.id, true, function() {
-							console.log("Chrome Virtual Keyboard activated");
-						})
-					}
-				} else {
-					if (extInfo.enabled) {
-						chrome.management.setEnabled(extInfo.id, false, function() {
-							console.log("Chrome Virtual Keyboard has been deactivated");
-						})
-					}
-				}
+			// magnifier is enabled but there is no value for magnification
+				chrome.tabs.executeScript({ code : "$('html').css('zoom', 1);"}, function() {
+					if (chrome.runtime.lastError) { console.log(chrome.runtime.lastError.message); }
+				});
 			}
+		} else {
+		// magnifier is not enabled
+			chrome.tabs.executeScript({ code : "$('html').css('zoom', 1);"}, function() {
+				if (chrome.runtime.lastError) { console.log(chrome.runtime.lastError.message ); }
+			});
+		}
+	} else {
+		chrome.tabs.executeScript({ code : "$('html').css('zoom', 1);" }, function() {
+			if (chrome.runtime.lastError) { console.log(chrome.runtime.lastError.message ); }
 		});
 	}
 
+
+
+	// FONT SIZE
+	if (preferences.hasOwnProperty('fontSize')) {
+		switch (preferences.fontSize) {
+			case 'normal':
+				chrome.tabs.executeScript({ code: "document.documentElement.removeAttribute('ts'); [].forEach.call(document.querySelectorAll('body *'), function(node) { node.setAttribute('ts', 'medium'); });" }, function() {
+					if (chrome.runtime.lastError) { console.log("Error in adding attribute ts = medium: " + chrome.runtime.lastError.message ); }
+				});
+			  	break;
+			case 'large': 
+				chrome.tabs.executeScript({ code: "document.documentElement.setAttribute('ts','large'); [].forEach.call(document.querySelectorAll('body *'), function(node) { node.setAttribute('ts', 'large'); });" }, function() {
+					if (chrome.runtime.lastError) { console.log("Error in adding attribute ts = large: " + chrome.runtime.lastError.message ); }
+				});			  	
+				break;
+			case 'x-large':
+				chrome.tabs.executeScript({ code: "document.documentElement.setAttribute('ts','x-large'); [].forEach.call(document.querySelectorAll('body *'), function(node) { node.setAttribute('ts', 'x-large'); });" }, function() {
+					if (chrome.runtime.lastError) { console.log("Error in adding attribute ts = x-large: " + chrome.runtime.lastError.message ); }
+				});
+				break;
+			default:
+				chrome.tabs.executeScript({ code: "document.documentElement.removeAttribute('ts'); [].forEach.call(document.querySelectorAll('body *'), function(node) { node.removeAttribute('ts'); });" }, function() {
+					if (chrome.runtime.lastError) { console.log("Error in removing attribute ts" + chrome.runtime.lastError.message ); }
+				});
+		}
+	} else {
+		chrome.tabs.executeScript( {code: "document.documentElement.removeAttribute('ts'); [].forEach.call(document.querySelectorAll('body *'), function(node) { node.removeAttribute('ts'); });" }, function() {
+			if (chrome.runtime.lastError) { console.log("Error in removing attribute ts" + chrome.runtime.lastError.message ); }
+		}); 
+	}
+
+	// FONT FACE
+	if (preferences.hasOwnProperty('fontFace')) {
+		var fontFace = preferences.fontFace;
+		chrome.tabs.executeScript({ code : "document.documentElement.setAttribute('ff', '" + fontFace + "'); " }, function() {
+			if (chrome.runtime.lastError) { console.log("Error changing font face: " + chrome.runtime.lastError.message); }
+		});
+	}
+	
 	if (preferences.hasOwnProperty('cursorSize')) {
 		switch (preferences.cursorSize) {
 			case "normal": 
@@ -360,6 +327,27 @@ function setPreferences(preferences) {
 		}
 	}
 
+	if (preferences.hasOwnProperty('onScreenKeyboardEnabled')) {
+		chrome.management.get('pflmllfnnabikmfkkaddkoolinlfninn', function(extInfo) {
+			if (chrome.runtime.lastError) {
+				console.log(chrome.runtime.lastError);
+			} else {
+				if (preferences.onScreenKeyboardEnabled) {
+					if (!extInfo.enabled) {
+						chrome.management.setEnabled(extInfo.id, true, function() {
+							console.log("Chrome Virtual Keyboard activated");
+						})
+					}
+				} else {
+					if (extInfo.enabled) {
+						chrome.management.setEnabled(extInfo.id, false, function() {
+							console.log("Chrome Virtual Keyboard has been deactivated");
+						})
+					}
+				}
+			}
+		});
+	}
 	// SIMPLIFIER
 	if (preferences.hasOwnProperty('simplifier')) {
 		if (preferences['simplifier']) {

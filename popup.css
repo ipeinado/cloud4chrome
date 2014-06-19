@@ -3,29 +3,33 @@ html[hc="invert"] {
   -webkit-filter: invert();
 }
 			
-html[ts="large"] > body {
+html[ts="large"], html[ts="large"] > body {
   font-size: large;
 }
-			
-html[ts="large"] > body {
-  width: 400px;
-}
-			
-html[ts="x-large"] > body {
+
+html[ts="x-large"], html[ts="x-large"] > body {
  font-size: x-large;
 }
-		
-html[ts="x-large"] > body {
-  width: 500px;
+
+html[hc="bw"] input, html[hc="bw"] select {
+  background: white;
+  color: black;
 }
-			
-html[zoom="200%"] {
-  zoom: 2;
+
+html[hc="wb"] input, html[hc="wb"] select {
+  background: black;
+  color: white;
 }
-			
-html[zoom="300%"] {
-  zoom: 3;
-}			
+
+html[hc="yb"] input, html[hc="yb"] select {
+  background: black;
+  color: yellow;
+}
+
+html[hc="by"] input, html[hc="by"] select {
+  background: yellow;
+  color: orange;
+}
 
 /* Common options */
 
@@ -59,6 +63,7 @@ div#token-form-container h1 {
 }
 
 input#token-input {
+  width: 96%;
 	font-size: 1.2em;
 	background: #1b428d;
 	border: 1px solid white;
@@ -101,38 +106,33 @@ div#token-form-container div#options a#exitbutton {
 
 /* Style of preferences form */
 
-div#preferencesContainer div#header {
+div#preferences-container header {
   padding: 0 1em;
 }
 			
-.config_option {
+.config-option {
   border-top: 1px solid #CCC;
   padding: 0 1em 1em 1em;
   margin: 0;
 }
 		
-.config_option h3 {
-  font-size: 1.2em;
-}
-			
+		
 ul.radiogroup {
   list-style: none; 
   margin: 0; 
   padding: 0; 
 }
 			
-span.textSizeMedium {
-  font-size: medium; 
+span.font-size-normal-span {
+  font-size: 1em; 
 }
 			
-span.textSizeLarge {
-  margin-top: 1em;
-  font-size: large;
+span.font-size-large-span {
+  font-size: 1.2em;
 }
 			
-span.textSizeXLarge {
-  margin-top: 1em;
-  font-size: x-large;
+span.font-size-x-large-span {
+  font-size: 1.4em;
 }
 
 div#prefOptions {
@@ -152,34 +152,27 @@ input[type='submit'] {
 
 a.sign-out-btn {
   float: right;
+  font-size: 0.9em;
 }
 
-button#installCVButton, button#installOnScreenKeyboardButton {
-  padding: 0.5em;
-  background: #CD3700;
-  border-radius: 4px;
-  font-weight: bold;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
 
-.blackonwhite {
+.black-on-white {
   background: white;
   color: black;
 }
 
-.whiteonblack {
+.white-on-black {
   background: black;
   color: white;
 }
 
-.yellowonblack {
+.yellow-on-black {
   background: black;
   color: yellow;
 }
 
-.blackonyellow {
+.black-on-yellow {
   background: yellow;
   color: black;
 }
+

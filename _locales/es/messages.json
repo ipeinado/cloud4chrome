@@ -47,6 +47,9 @@
         "message": "ver todas las opciones",
         "description": "link to the PMT from the configuration popup"
     },
+    "seeAllPrefsTitle": {
+        "message": "Pulsa para ver todas las preferencias disponibles"
+    },
     "screenReaderTitleText": {
         "message": "Lector de pantalla"
     },
@@ -86,23 +89,32 @@
     "zoomRgTitleText": {
         "message": "Zoom"
     },
+    "zoomEnableChechboxLabelText": {
+        "message": "Habilitar el zoom"
+    },
+    "zoomLevelLabelText": {
+        "message": "Elige el nivel de zoom"
+    },
     "fontOptionsTitleText": {
         "message": "Opciones de letra"
     },
     "fontSizeTitleText": {
         "message": "Tamaño de letra"
     },
-    "textSizeMediumLabelText": {
+    "fontSizeNormalLabelText": {
         "message": "normal"
     },
-    "textSizeLargeLabelText": {
+    "fontSizeLargeLabelText": {
         "message": "grande"
     },
-    "textSizeXLargeLabelText": {
+    "fontSizeXLargeLabelText": {
         "message": "X-grande"
     },
     "fontFaceTitleText": {
         "message": "Tipo de fuente"
+    },
+    "fontFaceOriginalText": {
+        "message": "-- Fuente original --"
     },
     "cursorSizeTitleText": {
         "message": "Tamaño del cursor"
@@ -136,6 +148,9 @@
     },
     "signOutBtnText": {
         "message": "Salir"
+    },
+    "signoutBtnTitle": {
+        "message": "Salir de Cloud4all"
     },
     "optionsPageTitleText": {
         "message": "Edita tus preferencias"
