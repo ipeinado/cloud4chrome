@@ -19,7 +19,8 @@
             "js": [
                 "lib/jquery-1.9.1.min.js",
                 "js/simplifier.js",
-                "js/synonyms_en.js"
+                "js/synonyms_en.js",
+                "js/sinonimos_es.js"
             ],
             "css": [
                 "content.css"

@@ -6,8 +6,7 @@
 "use strict";
 
 var userToken = "",
-    localPreferences = {},
-    recognition;
+    localPreferences = {};
 
 var notification_OnScreenReaderActivated = {
 	type: "basic",
@@ -36,6 +35,7 @@ $(document).ready(function(e) {
   $('#install-onscreenkeyboard-button').click(onInstallOnScreenKeyboardButtonClicked);
   $('#simplifier-checkBox').click(simplifierCheckBoxClicked);
   $('#synonyms-en-checkbox').click(synonymsEnCheckboxClicked);
+  $('#sinonimos-es-checkbox').click(sinonimosEsCheckboxClicked);
 
   $('#see-all-prefs').click(onOptionsClick);
 
@@ -352,11 +352,32 @@ function setPreferencesForm(npsetObject) {
 		      	}
 	      	} // end if simplifier
 
+	      	if (localPreferences.hasOwnProperty('language')) {
+
+	      		var subLocale = localPreferences.language.substring(0, 2);
+
+	      		if (subLocale == "en") {
+	      			$('#synomyms-en-div').show();
+	      		}
+
+	      		if (subLocale == "es") {
+					$('#sinonimos-es-div').show();
+	      		}
+	      	}
+
 	      	if (localPreferences.hasOwnProperty('synonymsEn')) {
 	      		if (localPreferences.synonymsEn) {
 	      			$('#synonyms-en-checkbox').prop('checked', true);
 	      		} else {
 					$('#synonyms-en-checkbox').prop('checked', false);
+	      		}
+	      	}
+
+	      	if (localPreferences.hasOwnProperty('sinonimosEs')) {
+	      		if (localPreferences.sinonimosEs) {
+	      			$('#sinonimos-es-checkbox').prop('checked', true);
+	      		} else {
+	      			$('#sinonimos-es-checkbox').prop('checked', false);
 	      		}
 	      	}
 		
@@ -546,3 +567,11 @@ function synonymsEnCheckboxClicked() {
 	chrome.storage.local.set({ preferences : localPreferences });
 }
 
+function sinonimosEsCheckboxClicked() {
+	if (this.checked) {
+		localPreferences.sinonimosEs = true;
+	} else {
+		localPreferences.sinonimosEs = false;
+	}
+	chrome.storage.local.set({ preferences : localPreferences });
+}

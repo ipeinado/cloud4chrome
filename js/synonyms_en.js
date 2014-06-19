@@ -2,25 +2,25 @@
 
 var bhl_url = "http://words.bighugelabs.com/api/2/d1cbb0c53ddabe240d726e3fc76b1491/";
 var sel_x = 0, sel_y = 0;
-var help_paragraph = $('<p></p>').addClass('help-paragraph').text("Click the mouse or any key to close");
-var error_paragraph = $('<p></p>').text("Sorry, no synonyms found");
+var help_paragraph_en = $('<p></p>').addClass('help-paragraph').text("Click the mouse or any key to close");
+var error_paragraph_en = $('<p></p>').text("Sorry, no synonyms found");
 
 chrome.runtime.onMessage.addListener(
     function(req, sen, sendResponse) {
         if (req.action == "enable synonyms") {
             if (req.status == true) {
-                $(document).bind('dblclick', onDoubleClick);
+                $(document).bind('dblclick', onDoubleClickEn);
                 console.log("Activating synonyms");
             } else {
-                $(document).unbind('dblclick', onDoubleClick);
+                $(document).unbind('dblclick', onDoubleClickEn);
                 console.log("Deactivating synonyms");
             }
         }
     }
 );
 
-function onDoubleClick(e) {
-    var t = get_selection();
+function onDoubleClickEn(e) {
+    var t = get_selection_en();
 
     if (t.length > 0) {
         var xhr = new XMLHttpRequest();
@@ -29,11 +29,11 @@ function onDoubleClick(e) {
         xhr.onreadystatechange = function() {
             if (xhr.readyState == 4) {
                 if (xhr.status == 200) {
-                    showTooltip(xhr.responseText);
+                    showTooltipEn(xhr.responseText);
                 }
             } else {
                 if (xhr.status == 404) {
-                    showErrorTooltip();
+                    showErrorTooltipEn();
                 }
             }
         };
@@ -42,7 +42,7 @@ function onDoubleClick(e) {
     }
 }
 
-function get_selection() {
+function get_selection_en() {
     var txt = '';
 
     if (window.getSelection) {
@@ -68,7 +68,7 @@ function get_selection() {
     return $.trim(txt.toString());
 }
 
-function showTooltip(synonymsJSON) {
+function showTooltipEn(synonymsJSON) {
 
     var synonyms = JSON.parse(synonymsJSON);
     var tooltipDiv = $("<div class='tooltip'></div>");
@@ -105,17 +105,17 @@ function showTooltip(synonymsJSON) {
         $(tooltipDiv).append(par);
     }
 
-    $(tooltipDiv).append(help_paragraph);
+    $(tooltipDiv).append(help_paragraph_en);
 
     $('body').append(tooltipDiv);
 }
 
-function showErrorTooltip() {
+function showErrorTooltipEn() {
     var tooltipDiv = $("<div class='tooltip'></div>");
     $(tooltipDiv).css("top", sel_y);
     $(tooltipDiv).css("left", sel_x);
-    $(tooltipDiv).append(error_paragraph);
-    $(tooltipDiv).append(help_paragraph);
+    $(tooltipDiv).append(error_paragraph_en);
+    $(tooltipDiv).append(help_paragraph_en);
     $('body').append(tooltipDiv);
 }
 

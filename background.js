@@ -67,6 +67,9 @@ function processPreferences(userPreferencesDownloaded) {
 			payload = JSON.parse(userPreferencesDownloaded.payloadJSON);
 
 		if (!(isEmpty(payload)) && (payload.hasOwnProperty(uri))) {
+
+			payload[uri].language = chrome.i18n.getUILanguage();
+
 			chrome.storage.local.set({ token : token, preferences : payload[uri]}, function() {
 				if (chrome.runtime.lastError) {
 					console.log("Error storing preferences locally: " + chrome.runtime.lastError.message);
@@ -123,7 +126,7 @@ chrome.storage.onChanged.addListener(function(changes, local) {
 		setPreferences(newPrefs);
 	} else {
 		if (oldPrefs != undefined) {
-			var simplifierIsOn = oldPrefs['simplifier'] || false;
+			var simplifierIsOn = oldPrefs.simplifier || false;
 
 
 			// Deactivate ChromeVox
@@ -371,6 +374,22 @@ function setPreferences(preferences) {
 			});
 		}
 	}
+
+	// SINONIMOS
+	if (preferences.hasOwnProperty('sinonimosEs')) {
+		if (preferences.sinonimosEs) {
+			chrome.tabs.query({ active : true, currentWindow : true}, function(tabs) {
+				chrome.tabs.sendMessage(tabs[0].id, { action : "habilitar sinonimos", status : true }, function(response) {
+				});
+			});
+		} else {
+			chrome.tabs.query({ active : true, currentWindow : true}, function(tabs) {
+				chrome.tabs.sendMessage(tabs[0].id, { action : "habilitar sinonimos", status : false }, function(response) {
+				});
+			});
+		}
+	}
+
 }
 
 function installCV() {
