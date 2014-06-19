@@ -31,7 +31,7 @@
 	  
 	    <header>
 	      <a href="" class="btn btn-danger sign-out-btn" title="Sign out of Cloud4all"></a>
-		  <h1 id='config-title' tabindex='1'></h1>
+		  <h1 id='config-title'></h1>
 		  <p><span id="config-description"></span>
 		  	<a id='see-all-prefs' href="" class='seemore'>See all preferences</a>
 		  </p>
@@ -41,20 +41,20 @@
   		  
 
 		  <div class='config-option' id="screenreader-div">
-		    <h2 tabindex='2' id='screenreader-title'></h3>
+		    <h2 id='screenreader-title'></h3>
 		  	<div class='checkbox' id="CV-installed">
+		  		<input type='checkbox' name='screen reader checkbox' id='screenreader-checkbox' aria-labelled-by='screenreader-label' role='checkbox' />
 		  		<label for='screenreader-checkbox' id='screenreader-checkbox-label'></label>
-				<input type='checkbox' name='screen reader checkbox' id='screenreader-checkbox' aria-labelled-by='screenreader-label' role='checkbox' tabindex='3' />
 			</div>
 			  
 			  <div id='CV-not-installed' style='display: none;'>
 				<p id='CV-not-installed-warning' class='text-warning'></p>
-				<p><button class="btn btn-primary" id='install-CV-btn' tabindex='3'></button></p>
+				<p><button class="btn btn-primary" id='install-CV-btn'></button></p>
 			  </div>
 		  </div>
 			
 		  <div class='config-option' id='high-contrast-options'>
-			<h2 id='high-contrast-title' tabindex='4'></h2>
+			<h2 id='high-contrast-title'></h2>
 			<div class='radio'>
 				<input type='radio' name='high-contrast' value='none' id='no-high-contrast' role='radio' />
 				<label for='no-high-contrast' id='no-high-contrast-label'></label>
@@ -159,9 +159,20 @@
 			
 		  
 		  <div class='config-option'>
-			<h2 id="simplifier-title"></h2>
+			<h2 id='simplifier-title'></h2>
+			<div class='checkbox'>
 			  <input type='checkbox' id='simplifier-checkBox' role='checkbox' />
 			  <label for='simplifier-checkBox' id='simplifier-checkbox-label'></label>
+			</div>
+		  </div>
+
+		  <div class='config-option' id='synomyms-en-div'>
+		  	<h2 id='synomyms-en-title'></h2>
+		  	<p class='text-muted' id='synonyms-en-explanation'></p>
+		  	<div class='checkbox'>
+		  		<input type='checkbox' id='synonyms-en-checkbox' role='checkbox' />
+		  		<label for='synonyms-en-checkbox' id='synonyms-en-checkbox-label'></label>
+		  	</div>
 		  </div>
 		  
 		  <div class='config-option' id='prefOptions'>

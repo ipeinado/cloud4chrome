@@ -20,7 +20,6 @@ $(document).ready(function(e) {
 
   $('#token-form').submit(onTokenFormSubmit);
   
-  /* document.querySelector('#optionsLink').addEventListener('focus', function(e) { chrome.tts.speak('Click to edit your preferences');}); */
   $('#options-link').click(onOptionsClick);
   $("#c4a-website-link").click(onC4aWebsiteLinkClick);
   
@@ -33,17 +32,14 @@ $(document).ready(function(e) {
   $('input[name="font-size"]').change(fontSizeChanged);
   $('#font-face-select').change(fontFaceChanged);
   $('input[name="cursor-size"]').click(cursorSizeChanged);
-  // $('#cursorSizeNormal').click(cursorSizeNormalClicked);
-  // $('#cursorSizeLarge').click(cursorSizeLargeClicked);
-  // $('#cursorSizeXLarge').click(cursorSizeXLargeClicked);
   $('#onscreenkeyboard-checkbox').click(onScreenKeyboardCheckBoxClicked);
   $('#install-onscreenkeyboard-button').click(onInstallOnScreenKeyboardButtonClicked);
   $('#simplifier-checkBox').click(simplifierCheckBoxClicked);
+  $('#synonyms-en-checkbox').click(synonymsEnCheckboxClicked);
 
   $('#see-all-prefs').click(onOptionsClick);
 
   $('.sign-out-btn').click(signOutBtnClicked);
-
   $('.sign-out-btn').text(chrome.i18n.getMessage("signOutBtnText"));
   $('.sign-out-btn').attr('title', chrome.i18n.getMessage("signOutBtnTitle"));
   
@@ -90,6 +86,9 @@ $(document).ready(function(e) {
   $('#install-onscreenkeyboard-button').text(chrome.i18n.getMessage("installOnScreenKeyboardButtonText"));
   $('#simplifier-title').text(chrome.i18n.getMessage("simplifierTitleText"));
   $('#simplifier-checkbox-label').text(chrome.i18n.getMessage("simplifierCheckBoxLabelText"));  
+  $('#synomyms-en-title').text(chrome.i18n.getMessage("synonymsEnTitleText"));
+  $('#synonyms-en-explanation').text(chrome.i18n.getMessage("synonymsEnExplanationText"));
+  $('#synonyms-en-checkbox-label').text(chrome.i18n.getMessage("synonymsEnCheckboxLabelText"));
   
   // if there is a configuration stored locally, we will load this 
   // set of needs and preferences
@@ -125,17 +124,21 @@ function onTokenFormSubmit(e) {
 // Actions to respond to the receipt of a set of needs and preferences 
 // from the web
 function handleResponse(response) {
+
   var status = response.status,
       isError = response.isError,
       errorMessage = response.errorMessage;
+
   if (status == 1) {
   	console.log("succesfully logged in");
   	chrome.storage.local.get({'token': "", 'preferences': {}}, function(results) {
+  		chrome.tabs.reload();
   		window.location.reload();
   	});
   } else {
   	$('#results').html('<span class="warning">' + errorMessage + '</span>').show();
   }
+
 }
 
 // Function that initializes the popup
@@ -349,6 +352,14 @@ function setPreferencesForm(npsetObject) {
 		        	console.log("Simplification set to false in background");
 		      	}
 	      	} // end if simplifier
+
+	      	if (localPreferences.hasOwnProperty('synonymsEn')) {
+	      		if (localPreferences.synonymsEn) {
+	      			$('#synonyms-en-checkbox').prop('checked', true);
+	      		} else {
+					$('#synonyms-en-checkbox').prop('checked', false);
+	      		}
+	      	}
 		
 	    } // The preferences object is empty ifelse
 	  } // The preferences object is empty and the token is an empty string
@@ -448,30 +459,6 @@ function fontSizeChanged() {
 	chrome.storage.local.set({ preferences : localPreferences });
 }
 
-// function textSizeNormalClicked() {
-//   localPreferences['fontSize'] = 'medium';
-//   chrome.storage.local.set({ token: userToken, preferences: localPreferences });
-//   //preferencesPort.postMessage({ fontSize : 'medium' }); 
-//   document.documentElement.removeAttribute('ts');
-// }
-
-// function textSizeLargeClicked() {
-//   localPreferences['fontSize'] = 'large';
-//   chrome.storage.local.set({ token: userToken, preferences: localPreferences });
-//   //preferencesPort.postMessage({ fontSize : 'large' }); 
-//   document.documentElement.setAttribute("ts", "large");
-// }
-
-// function textSizeXLargeClicked() {
-//   localPreferences['fontSize'] = 'x-large';
-//   chrome.storage.local.set({ token: userToken, preferences: localPreferences });
-//   //preferencesPort.postMessage({ fontSize : 'x-large' }); 
-//   document.documentElement.setAttribute("ts", "x-large");
-// 	// chrome.storage.sync.set({textSize: "x-large"}, function() {
-// 	  // document.documentElement.setAttribute("ts", "x-large");
-// 	// });
-// }
-
 function fontFaceChanged() {
 	localPreferences.fontFace = $("#font-face-select").val();
 	chrome.storage.local.set({ preferences : localPreferences });
@@ -481,21 +468,6 @@ function cursorSizeChanged() {
 	localPreferences.cursorSize = $(this).val();
 	chrome.storage.local.set({ preferences : localPreferences });
 }
-
-// function cursorSizeNormalClicked() {
-// 	localPreferences.cursorSize = "normal";
-// 	chrome.storage.local.set({ preferences : localPreferences });
-// }
-
-// function cursorSizeLargeClicked() {
-// 	localPreferences.cursorSize = "large";
-// 	chrome.storage.local.set({ preferences : localPreferences });
-// }
-
-// function cursorSizeXLargeClicked() {
-// 	localPreferences.cursorSize = "x-large";
-// 	chrome.storage.local.set({ preferences : localPreferences });
-// }
 
 function highContrastChanged() {
 	console.log("High contrast has changed");
@@ -564,5 +536,14 @@ function simplifierCheckBoxClicked() {
 	  	chrome.tabs.reload();
 	  	// preferencesPort.postMessage({ simplifier : false }); 
 	}
+}
+
+function synonymsEnCheckboxClicked() {
+	if (this.checked) {
+		localPreferences.synonymsEn = true;
+	} else {
+		localPreferences.synonymsEn = false;
+	}
+	chrome.storage.local.set({ preferences : localPreferences });
 }
 

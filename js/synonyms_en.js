@@ -5,7 +5,21 @@ var sel_x = 0, sel_y = 0;
 var help_paragraph = $('<p></p>').addClass('help-paragraph').text("Click the mouse or any key to close");
 var error_paragraph = $('<p></p>').text("Sorry, no synonyms found");
 
-$(document).dblclick(function(e) {
+chrome.runtime.onMessage.addListener(
+    function(req, sen, sendResponse) {
+        if (req.action == "enable synonyms") {
+            if (req.status == true) {
+                $(document).bind('dblclick', onDoubleClick);
+                console.log("Activating synonyms");
+            } else {
+                $(document).unbind('dblclick', onDoubleClick);
+                console.log("Deactivating synonyms");
+            }
+        }
+    }
+);
+
+function onDoubleClick(e) {
     var t = get_selection();
 
     if (t.length > 0) {
@@ -26,7 +40,7 @@ $(document).dblclick(function(e) {
 
         xhr.send();
     }
-});
+}
 
 function get_selection() {
     var txt = '';
@@ -37,7 +51,6 @@ function get_selection() {
         var selection = txt.getRangeAt(0);
         sel_x = selection.getBoundingClientRect().left; 
         sel_y = selection.getBoundingClientRect().top; 
-        console.log(sel_x, ", " + sel_y);
 
     } else if (document.getSelection) {
 
@@ -45,7 +58,6 @@ function get_selection() {
         var selection = txt.getRangeAt(0);
         sel_x = selection.getBoundingClientRect().left; 
         sel_y = selection.getBoundingClientRect().top; 
-        console.log(sel_x.toString() + ", " + sel_y.toString());
 
     } else if (document.selection) {
 

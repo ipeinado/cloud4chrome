@@ -146,6 +146,15 @@
     "simplifierCheckBoxLabelText": {
         "message": "Simplificar páginas"
     },
+    "synonymsEnTitleText": {
+        "message": "Mostrar sinónimos (inglés)"
+    },
+    "synonymsEnExplanationText": {
+        "message": "Haz doble click en cualquier palabra para ver una lista de sinónimos"
+    },
+    "synonymsEnCheckboxLabelText": {
+        "message": "Habilitar mostrar sinónimos"
+    },
     "signOutBtnText": {
         "message": "Salir"
     },
