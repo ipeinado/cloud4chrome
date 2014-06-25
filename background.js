@@ -6,7 +6,22 @@ var value,
 	npserver = 'http://127.0.0.1:8081/',
 	suffix = '/settings/%7B"OS":%7B"id":"web"%7D,"solutions":[%7B"id":"org.chrome.cloud4chrome"%7D]%7D',
 	audio = new Audio("audio/beep-06.wav"),
-	locale = "en-GB";
+	locale = "en-GB",
+	socket;
+
+(function() {
+	socket = io.connect('http://localhost:3000');
+
+	socket.on('connect', function() {
+		socket.emit('hello', { from : 'cloud4chrome' });
+	});
+
+	socket.on('token from local', function(data) {
+		console.log(data.token);
+		requestPreferences(data.token);
+	});
+
+})();
 
 chrome.windows.onCreated.addListener(function() {
 	// audio.play();

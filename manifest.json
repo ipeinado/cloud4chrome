@@ -72,5 +72,6 @@
         "images/arrow_icon_x_large.png",
         "images/hand_icon_large.png",
         "images/hand_icon_x_large.png"
-    ]
+    ],
+    "content_security_policy": "script-src 'self' http://localhost:3000; object-src 'self'"
 }
